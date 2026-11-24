@@ -1,7 +1,14 @@
 # Evolutions-Arena – feste Spielregeln (gelten für alle Netze, nur Markus ändert sie)
 account: 100000            # Startkapital je Netz (simuliert)
 max_risk_per_trade: 0.10   # max. Verlust je Trade 10 % des Kontos (Markus, 24.11.2026); kein Gesamtlimit, aber keine negative Kaufkraft
-max_position_frac: 1.0     # Aktienposition max. 100 % des Kontos (ungehebelt)
+max_position_frac: 2.0     # Aktienposition max. 200 % des Kontos (Margin, Reg-T)
+margin:                    # Margin realistisch wie bei einem US-Broker (Markus, 24.11.2026)
+  overnight_leverage: 2.0  # Reg-T: Kaufkraft über Nacht = 2 × Kontowert
+  intraday_leverage: 4.0   # Intraday-Positionen (exit "close"): 4 ×
+  rate_spread: 0.015       # Sollzins = Fed Funds (FRED DFF) + 1,5 % p. a. auf negative Kasse, taggenau /360
+  short_borrow: 0.003      # Leihgebühr Leerverkäufe 0,3 % p. a. auf den Kurswert
+  maintenance: 0.25        # Margin Call: Kontowert < 25 % des Brutto-Aktienexposures → Zwangsschließung (größte zuerst)
+max_drawdown_stop: 0.30    # fällt ein Netz 30 % unter seinen Höchststand: alles schließen, kein neuer Handel bis zur Auswahl
 cohort_size: 10            # neue Netze je Woche (anfangs 5 Klon-Netze + 5 freie Netze)
 cohort_days: 30            # Lebensdauer bis zur Auswahl (Kalendertage, nur zur Planung)
 cohort_trading_days: 21    # Auswahl nach 21 aktiven Handelstagen (≈ 30 Kalendertage); Pausen zählen nicht

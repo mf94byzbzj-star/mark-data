@@ -17,7 +17,11 @@ Alles hier ist simuliert (Papierdepots je 100.000 $). Quantitative Analyse, kein
 
 ## Feste Spielregeln (nur Markus ändert sie, `arena/config.yaml`)
 - Nur Positionen mit begrenztem Risiko (Optionen nur aus der Kandidatenliste mit echten Kettenpreisen; Aktien mit Stop).
-- Max. 10 % Kontorisiko je Trade; Kaufkraft darf nicht negativ werden; Aktien ungehebelt.
+- Max. 10 % Kontorisiko je Trade (Verlust bis Stop bzw. Max-Verlust); Kaufkraft darf nicht negativ werden.
+- Margin erlaubt (Markus, 24.11.2026): Kaufkraft 2 × Kontowert über Nacht, 4 × für Intraday-Positionen; Sollzins Fed Funds + 1,5 %
+  auf negative Kasse, Leihgebühr 0,3 % p. a. für Leerverkäufe (taggenau abgezogen). Margin Call bei < 25 % Deckung
+  (Zwangsschließung, größte zuerst). Max-Drawdown-Stopp: −30 % vom Höchststand → alles schließen, kein neuer Handel.
+  Höhere Hebel nur innerhalb der 10-%-Stop-Regel – Positionsgröße folgt immer aus dem Abstand zum Stop.
 - Gleiche Fills und Kosten für alle; kein Blick in die Zukunft (nur Daten bis heute); keine Netzwerkzugriffe in strategy.py.
 - Score = Rendite / max(Max-Drawdown, 2 %) nach 30 Tagen; mind. 2 Trades, sonst kein Sieger.
 

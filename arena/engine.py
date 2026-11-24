@@ -86,6 +86,70 @@ def context(today):
             "closes": C}
 
 
+# ------------------------------------------------------------------ Margin
+MG = CFG.get("margin", {})
+
+
+def margin_rate(today):
+    """Sollzins p. a.: Fed Funds (FRED DFF, letzter Wert bis heute) + Aufschlag."""
+    try:
+        f = pd.read_csv(os.path.join(data.D, "macro", "fred.csv"), usecols=["date", "DFF"]).dropna()
+        f = f[f["date"] <= str(today)]
+        base = float(f["DFF"].iloc[-1]) / 100
+    except Exception:
+        base = 0.04
+    return base + MG.get("rate_spread", 0.015)
+
+
+def gross_equity(book):
+    return sum(abs(p["shares"] * p.get("mark", p["entry"])) for p in book["open"] if p["kind"] == "equity")
+
+
+def finance(book, today):
+    """Taggenaue Zinsen auf negative Kasse und Leihgebühren für Leerverkäufe (Kalendertage /360)."""
+    last = book.get("last_fin")
+    book["last_fin"] = str(today)
+    if not last:
+        return
+    days = (pd.Timestamp(today) - pd.Timestamp(last)).days
+    if days <= 0:
+        return
+    cost = 0.0
+    if book["cash"] < 0:
+        cost += -book["cash"] * margin_rate(today) * days / 360
+    short = sum(p["shares"] * p.get("mark", p["entry"]) for p in book["open"] if p["kind"] == "equity" and p["dir"] == "short")
+    cost += short * MG.get("short_borrow", 0.003) * days / 360
+    book["cash"] -= cost
+    book["fees"] = round(book.get("fees", 0) + cost, 2)
+
+
+def risk_controls(book, today, base, genome):
+    """Margin Call und Max-Drawdown-Stopp – schließt Positionen erzwungen zum Schlusskurs."""
+    eq, _ = mark_book(book, today, base)
+    book["peak"] = max(book.get("peak", START_CASH), eq)
+    reason = None
+    if eq <= book["peak"] * (1 - CFG.get("max_drawdown_stop", 0.30)):
+        reason = "Max-Drawdown-Stopp"
+        book["halted"] = True
+        for p in book["open"]:
+            p["close_req"] = True
+    else:
+        gross = gross_equity(book)
+        if gross > 0 and eq < MG.get("maintenance", 0.25) * gross:
+            reason = "Margin Call"
+            for p in sorted([p for p in book["open"] if p["kind"] == "equity"], key=lambda p: -abs(p["shares"] * p.get("mark", p["entry"]))):
+                p["close_req"] = True
+                gross -= abs(p["shares"] * p.get("mark", p["entry"]))
+                if eq >= MG.get("maintenance", 0.25) * gross * 1.2:
+                    break
+    if reason:
+        n0 = len(book["closed"])
+        exits(book, today, base, genome)
+        for c in book["closed"][n0:]:
+            c["reason"] = reason
+        book.setdefault("events", []).append({"day": str(today), "what": reason})
+
+
 # ------------------------------------------------------------------ Depot
 def new_book():
     return {"cash": START_CASH, "open": [], "closed": [], "curve": [], "n_orders": 0}
@@ -228,7 +292,8 @@ def execute(book, orders, ctx, today, net_id):
     for o in orders or []:
         try:
             equity, risk_open = mark_book(book, today, None)
-            buying_power = equity - risk_open - sum(abs(p["shares"] * p.get("mark", p["entry"])) for p in book["open"] if p["kind"] == "equity")
+            lev = MG.get("intraday_leverage", 4.0) if o.get("exit") == "close" else MG.get("overnight_leverage", 2.0)
+            buying_power = equity * lev - risk_open - gross_equity(book)   # Margin: Kaufkraft = Hebel × Kontowert
             rf = min(float(o.get("risk", MAX_RISK)), MAX_RISK)
             if o["type"] == "close":
                 for p in book["open"]:
@@ -310,7 +375,7 @@ def execute(book, orders, ctx, today, net_id):
                     log.append({"o": o, "ok": False, "why": "Stop ungültig"})
                     continue
                 rps = abs(px - stop)
-                sh = int(max(buying_power, 0) / px) if o.get("full") else int(min(rf * equity / rps, max(buying_power, 0) / px, CFG["max_position_frac"] * equity / px))
+                sh = int(max(buying_power, 0) / px) if o.get("full") else int(min(rf * equity / rps, max(buying_power, 0) / px, max(CFG["max_position_frac"], lev if o.get("exit") == "close" else 0) * equity / px))
                 if sh < 1:
                     log.append({"o": o, "ok": False, "why": "zu wenig Kaufkraft"})
                     continue
@@ -403,7 +468,9 @@ def metrics(book):
     ru = float(np.mean([x.get("risk", 0) / x["equity"] for x in book["curve"] if x["equity"] > 0])) if book["curve"] else 0
     r_tail = sorted([c.get("r") or 0 for c in closed])[: max(1, len(closed) // 20)] if closed else [0]
     score = ret / max(abs(dd), CFG["min_dd_for_score"])
-    return {"equity": round(float(cur.iloc[-1]), 2), "ret": round(float(ret), 5), "maxdd": round(dd, 5), "score": round(float(score), 4),
+    lev_now = gross_equity(book) / cur.iloc[-1] if cur.iloc[-1] > 0 else 0
+    return {"lev": round(float(lev_now), 2), "fees": round(book.get("fees", 0), 2), "halted": bool(book.get("halted")),
+            "equity": round(float(cur.iloc[-1]), 2), "ret": round(float(ret), 5), "maxdd": round(dd, 5), "score": round(float(score), 4),
             "n_trades": book["n_orders"], "n_closed": len(closed), "win": None if win is None else round(float(win), 3),
             "risk_used": round(ru, 4), "worst_r": round(float(np.mean(r_tail)), 3), "n_open": len(book["open"])}
 
@@ -444,8 +511,10 @@ def run(today=None):
         bp = os.path.join(NETS, net["id"], "book.json")
         book = jl(bp) or new_book()
         g = yaml.safe_load(open(os.path.join(NETS, net["id"], "genome.yaml"))) or {}
+        finance(book, today)
         mark_book(book, today, base)
         exits(book, today, base, g)
+        risk_controls(book, today, base, g)
         try:
             if net["kind"] == "klon" or net["kind"] == "markus":
                 orders = policy_chain(g, ctx, book)
@@ -458,7 +527,7 @@ def run(today=None):
             else:
                 orders = []
             orders = [{k: v for k, v in o.items() if k != "fill_px"} for o in (orders or [])]   # Fill-Preise setzt nur der Code
-            if retired:
+            if retired or book.get("halted"):
                 orders = [o for o in orders if o.get("type") in ("modify", "close")]
             if not fresh or (cpause.get(net.get("cohort"), True) and not retired):
                 orders = []

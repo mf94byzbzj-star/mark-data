@@ -10,3 +10,9 @@
 4. **Pyramiding und DCA sind erlaubt:** Nachkaufen in Gewinner (`add`) und Verbilligen von Verlustpositionen, deren Stop noch
    nicht erreicht ist (`add`). Grenze: Verlust der Gesamtposition am Stop höchstens 10 % des Kontos.
 5. Klon-Netze steuern das über ihr Genom (`equity_trail`, `equity_let_run`, `equity_days`) und einmalige Orders in `orders.json`.
+
+## 2026-11-24 (2) – von Markus: Margin
+6. **Positionen dürfen größer als das Konto sein (Margin):** bis 2 × Kontowert über Nacht, 4 × intraday. Zinsen (Fed Funds + 1,5 %)
+   und Leihgebühren werden realistisch abgezogen – Hebel lohnt nur, wenn der erwartete Ertrag die Kosten klar übersteigt.
+   Die 10-%-Stop-Regel je Trade und der Max-Drawdown-Stopp (−30 %) gelten unverändert; ein Margin Call schließt Positionen
+   zwangsweise. Hebel bewusst und begründet einsetzen (in notes.md festhalten).
