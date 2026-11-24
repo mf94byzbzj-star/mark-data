@@ -1,0 +1,7 @@
+name: Overnight-Drift
+idee: Zum Schlusskurs kaufen, zur Eröffnung verkaufen (Haltedauer eine Nacht), Pause im Crash-Regime
+tickers: [SPY, QQQ]
+pause_in: [Crash/Stress]
+stop: 0.03
+risk: 0.03
+changes: []

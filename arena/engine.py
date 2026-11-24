@@ -140,7 +140,7 @@ def exits(book, today, base, genome):
     for p in book["open"]:
         reason, px_exit = None, None
         if p["kind"] == "option":
-            mode = genome.get("exit_override") or backtest.STRATS.get(p["strategy"], {}).get("exit", "hold")
+            mode = p.get("exit_mode") or genome.get("exit_override") or backtest.STRATS.get(p["strategy"], {}).get("exit", "hold")
             front = min(pd.Timestamp(l["expiry"]) for l in p["legs"])
             days = (front - pd.Timestamp(today)).days
             m = p.get("mark", p["entry"])
@@ -171,17 +171,39 @@ def exits(book, today, base, genome):
                 continue
         else:
             b = bar(p["ticker"], today)
-            if b is not None and str(b.name.date()) > p["opened"]:
-                d = 1 if p["dir"] == "long" else -1
-                lo, hi, cl = float(b["Low"]), float(b["High"]), float(b["Close"])
-                if (d > 0 and lo <= p["stop"]) or (d < 0 and hi >= p["stop"]):
-                    reason, px_exit = "Stop", p["stop"]
+            d = 1 if p["dir"] == "long" else -1
+            if b is not None and str(b.name.date()) >= p["opened"]:
+                same_day = str(b.name.date()) == p["opened"]
+                op, lo, hi, cl = float(b["Open"]), float(b["Low"]), float(b["High"]), float(b["Close"])
+                if same_day:
+                    if p.get("exit") == "close":                     # Intraday-Einstieg, Ausstieg zum Schluss desselben Tages
+                        reason, px_exit = "Schluss", cl
+                elif p.get("exit") == "open":                        # Overnight: Ausstieg zur Eröffnung des Folgetags
+                    reason, px_exit = "Eröffnung", op
+                elif (d > 0 and lo <= p["stop"]) or (d < 0 and hi >= p["stop"]):
+                    gap = (d > 0 and op <= p["stop"]) or (d < 0 and op >= p["stop"])
+                    reason, px_exit = ("Stop (Gap)", op) if gap else ("Stop" if not p.get("trailed") else "Nachgezogener Stop", p["stop"])
                 elif p.get("target") and ((d > 0 and hi >= p["target"]) or (d < 0 and lo <= p["target"])):
                     reason, px_exit = "Ziel", p["target"]
-                elif np.busday_count(p["opened"], str(today)) >= p.get("max_days", 20):
-                    reason, px_exit = "Zeit", cl
                 elif p.get("close_req"):
                     reason, px_exit = "Supervisor", cl
+                elif np.busday_count(p["opened"], str(today)) >= p.get("max_days", 20):
+                    in_profit = (cl - p["entry"]) * d > 0
+                    if p.get("let_run") and in_profit:
+                        p["extended"] = True                         # Gewinner laufen lassen – Stop wird nachgezogen
+                    else:
+                        reason, px_exit = "Zeit", cl
+                if not reason and p.get("trail"):                    # Stop nachziehen (nur in Gewinnrichtung)
+                    tr = p["trail"]
+                    if "atr" in tr:
+                        h = data.prices(p["ticker"])
+                        h = h[pd.DatetimeIndex(h.index).tz_localize(None).normalize() <= pd.Timestamp(today)].iloc[-15:]
+                        atr = float((h["High"] - h["Low"]).mean())
+                        cand = cl - d * tr["atr"] * atr
+                    else:
+                        cand = cl * (1 - d * tr.get("pct", 0.1))
+                    if (d > 0 and cand > p["stop"]) or (d < 0 and cand < p["stop"]):
+                        p["stop"], p["trailed"] = round(cand, 2), True
             if reason:
                 px_exit *= 1 - 0.0005 * (1 if p["dir"] == "long" else -1)   # halbe Spanne/Slippage
                 if p["dir"] == "long":
@@ -189,8 +211,9 @@ def exits(book, today, base, genome):
                 else:
                     book["cash"] -= p["shares"] * px_exit
                 pnl = (px_exit - p["entry"]) * p["shares"] * (1 if p["dir"] == "long" else -1)
-                rk = abs(p["entry"] - p["stop"]) * p["shares"]
+                rk = p.get("risk0") or abs(p["entry"] - p["stop"]) * p["shares"]
                 book["closed"].append({**{k: p[k] for k in ("id", "kind", "ticker", "dir", "opened", "shares", "entry")},
+                                       "held_days": int(np.busday_count(p["opened"], str(today))), "adds": p.get("adds", 0),
                                        "strategy": "aktie", "closed": str(today), "reason": reason, "pnl": round(pnl, 2),
                                        "risk": round(rk, 2), "r": round(pnl / rk, 3) if rk else None})
                 continue
@@ -213,6 +236,53 @@ def execute(book, orders, ctx, today, net_id):
                         p["close_req"] = True
                 log.append({"o": o, "ok": True})
                 continue
+            if o["type"] == "modify":                     # Stop nachziehen, Ziel/Haltedauer/Trailing ändern, Gewinner laufen lassen
+                p = next((x for x in book["open"] if x["id"] == o["id"]), None)
+                if not p:
+                    log.append({"o": o, "ok": False, "why": "Position unbekannt"})
+                    continue
+                if p["kind"] == "equity" and "stop" in o:
+                    d = 1 if p["dir"] == "long" else -1
+                    if (o["stop"] - p["stop"]) * d < 0:
+                        log.append({"o": o, "ok": False, "why": "Stop darf nur nachgezogen werden (nie Risiko erhöhen)"})
+                        continue
+                    p["stop"], p["trailed"] = float(o["stop"]), True
+                for k in ("target", "max_days", "trail", "let_run"):
+                    if k in o:
+                        p[k] = o[k]
+                if "exit" in o and p["kind"] == "option":
+                    p["exit_mode"] = o["exit"]
+                log.append({"o": o, "ok": True})
+                continue
+            if o["type"] == "add":                        # Pyramiding (im Gewinn) oder DCA (im Verlust, Stop nicht erreicht)
+                p = next((x for x in book["open"] if x["id"] == o["id"] and x["kind"] == "equity"), None)
+                px = last_close(p["ticker"], today) if p else None
+                if not p or not px:
+                    log.append({"o": o, "ok": False, "why": "Aktienposition unbekannt"})
+                    continue
+                d = 1 if p["dir"] == "long" else -1
+                if (px - p["stop"]) * d <= 0:
+                    log.append({"o": o, "ok": False, "why": "Stop bereits erreicht"})
+                    continue
+                want = int(min(rf * equity / abs(px - p["stop"]), max(buying_power, 0) / px))
+                # Gesamtverlust der Position am Stop darf 10 % des Kontos nicht übersteigen
+                while want > 0:
+                    tot = p["shares"] + want
+                    avg = (p["entry"] * p["shares"] + px * want) / tot
+                    if (avg - p["stop"]) * d * tot <= MAX_RISK * equity:
+                        break
+                    want = int(want * 0.8)
+                if want < 1:
+                    log.append({"o": o, "ok": False, "why": "Risikolimit der Gesamtposition (10 %) erreicht"})
+                    continue
+                fill = px * (1 + 0.0005 * d)
+                book["cash"] += -want * fill if d > 0 else want * fill
+                p["entry"] = (p["entry"] * p["shares"] + fill * want) / (p["shares"] + want)
+                p["shares"] += want
+                p["risk0"] = (p.get("risk0") or 0) + abs(px - p["stop"]) * want
+                p["adds"] = p.get("adds", 0) + 1
+                log.append({"o": o, "ok": True, "shares": want})
+                continue
             if o["type"] == "option":
                 c = cmap.get(o["cid"])
                 if not c:
@@ -234,7 +304,7 @@ def execute(book, orders, ctx, today, net_id):
                 log.append({"o": o, "ok": True, "n": n})
             elif o["type"] == "equity":
                 t, d = o["ticker"], o["direction"]
-                px = last_close(t, today)
+                px = float(o["fill_px"]) if o.get("fill_px") else last_close(t, today)
                 stop = float(o["stop"])
                 if not px or (d == "long" and stop >= px) or (d == "short" and stop <= px):
                     log.append({"o": o, "ok": False, "why": "Stop ungültig"})
@@ -244,11 +314,12 @@ def execute(book, orders, ctx, today, net_id):
                 if sh < 1:
                     log.append({"o": o, "ok": False, "why": "zu wenig Kaufkraft"})
                     continue
-                entry = px * (1 + 0.0005 * (1 if d == "long" else -1))
+                entry = float(o["fill_px"]) if o.get("fill_px") else px * (1 + 0.0005 * (1 if d == "long" else -1))
                 book["cash"] += -sh * entry if d == "long" else sh * entry
                 book["open"].append({"id": f"{net_id}-{today}-{t}-{d}", "kind": "equity", "ticker": t, "dir": d, "opened": str(today),
                                      "shares": sh, "entry": entry, "stop": stop, "target": o.get("target"),
-                                     "max_days": int(o.get("max_days", 20))})
+                                     "max_days": int(o.get("max_days", 20)), "trail": o.get("trail"), "let_run": bool(o.get("let_run")),
+                                     "exit": o.get("exit"), "risk0": round(abs(entry - stop) * sh, 2)})
                 log.append({"o": o, "ok": True, "shares": sh})
         except Exception as e:
             log.append({"o": o, "ok": False, "why": f"Fehler: {type(e).__name__}"})
@@ -284,7 +355,8 @@ def policy_chain(g, ctx, book):
         for e in ctx["equity_ideas"][: max(0, g.get("max_open_equity", 5) - open_eq)]:
             if e["ticker"] not in held:
                 orders.append({"type": "equity", "ticker": e["ticker"], "direction": e["direction"], "stop": e["stop"],
-                               "target": e.get("target"), "risk": g.get("equity_risk", 0.03), "max_days": g.get("equity_days", 20)})
+                               "target": e.get("target"), "risk": g.get("equity_risk", 0.03), "max_days": g.get("equity_days", 20),
+                               "trail": g.get("equity_trail"), "let_run": g.get("equity_let_run", False)})
     return orders
 
 
@@ -367,7 +439,8 @@ def run(today=None):
                 c["active_days"] = c.get("active_days", 0) + 1
                 c["last_active"] = str(today)
     ctx = context(today)
-    for net in [n for n in st["nets"].values() if n["status"] == "lebt"]:
+    for net in [n for n in st["nets"].values() if n["status"] in ("lebt", "weiter")]:
+        retired = net["status"] == "weiter"   # Gewinner nach der Auswahl: offene Trades laufen nach ihren Regeln aus, keine neuen
         bp = os.path.join(NETS, net["id"], "book.json")
         book = jl(bp) or new_book()
         g = yaml.safe_load(open(os.path.join(NETS, net["id"], "genome.yaml"))) or {}
@@ -384,7 +457,10 @@ def run(today=None):
                 orders = policy_spy(ctx, book)
             else:
                 orders = []
-            if not fresh or cpause.get(net.get("cohort"), True):
+            orders = [{k: v for k, v in o.items() if k != "fill_px"} for o in (orders or [])]   # Fill-Preise setzt nur der Code
+            if retired:
+                orders = [o for o in orders if o.get("type") in ("modify", "close")]
+            if not fresh or (cpause.get(net.get("cohort"), True) and not retired):
                 orders = []
             manual = os.path.join(NETS, net["id"], "orders.json")   # Orders des Supervisors aus dem Wochenlauf
             if fresh and not cpause.get(net.get("cohort"), True) and os.path.exists(manual):

@@ -26,9 +26,28 @@ Alles hier ist simuliert (Papierdepots je 100.000 $). Quantitative Analyse, kein
 payoff{debit_fill,max_loss,max_gain,pop}, legs, oos_mean/oos_win/oos_t, trigger_status, score, factors, final, gex),
 `equity_ideas`, `equity_signals`, `price` (Preisaktion der Kandidaten), `patterns`, `events`, `filings` (SEC je Ticker),
 `trends`, `closes` (DataFrame Schlusskurse ~300 Tage, alle Ticker), `book` (cash, open), `genome`.
-Orders: `{"type":"option","cid":…, "risk":0.05}` · `{"type":"equity","ticker":…, "direction":"long|short", "stop":…,
-"target":…|null, "risk":0.03, "max_days":20}` · `{"type":"close","id":…}`. `risk` = Anteil des Kontos bis Stop/Max-Verlust (≤ 0,10).
+Orders:
+- `{"type":"option","cid":…, "risk":0.05}` – Haltedauer = Ausstiegsregel der Struktur (tp50/tp25/daysN/front/pre/post/Verfall)
+- `{"type":"equity","ticker":…, "direction":"long|short", "stop":…, "target":…|null, "risk":0.03, "max_days":20,
+   "trail":{"atr":3}|{"pct":0.08}|null, "let_run":true|false, "exit":null|"open"|"close"}`
+  – `max_days` = geplante Haltedauer in Handelstagen (Pflicht, immer bewusst setzen); `exit:"open"` = über Nacht bis zur
+  Eröffnung, `exit:"close"` = intraday bis Schluss; `let_run` = Gewinner dürfen über max_days hinaus laufen (auch > 30 Tage),
+  dann trägt der nachgezogene Stop; `trail` = Stop täglich nachziehen (nur in Gewinnrichtung).
+- `{"type":"modify","id":…, "stop":…, "target":…, "max_days":…, "trail":…, "let_run":…, "exit":"tp50|hold|…"(nur Optionen)}`
+  – Stop darf nur nachgezogen werden, nie Risiko erhöhen.
+- `{"type":"add","id":…, "risk":0.03}` – Pyramiding (im Gewinn) oder DCA (im Verlust, solange der Stop nicht erreicht ist).
+  Grenze: Verlust der GESAMTEN Position am Stop ≤ 10 % des Kontos.
+- `{"type":"close","id":…}`. `risk` = Anteil des Kontos bis Stop/Max-Verlust (≤ 0,10).
+- Optional `decide_intraday(ctx)` (ca. 15:30 New York): `ctx` = day, time, bars (5-Minuten-Kerzen des Tages für SPY, QQQ, IWM,
+  DIA, Sektor-ETFs, TLT, GLD), book, genome; nur Aktien/ETF-Orders, Ausführung zum letzten 5-Minuten-Kurs.
 Einmalige Orders des Supervisors: `arena/nets/<ID>/orders.json` (gleiche Form) – werden am nächsten Handelstag ausgeführt.
+
+## Haltedauer und Positionsführung (Markus, 24.11.2026)
+- Jede Position hat eine klar festgelegte Haltedauer (max_days bzw. Ausstiegsregel); sie steht im Dashboard bei jeder Position.
+- Erlaubt und erwünscht: Gewinner länger laufen lassen (auch über 30 Tage) mit nachgezogenem Stop; Pyramiding in Gewinnern;
+  DCA in Verlustpositionen, solange der Stop nicht erreicht ist – immer innerhalb der 10-%-Grenze für die Gesamtposition.
+- Kurz-Swing (1–5 Tage), Overnight (exit "open") und Intraday-Fenster (decide_intraday, exit "close") sind erlaubt.
+- Nach der Auswahl laufen offene Trades der Gewinner-Netze nach ihren Regeln aus (Nachlauf, ohne neue Trades).
 
 ## Ohne Claude kein Handel (Markus, 24.11.2026)
 - Jeder Denk-Lauf schreibt am Ende `arena/heartbeat.json` = `{"last_think": "<YYYY-MM-DD>"}`.

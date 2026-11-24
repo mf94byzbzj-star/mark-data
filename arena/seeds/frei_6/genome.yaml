@@ -1,0 +1,8 @@
+name: Intraday-Momentum
+idee: Richtung der ersten halben Stunde bis 15:30 handeln, Ausstieg zum Schlusskurs (Haltedauer ~30 Min., Gao/Han/Li/Zhou 2018)
+tickers: [SPY, QQQ, IWM]
+use_rest: true
+min_move: 0.002
+stop: 0.006
+risk: 0.02
+changes: []

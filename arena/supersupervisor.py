@@ -75,7 +75,9 @@ def births(st, today):
         if src == "vorlage":
             for k in range(5):
                 members.append(_make(st, "klon", os.path.join(SEEDS, "klon")))
-            for s in sorted(d for d in os.listdir(SEEDS) if d.startswith("frei_"))[:5]:
+            fs = sorted((d for d in os.listdir(SEEDS) if d.startswith("frei_")), key=lambda x: int(x.split("_")[1]))
+            k0 = (len(st["cohorts"]) * 5) % len(fs)               # Vorlagen rotieren, damit alle Startideen zum Zug kommen
+            for s in (fs[k0:] + fs[:k0])[:5]:
                 members.append(_make(st, "frei", os.path.join(SEEDS, s)))
         else:   # nach Rücksprung: Klone der Gewinner der besten Runde
             r = src["round"]
@@ -199,9 +201,34 @@ def write_summary(st):
             pass
         trades = None
         if n["status"] == "lebt" or n["id"] in curves:
+            EXT = {"tp50": "bis 50 % des max. Gewinns, spätestens Verfall", "tp25": "bis 25 % des max. Gewinns, spätestens Verfall",
+                   "hold": "bis Verfall", "front": "bis kurz vor Verfall des vorderen Monats", "pre": "bis vor die Earnings",
+                   "post": "bis nach den Earnings"}
+
+            def plan(p):
+                if p["kind"] == "option":
+                    from chain.core import backtest
+                    m = p.get("exit_mode") or backtest.STRATS.get(p.get("strategy"), {}).get("exit", "hold")
+                    exp = min(l["expiry"] for l in p["legs"])
+                    return (f"{m[4:]} Tage" if m.startswith("days") else EXT.get(m, m)) + f" (Verfall {exp})"
+                if p.get("exit") == "open":
+                    return "über Nacht – Ausstieg zur Eröffnung"
+                if p.get("exit") == "close":
+                    return "intraday – Ausstieg zum Schluss"
+                if p.get("max_days", 20) >= 1000:
+                    return "dauerhaft (kaufen und halten)"
+                t = f"{p.get('max_days', 20)} Handelstage"
+                if p.get("let_run"):
+                    t += ", Gewinner dürfen länger laufen"
+                if p.get("trail"):
+                    tr = p["trail"]
+                    t += f", Stop wird nachgezogen ({tr['atr']}× ATR)" if "atr" in tr else f", Stop wird nachgezogen ({tr.get('pct', 0) * 100:.0f} %)"
+                return t + (" – verlängert" if p.get("extended") else "")
+
             def pos(p):
                 d = {"ticker": p["ticker"], "kind": p["kind"], "opened": p["opened"], "entry": round(p["entry"], 2),
-                     "mark": round(p.get("mark", p["entry"]), 2)}
+                     "mark": round(p.get("mark", p["entry"]), 2), "plan": plan(p), "id": p["id"],
+                     "held": int(np.busday_count(p["opened"], str(dt.date.today()))), "adds": p.get("adds", 0), "trailed": p.get("trailed", False)}
                 if p["kind"] == "option":
                     d.update(what=p.get("strategy"), n=p["n"], risk=round(p["max_loss"] * 100 * p["n"], 0),
                              legs=" / ".join(f"{'+' if l['qty'] > 0 else '−'}{abs(l['qty'])} {l['cp']}{l['strike']:g} {l['expiry'][5:]}" for l in p["legs"]),
@@ -213,7 +240,7 @@ def write_summary(st):
                              pnl=round((p.get("mark", p["entry"]) - p["entry"]) * p["shares"] * sg, 0))
                 return d
             trades = {"open": [pos(p) for p in b.get("open", [])],
-                      "closed": [{k: c.get(k) for k in ("ticker", "kind", "strategy", "dir", "opened", "closed", "reason", "pnl", "r")}
+                      "closed": [{k: c.get(k) for k in ("ticker", "kind", "strategy", "dir", "opened", "closed", "reason", "pnl", "r", "held_days", "adds")}
                                  for c in b.get("closed", [])[-12:]][::-1],
                       "cash": round(b.get("cash", 0), 0)}
         nets.append({**{k: n.get(k) for k in ("id", "kind", "parent", "gen", "status", "cohort", "born", "ended", "lineage", "last_error")},

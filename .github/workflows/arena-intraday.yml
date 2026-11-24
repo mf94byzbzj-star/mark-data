@@ -1,0 +1,28 @@
+name: Arena – Intraday-Fenster (15:30 New York)
+on:
+  schedule:
+    - cron: "28 20 * * 1-5"    # 15:28 New York Winterzeit (Sommerzeit: 16:28 → zu spät, dann Marker nutzen)
+  push:
+    paths: ["arena/.run_intraday"]
+  workflow_dispatch:
+concurrency:
+  group: arena
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  intraday:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -q -r chain/requirements.txt yfinance
+      - run: python -m arena.intraday
+      - run: |
+          git config user.name "arena-bot"
+          git config user.email "arena-bot@users.noreply.github.com"
+          git add arena chain_data/intraday5m
+          git diff --cached --quiet || git commit -q -m "Arena: Intraday-Fenster $(date -u +%F)"
+          for i in 1 2 3; do git pull --rebase -q -X theirs && git push -q && break; sleep 5; done
