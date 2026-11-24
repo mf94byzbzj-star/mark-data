@@ -197,7 +197,27 @@ def write_summary(st):
             g = yaml.safe_load(open(os.path.join(NETS, n["id"], "genome.yaml"))) or {}
         except Exception:
             pass
+        trades = None
+        if n["status"] == "lebt" or n["id"] in curves:
+            def pos(p):
+                d = {"ticker": p["ticker"], "kind": p["kind"], "opened": p["opened"], "entry": round(p["entry"], 2),
+                     "mark": round(p.get("mark", p["entry"]), 2)}
+                if p["kind"] == "option":
+                    d.update(what=p.get("strategy"), n=p["n"], risk=round(p["max_loss"] * 100 * p["n"], 0),
+                             legs=" / ".join(f"{'+' if l['qty'] > 0 else '−'}{abs(l['qty'])} {l['cp']}{l['strike']:g} {l['expiry'][5:]}" for l in p["legs"]),
+                             pnl=round((p.get("mark", p["entry"]) - p["entry"]) * 100 * p["n"], 0))
+                else:
+                    sg = 1 if p["dir"] == "long" else -1
+                    d.update(what=p["dir"], n=p["shares"], stop=p["stop"], target=p.get("target"),
+                             risk=round(abs(p["entry"] - p["stop"]) * p["shares"], 0),
+                             pnl=round((p.get("mark", p["entry"]) - p["entry"]) * p["shares"] * sg, 0))
+                return d
+            trades = {"open": [pos(p) for p in b.get("open", [])],
+                      "closed": [{k: c.get(k) for k in ("ticker", "kind", "strategy", "dir", "opened", "closed", "reason", "pnl", "r")}
+                                 for c in b.get("closed", [])[-12:]][::-1],
+                      "cash": round(b.get("cash", 0), 0)}
         nets.append({**{k: n.get(k) for k in ("id", "kind", "parent", "gen", "status", "cohort", "born", "ended", "lineage", "last_error")},
+                     "trades": trades,
                      "m": n.get("m"), "idea": g.get("idee") or g.get("name"), "changes": g.get("changes", [])[-3:]})
     alive = [n for n in nets if n["status"] == "lebt"]
     comp = [n for n in alive if n["kind"] in ("klon", "frei")]
