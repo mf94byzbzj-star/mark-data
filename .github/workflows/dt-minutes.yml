@@ -1,7 +1,7 @@
 name: Daytrading – 1-Minuten-Kerzen
 on:
   schedule:
-    - cron: "40 1 * * 2-6"     # nach US-Nachbörse: Vortag nachladen
+    - cron: "10 1 * * 2-6"     # 20:10 New York (Winterzeit): Tag inkl. Nachbörse nachladen (Zeitplan unzuverlässig → Marker)
   push:
     paths: ["chain_data/.run_dt_minutes"]
   workflow_dispatch:
