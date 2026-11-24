@@ -13,11 +13,11 @@ universe:
 
 account_size: 100000          # USD – Kontogröße für die Positionsgröße (anpassen)
 risk:
-  options_per_trade: 0.02     # max. Verlust je Optionstrade (2 %)
+  options_per_trade: 0.10     # max. Verlust je Optionstrade (10 %, Markus 24.11.)
   equity_per_trade: 0.03      # Verlust bis Stop je Aktientrade (ungehebelt, daher höher)
   equity_max_position: 0.20   # max. Positionsgröße je Aktie (Anteil Konto)
   max_ideas: 8                # max. Trade-Ideen pro Tag (je Optionen und Aktien)
-  max_total_option_risk: 0.10 # Summe max. Verluste aller vorgeschlagenen Optionstrades (10 %)
+  max_total_option_risk: 0.20 # Summe max. Verluste aller vorgeschlagenen Optionstrades (20 %, Markus 24.11.)
   max_total_equity_exposure: 1.0  # Summe aller Aktienpositionen max. 100 % des Kontos (ungehebelt)
 only_defined_risk: true       # keine nackten Short-Optionen
 

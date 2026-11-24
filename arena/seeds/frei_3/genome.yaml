@@ -1,0 +1,11 @@
+name: Angst-Käufer
+idee: In Panik überverkaufte Aktien kaufen (VIX hoch, VIX-Kurve invertiert), sonst billige Vola kaufen
+vix_min: 25
+vix_ts_min: 1.0
+rsi_max: 30
+min_vs_sma200: 0.9
+new_per_day: 2
+risk: 0.04
+min_oos_long: 0.1
+risk_opt: 0.03
+changes: []

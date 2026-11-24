@@ -1,0 +1,149 @@
+# Agent 1 – Trigger-Bibliothek: Wann wird ein Optionstrade platziert?
+# Jeder Trigger = Strategie (chain/core/backtest.py → STRATS) + Bedingung über Merkmale (chain/core/features.py).
+# Felder:
+#   id, name, strategy, when (pandas-Ausdruck), grid (optional: Schwellen, die NUR In-Sample gewählt werden),
+#   source (Literatur/Praxis-Quelle), mechanism (warum es einen Edge geben sollte), added, status_note (frei)
+# Regeln: keine Zukunftsmerkmale (fut_*), Schwellen nur aus Quelle oder grid, max. 4 Grid-Werte.
+
+- id: T01
+  name: Forward Factor – Calendar
+  strategy: cal_atm
+  when: "ff >= {ff}"
+  grid: {ff: [0.1, 0.2, 0.3, 0.4]}
+  source: "Volatility Vibes / Option Quants (oquants.com): Forward-Factor-Calendar, Backtest ab 2007 (FF ≥ 0,2 dreht die Calendar-Rendite ins Positive)"
+  mechanism: "Front-IV liegt über der implizierten Forward-Vola → Front zu teuer relativ zur Zukunft; Calendar ist long Forward-Vola und kassiert die Normalisierung der Term-Structure."
+  added: 2026-11-23
+
+- id: T02
+  name: Forward Factor – Calendar ohne Earnings im Front
+  strategy: cal_atm
+  when: "ff >= {ff} and e_in_f != 1"
+  grid: {ff: [0.1, 0.2, 0.3, 0.4]}
+  source: "Volatility Vibes: FF nur mit Ex-Earnings-IV aussagekräftig; Earnings blähen die Front-IV legitim auf"
+  mechanism: "Ohne Earnings-Termin ist hohe Front-IV eher Fehlbewertung als berechtigte Event-Prämie."
+  added: 2026-11-23
+
+- id: T03
+  name: Forward Factor – Double Calendar
+  strategy: dcal
+  when: "ff >= {ff} and e_in_f != 1"
+  grid: {ff: [0.1, 0.2, 0.3]}
+  source: "Volatility Vibes / oquants: Double Calendar als breitere Variante des FF-Calendars"
+  mechanism: "Wie T02, aber mit breiterem Gewinnbereich (25Δ-Strikes)."
+  added: 2026-11-23
+
+- id: T04
+  name: Variance Risk Premium – Iron Condor
+  strategy: ic
+  when: "ivrv >= {ivrv} and slope > 0 and e_in_f != 1"
+  grid: {ivrv: [1.1, 1.2, 1.3, 1.5]}
+  source: "Carr & Wu (2009) 'Variance Risk Premiums'; Bakshi & Kapadia (2003); oquants VRP-Screener (IV/RV)"
+  mechanism: "Implizite Vola übersteigt im Mittel die realisierte; im Contango (ruhiger Markt) ist die Prämie am stabilsten."
+  added: 2026-11-23
+
+- id: T05
+  name: Hohe IV im Aufwärtstrend – Put Credit Spread
+  strategy: pcs
+  when: "iv_rank >= {ivr} and dist200 > 0 and e_in_f != 1"
+  grid: {ivr: [0.3, 0.5, 0.7]}
+  source: "tastytrade-Forschung (IV-Rank > 50 für Prämienverkauf); Israelov & Nielsen (2015) 'Still Not Cheap: Portfolio Protection'"
+  mechanism: "Puts sind strukturell überteuert (Crash-Absicherung); bei hoher IV und intaktem Trend ist die Prämie am größten im Verhältnis zum Risiko."
+  added: 2026-11-23
+
+- id: T06
+  name: Hohe IV im Abwärtstrend – Call Credit Spread
+  strategy: ccs
+  when: "iv_rank >= {ivr} and dist50 < 0 and e_in_f != 1"
+  grid: {ivr: [0.3, 0.5, 0.7]}
+  source: "tastytrade (IV-Rank); Spiegelbild von T05"
+  mechanism: "Erhöhte IV plus Abwärtstrend: Calls über dem Markt verfallen häufiger wertlos."
+  added: 2026-11-23
+
+- id: T07
+  name: Billige Vola – Long Straddle
+  strategy: lstrad
+  when: "ivrv <= {ivrv} and e_in_f != 1"
+  grid: {ivrv: [0.7, 0.8, 0.9]}
+  source: "Goyal & Saretto (2009) 'Cross-section of option returns and volatility' (JFE): Long Straddles, wenn HV deutlich über IV"
+  mechanism: "Wenn die realisierte Vola die implizite übersteigt, ist Vola zu billig eingepreist (Mean Reversion der Fehlbewertung)."
+  added: 2026-11-23
+
+- id: T08
+  name: Teure Vola – Iron Butterfly
+  strategy: ifly
+  when: "ivrv >= {ivrv} and e_in_f != 1"
+  grid: {ivrv: [1.3, 1.5, 1.8]}
+  source: "Goyal & Saretto (2009), Gegenrichtung: Short Vola, wenn IV deutlich über HV"
+  mechanism: "Übertriebene implizite Vola fällt zurück (IV-Crush ohne Event)."
+  added: 2026-11-23
+
+- id: T09
+  name: Vor-Earnings-Anstieg – Long Straddle
+  strategy: pre_earn
+  when: "d2e >= 5"
+  source: "Gao, Xing & Zhang (2018) 'Anticipating Uncertainty: Straddles around Earnings Announcements' (JFQA)"
+  mechanism: "Die implizite Vola steigt in den Tagen vor Earnings systematisch; Straddle wird vor dem Termin geschlossen."
+  added: 2026-11-23
+
+- id: T10
+  name: Earnings-IV-Crush – Iron Butterfly
+  strategy: earn_ifly
+  when: "slope < {slope}"
+  grid: {slope: [-0.05, -0.1, -0.2]}
+  source: "oquants Earnings-Dashboard (IV-Crush, ex-earnings Vola); Dubinsky et al. (2019) 'Earnings Announcements and Equity Options'"
+  mechanism: "Stark invertierte Term-Structure = hohe eingepreiste Earnings-Bewegung; nach dem Termin kollabiert die Front-IV."
+  added: 2026-11-23
+
+- id: T11
+  name: Steiler Put-Skew – Bear Put Spread
+  strategy: bps
+  when: "skew_z >= {z}"
+  grid: {z: [1.0, 1.5, 2.0]}
+  source: "Xing, Zhang & Zhao (2010) 'What Does the Individual Option Volatility Smirk Tell Us About Future Equity Returns?' (JFQA)"
+  mechanism: "Ungewöhnlich teure OTM-Puts spiegeln Informationsvorsprung informierter Händler → schwächere Folgerenditen."
+  added: 2026-11-23
+
+- id: T12
+  name: Kurzfristige Überverkauftheit im Aufwärtstrend – Put Credit Spread
+  strategy: pcs
+  when: "rsi2 <= {rsi} and dist200 > 0"
+  grid: {rsi: [5, 10, 20]}
+  source: "Connors & Alvarez (2009) 'Short Term Trading Strategies That Work' (RSI(2)-Mean-Reversion)"
+  mechanism: "Kurzfristige Ausverkäufe im intakten Trend erholen sich häufig; erhöhte Put-IV nach dem Rückgang verbessert die Prämie."
+  added: 2026-11-23
+
+- id: T13
+  name: Momentum mit günstiger IV – Bull Call Spread
+  strategy: bcs
+  when: "mom12_1 > {mom} and iv_rank <= 0.5 and dist50 > 0"
+  grid: {mom: [0.1, 0.2, 0.3]}
+  source: "Jegadeesh & Titman (1993) Momentum; Debit-Spreads bei niedriger IV (Optionspreis-Literatur)"
+  mechanism: "Zeitreihen-/Querschnitts-Momentum hält an; bei günstiger IV ist der Debit-Spread effizienter als die Aktie."
+  added: 2026-11-23
+
+- id: T14
+  name: Term-Structure in Backwardation – Iron Condor meiden / Calendar
+  strategy: cal_put
+  when: "slope < {slope} and e_in_f != 1"
+  grid: {slope: [-0.03, -0.06, -0.1]}
+  source: "Vasquez (2017) 'Equity Volatility Term Structures and the Cross Section of Option Returns' (JFQA)"
+  mechanism: "Steigende Term-Structure sagt höhere Straddle-Renditen voraus; invertierte Strukturen normalisieren sich (Front-IV fällt)."
+  added: 2026-11-23
+
+- id: T15
+  name: VIX-Kurve in Contango – Iron Condor
+  strategy: ic
+  when: "vix_ts <= {ts} and e_in_f != 1"
+  grid: {ts: [0.85, 0.9, 0.95]}
+  source: "Johnson (2017) 'Risk Premia and the VIX Term Structure', JFQA 52(6), 2461–2490 (https://ideas.repec.org/a/cup/jfinqa/v52y2017i06p2461-2490_00.html)"
+  mechanism: "Die Steigung der VIX-Kurve sagt Varianz-Risikoprämien voraus; in ruhigem Contango ist verkaufte Vola im Mittel überbezahlt."
+  added: 2026-11-24
+
+- id: T16
+  name: Nach Angstspitze fallende IV – Put Credit Spread
+  strategy: pcs
+  when: "vix_rank >= {vr} and iv_chg5 < 0 and e_in_f != 1"
+  grid: {vr: [0.8, 0.9]}
+  source: "Whaley (2000) 'The Investor Fear Gauge', J. Portfolio Management; Sinclair (2020) 'Positional Option Trading' (Mean-Reversion der IV nach Spitzen)"
+  mechanism: "Nach einer Vola-Spitze kehrt die IV zum Mittel zurück; sobald sie dreht, sind Puts noch teuer und der Verkauf erhält die Prämie mit Rückenwind."
+  added: 2026-11-24

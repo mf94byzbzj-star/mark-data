@@ -1,0 +1,61 @@
+# Agent 2 – Ticker-Auswahlregeln: Auf welchen Tickern funktioniert ein Trigger?
+# Feste Hypothesen aus Literatur/Praxis (werden für jeden bestätigten/Kandidaten-Trigger Out-of-Sample geprüft).
+# Zusätzlich sucht die Engine datengetrieben (Terzile je Merkmal, Auswahl nur In-Sample).
+# Felder: id, name, applies (Liste von Strategien oder 'all'), rule (pandas-Ausdruck), source, mechanism
+
+- id: R01
+  name: Liquidität – enger ATM-Spread
+  applies: all
+  rule: "spr_atm <= 0.06"
+  source: "oquants: Fokus auf liquide Namen; Muravyev & Pearson (2020) 'Options Trading Costs Are Lower than You Think' – Spreads fressen Optionsrenditen"
+  mechanism: "Hohe Handelskosten zerstören kleine Edges; enge Spreads = realistische Fills."
+- id: R02
+  name: Keine Earnings während der Laufzeit
+  applies: [cal_atm, cal_put, dcal, ic, ifly, pcs, ccs]
+  rule: "e_in_f != 1"
+  source: "Volatility Vibes (ex-earnings IV); tastytrade (Earnings meiden bei Prämienverkauf außerhalb von Earnings-Plays)"
+  mechanism: "Earnings-Sprünge verletzen die Annahme glatter Kursbewegungen."
+- id: R03
+  name: Nur ETFs/Indizes
+  applies: [ic, ifly, pcs, ccs, cal_atm, dcal]
+  rule: "is_etf == 1"
+  source: "Bakshi & Kapadia (2003); Driessen, Maenhout & Vilkov (2009): Varianzprämie bei Indizes deutlich stärker als bei Einzelwerten"
+  mechanism: "Korrelationsrisikoprämie macht Index-Optionen systematisch teurer."
+- id: R04
+  name: Einzelaktien mit hoher Vola-Prämie
+  applies: [ic, ifly, pcs, ccs]
+  rule: "is_etf == 0 and ivrv >= 1.2"
+  source: "Goyal & Saretto (2009); Cao & Han (2013) 'Cross section of option returns and idiosyncratic stock volatility'"
+  mechanism: "Bei Einzelwerten nur dann Prämie verkaufen, wenn IV klar über RV liegt."
+- id: R05
+  name: Ruhiger Kursverlauf (niedrige realisierte Vola)
+  applies: [cal_atm, cal_put, dcal, ic, ifly]
+  rule: "rv20 <= rv60"
+  source: "Praxis (Calendar/Condor lieben fallende realisierte Vola); Volatility-Clustering (Engle 1982)"
+  mechanism: "Fallende realisierte Vola reduziert das Gamma-Risiko der Short-Front."
+- id: R06
+  name: Kein Abwärtstrend für bullische Strategien
+  applies: [pcs, bcs]
+  rule: "dist50 > -0.02"
+  source: "Trendfolge-Literatur (Moskowitz, Ooi & Pedersen 2012 – Time Series Momentum)"
+  mechanism: "Bullische Spreads gegen einen Abwärtstrend haben negative Drift gegen sich."
+- id: R07
+  name: Hohe Kursvola-Ticker meiden bei Calendars
+  applies: [cal_atm, cal_put, dcal]
+  rule: "atr_pct <= 0.035"
+  source: "Praxis: Calendars verlieren bei großen Bewegungen des Basiswerts"
+  mechanism: "Große Tagesbewegungen schieben den Kurs aus dem Gewinnbereich."
+- id: R08
+  name: Hoher IV-Rang beim Prämienverkauf
+  applies: [ic, ifly, pcs, ccs]
+  rule: "iv_rank >= 0.5"
+  source: "tastytrade-Studien zu IV Rank und Short-Premium; Goyal & Saretto (2009) 'Cross-section of option returns and volatility', JFE"
+  mechanism: "Prämie nur verkaufen, wenn die IV relativ zur eigenen Historie hoch ist – höhere Mean-Reversion-Chance."
+  added: 2026-11-24
+- id: R09
+  name: Kein extremer Put-Skew bei bullischen Strategien
+  applies: [pcs, bcs]
+  rule: "skew_z < 1.5"
+  source: "Xing, Zhang & Zhao (2010) 'What Does the Individual Option Volatility Smirk Tell Us About Future Equity Returns?', JFQA"
+  mechanism: "Steiler Smirk signalisiert informierte Absicherung und schwächere Folgerenditen – schlecht für Long-Delta."
+  added: 2026-11-24

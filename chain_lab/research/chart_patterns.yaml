@@ -1,0 +1,37 @@
+# Agent 8 – Bibliothek der Chartmuster (Detektoren in chain/core/patterns.py)
+# Jedes Muster wird über die gesamte Kurshistorie aller Ticker backgetestet (Walk-forward, Kosten, BH-Korrektur) und
+# gegen denselben Handelsmechanismus ohne Muster verglichen. Nur „bestätigt“/„Kandidat“ fließt in Entscheidungen ein.
+# Felder: id (= Detektor-Ausgabe), name, family, source, mechanism, enabled
+- {id: trendline_break_up, name: Ausbruch über Abwärtstrendlinie, family: Trendlinie, source: "Edwards & Magee, Technical Analysis of Stock Trends; Bulkowski, Encyclopedia of Chart Patterns", mechanism: "Bruch der Folge fallender Hochs signalisiert Ende des Verkaufsdrucks"}
+- {id: trendline_break_down, name: Bruch der Aufwärtstrendlinie, family: Trendlinie, source: "Edwards & Magee; Bulkowski", mechanism: "Bruch der Folge steigender Tiefs signalisiert Ende der Nachfrage"}
+- {id: double_top, name: Doppeltop, family: Formation, source: "Bulkowski (Erfolgsquoten); Lo, Mamaysky & Wang (2000) Foundations of Technical Analysis, J. Finance", mechanism: "Zweimal gescheitertes Hoch, Bruch der Nackenlinie"}
+- {id: double_bottom, name: Doppelboden, family: Formation, source: "Bulkowski; Lo, Mamaysky & Wang (2000)", mechanism: "Zweimal gehaltenes Tief, Ausbruch über die Nackenlinie"}
+- {id: head_shoulders, name: Kopf-Schulter, family: Formation, source: "Osler & Chang (1995) Head and Shoulders: Not Just a Flaky Pattern, NY Fed; Lo, Mamaysky & Wang (2000)", mechanism: "Erschöpfung des Aufwärtstrends, Bruch der Nackenlinie"}
+- {id: inv_head_shoulders, name: Inverse Kopf-Schulter, family: Formation, source: "Osler & Chang (1995); Bulkowski", mechanism: "Erschöpfung des Abwärtstrends, Ausbruch über die Nackenlinie"}
+- {id: asc_triangle_up, name: Aufsteigendes Dreieck ↑, family: Formation, source: "Bulkowski", mechanism: "Steigende Tiefs gegen flachen Widerstand, Ausbruch"}
+- {id: asc_triangle_down, name: Aufsteigendes Dreieck ↓, family: Formation, source: "Bulkowski", mechanism: "Fehlausbruch nach unten"}
+- {id: desc_triangle_down, name: Absteigendes Dreieck ↓, family: Formation, source: "Bulkowski", mechanism: "Fallende Hochs gegen flache Unterstützung, Bruch"}
+- {id: desc_triangle_up, name: Absteigendes Dreieck ↑, family: Formation, source: "Bulkowski", mechanism: "Ausbruch gegen die Erwartung"}
+- {id: sym_triangle_up, name: Symmetrisches Dreieck ↑, family: Formation, source: "Bulkowski; Lo, Mamaysky & Wang (2000)", mechanism: "Volatilitätskontraktion, Ausbruch nach oben"}
+- {id: sym_triangle_down, name: Symmetrisches Dreieck ↓, family: Formation, source: "Bulkowski", mechanism: "Volatilitätskontraktion, Ausbruch nach unten"}
+- {id: bull_flag, name: Bullische Flagge, family: Formation, source: "Bulkowski; Leigh, Modani, Purvis & Roberts (2002) Stock market trading rule discovery using technical charting heuristics", mechanism: "Impuls, kurze Konsolidierung, Fortsetzung"}
+- {id: bear_flag, name: Bärische Flagge, family: Formation, source: "Bulkowski", mechanism: "Impuls abwärts, Konsolidierung, Fortsetzung"}
+- {id: bull_engulfing, name: Bullish Engulfing, family: Kerze, source: "Nison, Japanese Candlestick Charting Techniques; Caginalp & Laurent (1998); Marshall, Young & Rose (2006) J. Banking & Finance (kein Edge im DJIA)", mechanism: "Umkehr nach Rückgang"}
+- {id: bear_engulfing, name: Bearish Engulfing, family: Kerze, source: "Nison; Marshall, Young & Rose (2006)", mechanism: "Umkehr nach Anstieg"}
+- {id: hammer, name: Hammer, family: Kerze, source: "Nison; Lu, Shiu & Liu (2012)", mechanism: "Abverkauf wird im Tagesverlauf zurückgekauft"}
+- {id: shooting_star, name: Shooting Star, family: Kerze, source: "Nison", mechanism: "Anstieg wird im Tagesverlauf abverkauft"}
+- {id: morning_star, name: Morning Star, family: Kerze, source: "Nison; Caginalp & Laurent (1998)", mechanism: "Dreikerzen-Umkehr unten"}
+- {id: evening_star, name: Evening Star, family: Kerze, source: "Nison; Caginalp & Laurent (1998)", mechanism: "Dreikerzen-Umkehr oben"}
+- {id: gap_up_fade, name: Gap up – Fill erwartet, family: Gap, source: "Praxis „Gaps get filled“; Plastun et al. (2019) Price gap anomaly in the US stock market", mechanism: "Übertreibung zur Eröffnung wird abgebaut"}
+- {id: gap_down_fade, name: Gap down – Fill erwartet, family: Gap, source: "Plastun et al. (2019)", mechanism: "Übertreibung zur Eröffnung wird abgebaut"}
+- {id: sweep_low, name: Liquidity Sweep unter Swing-Tief, family: Liquidität, source: "Smart-Money-/ICT-Praxis; Osler (2003) Currency Orders and Exchange Rate Dynamics, J. Finance (Stop-Cluster an runden/markanten Marken)", mechanism: "Stops unter dem Tief werden ausgelöst, große Käufer nutzen die Liquidität"}
+- {id: sweep_high, name: Liquidity Sweep über Swing-Hoch, family: Liquidität, source: "ICT-Praxis; Osler (2003)", mechanism: "Stops über dem Hoch werden ausgelöst, große Verkäufer nutzen die Liquidität"}
+- {id: demand_zone, name: Nachfragezone (Rücktest), family: Angebot/Nachfrage, source: "Supply-&-Demand-Praxis (Sam Seiden)", mechanism: "Unerfüllte Kauforders am Ursprung eines Impulses"}
+- {id: supply_zone, name: Angebotszone (Rücktest), family: Angebot/Nachfrage, source: "Supply-&-Demand-Praxis (Sam Seiden)", mechanism: "Unerfüllte Verkaufsorders am Ursprung eines Impulses"}
+- {id: fvg_bull, name: Fair Value Gap bullisch (Rücktest), family: Angebot/Nachfrage, source: "ICT-Praxis (Imbalance)", mechanism: "Ungleichgewicht wird beim Rücklauf gefüllt, dann Fortsetzung"}
+- {id: fvg_bear, name: Fair Value Gap bärisch (Rücktest), family: Angebot/Nachfrage, source: "ICT-Praxis (Imbalance)", mechanism: "Ungleichgewicht wird beim Rücklauf gefüllt, dann Fortsetzung"}
+- {id: high52_breakout, name: 52-Wochen-Hoch, family: Ausbruch, source: "George & Hwang (2004) The 52-Week High and Momentum Investing, J. Finance", mechanism: "Anker-Effekt: Anleger reagieren zu langsam auf neue Hochs"}
+- {id: range_breakout_up, name: Range-Ausbruch ↑, family: Ausbruch, source: "Donchian/Turtle-Regeln; Brock, Lakonishok & LeBaron (1992) J. Finance", mechanism: "Ausbruch aus enger Spanne"}
+- {id: range_breakout_down, name: Range-Ausbruch ↓, family: Ausbruch, source: "Brock, Lakonishok & LeBaron (1992)", mechanism: "Bruch aus enger Spanne"}
+- {id: nr7_up, name: NR7-Ausbruch ↑, family: Ausbruch, source: "Crabel (1990) Day Trading with Short Term Price Patterns and Opening Range Breakout; Fisher (2002) The Logical Trader", mechanism: "Engste Spanne seit 7 Tagen = Volatilitätskontraktion; Ausbruch über das Hoch leitet Expansion ein", added: 2026-11-24}
+- {id: nr7_down, name: NR7-Ausbruch ↓, family: Ausbruch, source: "Crabel (1990); Fisher (2002)", mechanism: "Volatilitätskontraktion, Bruch unter das Tief leitet Expansion nach unten ein", added: 2026-11-24}

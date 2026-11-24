@@ -8,7 +8,8 @@ import pandas as pd
 import yaml
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-D = os.environ.get("CHAIN_DATA", os.path.join(ROOT, "chain_data"))
+_SIB = os.path.join(os.path.dirname(ROOT), "mark-data", "chain_data")   # Daten-Agent (öffentliches Repo mark-data)
+D = os.environ.get("CHAIN_DATA") or (_SIB if os.path.isdir(_SIB) else os.path.join(ROOT, "chain_data"))
 LAB = os.environ.get("CHAIN_LAB", os.path.join(ROOT, "chain_lab"))
 CFG = yaml.safe_load(open(os.path.join(ROOT, "chain", "config.yaml")))
 ETFS = set(CFG["universe"]["etfs"])

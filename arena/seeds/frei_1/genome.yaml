@@ -1,0 +1,10 @@
+name: Trendfolger
+idee: Aktien long im intakten Aufwärtstrend (Kurs > SMA50 > SMA200) mit bestem risikobereinigtem Momentum
+pause_in: [Crash/Stress, Bärenmarkt]
+mom_days: 60
+new_per_day: 1
+max_open: 5
+stop_vol_mult: 1.5
+risk: 0.05
+max_days: 30
+changes: []

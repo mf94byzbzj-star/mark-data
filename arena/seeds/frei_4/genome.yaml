@@ -1,0 +1,8 @@
+name: Insider & Aufmerksamkeit
+idee: Aktien mit aktiven Insider-Käufen kaufen (Cluster, opportunistisch, CEO/CFO), Google-Trends-Sprung erhöht die Größe
+buy_signals: [I2, I3, I4]
+short_sells: false
+risk: 0.04
+max_days: 40
+new_per_day: 2
+changes: []

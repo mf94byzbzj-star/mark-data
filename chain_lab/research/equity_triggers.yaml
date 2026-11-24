@@ -1,0 +1,38 @@
+# Agent 5 – Aktien-Signale aus Optionsdaten (für reine Long/Short-Trades ohne Hebel)
+# direction: long / short. hold: Haltedauer in Handelstagen (5, 10 oder 20).
+- id: E01
+  name: Steiler Put-Skew → schwächere Aktie
+  direction: short
+  hold: 20
+  when: "skew_z >= 1.5 and is_etf == 0"
+  source: "Xing, Zhang & Zhao (2010), JFQA – Smirk sagt Folgerenditen voraus"
+- id: E02
+  name: Niedrige IV im Aufwärtstrend → Trend hält
+  direction: long
+  hold: 20
+  when: "iv_rank <= 0.2 and dist200 > 0 and ret20 > 0"
+  source: "Low-Volatility-/Momentum-Literatur; Moreira & Muir (2017) 'Volatility-Managed Portfolios'"
+- id: E03
+  name: Panik im Aufwärtstrend → Erholung
+  direction: long
+  hold: 10
+  when: "ivrv >= 1.5 and rsi2 <= 10 and dist200 > 0"
+  source: "Connors (RSI(2)); Nagel (2012) 'Evaporating Liquidity' – Liquiditätsprämie nach Stress"
+- id: E04
+  name: Invertierte Term-Structure im Abwärtstrend → weitere Schwäche
+  direction: short
+  hold: 10
+  when: "slope < -0.05 and e_in_f != 1 and dist200 < 0"
+  source: "Vasquez (2017); Johnson (2017) 'Risk Premia and the VIX Term Structure'"
+- id: E05
+  name: Vola-Crush im Aufwärtstrend → Fortsetzung
+  direction: long
+  hold: 10
+  when: "iv_chg5 <= -0.03 and dist50 > 0"
+  source: "Bollerslev, Tauchen & Zhou (2009) – fallende Varianzprämie begleitet steigende Kurse"
+- id: E06
+  name: Hohe Call-Nachfrage (flacher Skew) mit Momentum → Long
+  direction: long
+  hold: 20
+  when: "skew_z <= -1.5 and ret20 > 0 and is_etf == 0"
+  source: "Cremers & Weinbaum (2010) 'Deviations from Put-Call Parity and Stock Return Predictability'; An et al. (2014)"

@@ -1,0 +1,83 @@
+# Supervisor – Optimierungsvorschläge (Spiegel der Freigabe-Datenbank im Dashboard)
+# Status: offen → freigegeben/abgelehnt/zurückgestellt (durch Markus) → umgesetzt (durch den Supervisor, mit Ergebnis)
+# Nur „freigegeben“ wird umgesetzt. Fehlerbehebungen (Absturz, falsche Rechnung, Datenfehler) sind keine Vorschläge,
+# sie werden sofort behoben und im Agenten-Log dokumentiert.
+
+- id: P001
+  created: "2026-11-23"
+  agent: Supervisor
+  title: Kandidaten-Regel verschärfen
+  problem: "Ein Trigger wird schon ab Out-of-Sample t ≥ 1 als Kandidat mit halber Größe gehandelt. Aktuell betrifft das T05 (Put Credit Spread bei IV-Rang ≥ 0,3 im Aufwärtstrend): Ø +3,0 % je Trade, t = 1,03, aber nur +0,9 Prozentpunkte besser als derselbe Spread ohne Trigger. Ein t von 1 ist statistisch kaum von Zufall zu unterscheiden."
+  change: "Kandidat nur noch bei OOS t ≥ 1,5 UND Vorsprung gegenüber der Strategie ohne Trigger > 0. Darunter Status „beobachten“ (wird angezeigt, aber nicht gehandelt)."
+  expected: "Weniger Fehlsignale; Trades nur, wenn der Trigger selbst einen messbaren Mehrwert bringt."
+  evidence: "chain_lab/out/a1_triggers.json vom 23.11.2026 (Historie ab 01.12.2025)"
+  risk: "Weniger Trade-Ideen, solange die Historie kurz ist."
+  status: umgesetzt
+  decided_at: "2026-11-23"
+  comment: ""
+  result: "Umgesetzt 24.11.2026: chain/core/stats.py verdict() – Kandidat nur bei OOS t ≥ 1,5 (config research.cand_t) und OOS Ø > Strategie ohne Trigger; sonst bei t ≥ 1 Status „beobachten“ (kein Trade). Gilt auch für Aktien-Signale (Agent 5) und Ereignisstudien (Agent 10/11). Vorher (alte Regel, heutige Daten): 4 Kandidaten (T03, T07, T05 t = 1,02, T12 t = 1,40). Nachher: 2 Kandidaten (T03 t = 3,25, T07 t = 2,46); T05 und T12 „beobachten“."
+
+- id: P002
+  created: "2026-11-23"
+  agent: Supervisor
+  title: Backtest auf die tatsächlich gehandelte Struktur abstimmen
+  problem: "Live (Agent 3) setzt Short-Strikes an die Gamma-Walls und verengt die Flügel, damit das Risiko je Kontrakt ins 2-%-Budget passt (z. B. AAPL 330/320 statt 325/300). Der Backtest rechnet dagegen mit 25/10-Delta-Spreads. Die Backtest-Kennzahlen beschreiben also nicht exakt den vorgeschlagenen Trade."
+  change: "Zusätzliche Backtest-Varianten mit Flügelbreite nach Risikobudget (ca. 1,5–3 % des Kurses) für Put/Call Credit Spreads, Iron Condor und Iron Butterfly; Live nutzt die Kennzahlen der passenden Variante."
+  expected: "Erwartungswert, Trefferquote und Positionsgröße passen zum echten Trade."
+  evidence: "Supervisor-Prüfung 23.11.2026: Flügelverengung bei AAPL, MRNA, BLK, MSTR"
+  risk: "Mehr Varianten = mehr Mehrfachtests; wird über die Benjamini-Hochberg-Korrektur abgefangen."
+  status: umgesetzt
+  decided_at: "2026-11-23"
+  comment: ""
+  result: "Umgesetzt 24.11.2026: 8 Backtest-Varianten mit Flügelbreite 1,5 % bzw. 3 % des Kurses (pcs/ccs/ic/ifly _w15/_w30, chain/core/backtest.py). Agent 1 rechnet jeden Trigger zusätzlich auf den Varianten (Feld variants), Agent 3 übernimmt die Kennzahlen der Variante mit der nächstliegenden Live-Flügelbreite (≤ 4,5 %). Befund: schmale Flügel sind deutlich schlechter – T05 pcs OOS Ø +1,7 % je Risiko vs. pcs_w15 −8,7 % (t −4,4), pcs_w30 −2,3 %; T04 ic +0,7 % vs. ic_w15 −7,9 %; T08 ifly +1,0 % vs. ifly_w15 −98 %, ifly_w30 −41 % (Kosten im Median 53 % bzw. 32 % des Risikos). Verengte Live-Trades werden damit wegen negativem Erwartungswert abgelehnt."
+
+- id: P003
+  created: "2026-11-23"
+  agent: Supervisor
+  title: Eigenen Track-Record führen (Papier-Trades)
+  problem: "Die Gamma-basierte Strike-Wahl, die Chart-Prüfung (Agent 4) und der Regime-Filter (Agent 5) lassen sich nicht historisch backtesten, weil es kein historisches Open Interest gibt. Ob sie helfen, ist unbekannt."
+  change: "Jeder Vorschlag (auch abgelehnte) wird mit Fill-Preis gespeichert und bis zum Ausstieg nach denselben Regeln wie im Backtest bewertet. Der Supervisor vergleicht monatlich: freigegebene vs. abgelehnte Trades, Gamma-Strike vs. Delta-Strike, Live-Ergebnis vs. Backtest-Erwartung. Neuer Reiter-Abschnitt „Track-Record“."
+  expected: "Nach einigen Monaten belastbare Aussage, welche Prüfungen Geld bringen; Grundlage für weitere Optimierungen."
+  evidence: "Supervisor-Prüfung 23.11.2026"
+  risk: "Keiner für das Modell; nur zusätzlicher Speicher im Repo."
+  status: umgesetzt
+  decided_at: "2026-11-23"
+  comment: "Im Chat freigegeben"
+  result: "Agent 7 (chain/stages/a7_positions.py) eröffnet jeden Kandidaten mit Strikes als Papier-Trade zum Fill-Preis und schließt nach Backtest-Regeln. Auswertung nach Urteil (freigegeben/Vorsicht/abgelehnt), Gamma- vs. Delta-Strike und Live vs. Backtest-Erwartung im Reiter Positionen. Start 20.11.2026 mit 8 Papier-Trades."
+
+- id: P004
+  created: "2026-11-23"
+  agent: Supervisor
+  title: Mindestertrag für Chartmuster-Kandidaten
+  problem: "Agent 8 stuft Kopf-Schulter als Kandidat ein, weil es deutlich besser abschneidet als ein Short-Einstieg ohne Muster (+0,16 R, t = 2,0). Absolut bringt es aber nur Ø +0,01 R je Trade – nach Schwankung praktisch null. Daraus entstehen Aktien-Ideen (heute SLB short) mit kaum positivem Erwartungswert."
+  change: "Chartmuster gelten erst als handelbarer Kandidat, wenn zusätzlich zum Mehrwert der absolute Ø-Ertrag Out-of-Sample ≥ +0,10 R je Trade ist. Darunter nur Anzeige im Chart."
+  expected: "Weniger Aktien-Ideen mit Erwartungswert nahe null; Muster wirken als Kontext, nicht als eigenes Signal."
+  evidence: "chain_lab/out/a8_patterns.json vom 23.11.2026 (Kopf-Schulter OOS n = 305, Ø +0,011 R)"
+  risk: "Fast keine Muster-Signale mehr, solange kein Muster ≥ 0,10 R schafft."
+  status: umgesetzt
+  decided_at: "2026-11-23"
+  comment: ""
+  result: "Umgesetzt 24.11.2026: chain/stages/a8_patterns.py – bestätigt/Kandidat nur bei OOS Ø ≥ +0,10 R (config research.pattern_min_R), sonst Status „beobachten“ (nur Chart). Vorher: Kopf-Schulter Kandidat (OOS n = 305, Ø +0,011 R). Nachher: Kopf-Schulter „beobachten“; Trendlinien-Ausbruch ↑ bleibt Kandidat (Ø +0,182 R)."
+
+- id: P005
+  created: "2026-11-24"
+  agent: Supervisor
+  title: Ticker-Regeln (Agent 2) gegen Überanpassung begrenzen
+  problem: "Agent 2 hängt an jeden Trigger bis zu 8 datengetriebene Zusatzbedingungen mit krummen Schwellen (z. B. T03: vix ≤ 20,95, rsi14 > 50,82, atr_pct ≤ 0,0252, iv30 ≤ 0,296, iv_rank ≤ 0,35 …). Die finale Regel hat Out-of-Sample nur n = 25 (T03) bzw. n = 28 (T07) Trades – weit unter der eigenen Mindestzahl von 40. Die gemessenen OOS-Werte (T03 Ø +78,9 %) sind dadurch kaum belastbar, und heute feuert wegen vix ≤ 20,95 kein einziger Trade."
+  change: "Höchstens 2 datengetriebene Zusatzbedingungen je Trigger (Literatur-Regeln unbegrenzt); finale Regel nur übernehmen, wenn OOS n ≥ 40 und OOS Ø ≥ Trigger ohne Zusatzregel; sonst Trigger ohne Datenregeln verwenden."
+  expected: "Robustere Ticker-Auswahl, weniger Zufallstreffer; Trades wieder möglich, wenn der Trigger selbst feuert."
+  evidence: "chain_lab/out/a2_tickers.json vom 24.11.2026 (T03: 9 Bedingungen, OOS n = 25; T07: 5 Bedingungen, OOS n = 28)"
+  risk: "Etwas schwächere In-Sample-Kennzahlen; mehr Trades in Regimen, die die Datenregel bisher ausgeschlossen hat."
+  status: offen
+
+- id: P006
+  created: "2026-11-24"
+  agent: Supervisor
+  title: Ausstiegs-Spreads im Kostenmodell begrenzen
+  problem: "Der Backtest begrenzt den ATM-Spread nur beim Einstieg (25 %), beim Ausstieg nicht. Bei Iron Butterflies mit schmalen Flügeln kosten die Ausstiege dadurch teils ein Vielfaches des Risikos (schlechtester Trade KRE 22.01.2024: Kosten 18× Risiko bei positivem Brutto-Ergebnis). ifly_w15: Kosten im Median 53 % des Risikos, 22,4 % der Trades mit Kosten > 100 % des Risikos; ifly_w30: 11,0 %."
+  change: "Ausstiegs-Spread je Leg auf den Einstiegs-Spread bzw. höchstens 25 % des ATM-Preises kappen (wie beim Einstieg); Stresstest mit 3× Kosten bleibt."
+  expected: "Realistischere Kosten bei Gewinnmitnahmen in illiquiden Tagen; Kennzahlen der Flügel-Varianten (P002) werden belastbar."
+  evidence: "chain_lab/cache/trades.pkl vom 24.11.2026 (Spalte cost_ror je Strategie), chain_lab/out/a0_audit.json"
+  risk: "Kosten könnten an echten Stresstagen unterschätzt werden; der 3×-Kosten-Stresstest fängt das teilweise ab."
+  status: offen
+

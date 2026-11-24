@@ -1,0 +1,55 @@
+updated: '2026-11-24'
+weights:
+  liq_ok:
+    w: 1
+    prior: 1
+  trig_A:
+    w: 2
+    prior: 2
+  trig_B:
+    w: 0
+    prior: 0
+  gex_neg_sv:
+    w: -1
+    prior: -1
+  gex_pos_sv:
+    w: 1
+    prior: 1
+  pwall_ok:
+    w: 0.5
+    prior: 0.5
+  pwall_above:
+    w: 0
+    prior: 0
+  cwall_ok:
+    w: 0.5
+    prior: 0.5
+  cwall_below:
+    w: 0
+    prior: 0
+  gex_neg_lv:
+    w: 1
+    prior: 1
+  gex_pos_lv:
+    w: 0
+    prior: 0
+  event_warn:
+    w: -1
+    prior: -1
+  event_in_life:
+    w: 0
+    prior: 0
+  event_near:
+    w: 0
+    prior: 0
+  sec_confirm:
+    w: 1
+    prior: 1
+  sec_against:
+    w: -1
+    prior: -1
+  earn_in:
+    w: -2
+    prior: -2
+equity_sources: {}
+history: []
