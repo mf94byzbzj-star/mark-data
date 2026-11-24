@@ -1,8 +1,25 @@
-name: Insider & Aufmerksamkeit
-idee: Aktien mit aktiven Insider-Käufen kaufen (Cluster, opportunistisch, CEO/CFO), Google-Trends-Sprung erhöht die Größe
-buy_signals: [I2, I3, I4]
+name: Insider – frische Käufe
+idee: Aktien mit aktiven Insider-Käufen kaufen (Cluster, opportunistisch, CEO/CFO),
+  Google-Trends-Sprung erhöht die Größe
+buy_signals:
+- I2
+- I3
+- I4
 short_sells: false
 risk: 0.04
 max_days: 40
 new_per_day: 2
-changes: []
+changes:
+- datum: '2026-11-24'
+  was: Nur Insider-Signale der letzten 14 Tage
+  warum: Meldungen vom 04.11. (INTC) sind schon eingepreist; Insider-Effekt wirkt
+    v. a. in den ersten Wochen
+- datum: '2026-11-24'
+  was: Kein Kauf, wenn Kurs > 8 % unter SMA50
+  warum: Nicht ins fallende Messer greifen – Korrektur-Regime
+- datum: '2026-11-24'
+  was: max_open 6
+  warum: Positionslimit fehlte (Risiko 4–6 % je Trade)
+max_age_days: 14
+min_vs_sma50: 0.92
+max_open: 6

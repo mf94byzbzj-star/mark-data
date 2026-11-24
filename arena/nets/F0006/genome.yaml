@@ -1,10 +1,32 @@
-name: Trendfolger
-idee: Aktien long im intakten Aufwärtstrend (Kurs > SMA50 > SMA200) mit bestem risikobereinigtem Momentum
-pause_in: [Crash/Stress, Bärenmarkt]
+name: Trendfolger mit Marktfilter
+idee: Aktien long im intakten Aufwärtstrend (Kurs > SMA50 > SMA200) mit bestem risikobereinigtem
+  Momentum
+pause_in:
+- Crash/Stress
+- Bärenmarkt
 mom_days: 60
 new_per_day: 1
 max_open: 5
 stop_vol_mult: 1.5
-risk: 0.05
-max_days: 30
-changes: []
+risk: 0.04
+max_days: 40
+changes:
+- datum: '2026-11-24'
+  was: 'Marktfilter: keine Neukäufe, wenn SPY unter SMA200 (min_spy_dist200 0)'
+  warum: Trendfolge hat im Korrektur-Regime (SPY −1,1 % unter SMA200, Breite 43 %)
+    schlechte Trefferquote; Fehlausbrüche vermeiden
+- datum: '2026-11-24'
+  was: Relative Stärke zu SPY verlangt (min_rel_mom 0)
+  warum: Nur echte Leader kaufen, nicht Werte, die bloß mit dem Markt steigen
+- datum: '2026-11-24'
+  was: 'Trendbruch-Ausstieg: Close-Order bei Schluss < SMA50'
+  warum: Bisher nur fester Stop/Ziel/Zeit – Trendfolger sollen Verlierer früh schneiden
+    und Gewinner laufen lassen
+- datum: '2026-11-24'
+  was: risk 0,05→0,04, Ziel 2R→3R, max_days 30→40
+  warum: Kleineres Einzelrisiko bei 5 Positionen (max 20 % Risiko); asymmetrische
+    Auszahlung passt zur Trendlogik
+min_spy_dist200: 0.0
+min_rel_mom: 0.0
+exit_below_sma50: 0.0
+target_r: 3

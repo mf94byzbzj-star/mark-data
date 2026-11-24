@@ -1,13 +1,15 @@
-name: Klon der Original-Kette
-idee: Regeln von Markus' Kette (Tag 1); Supervisor optimiert eigenständig
-risk_per_trade: 0.1
+name: Long-Vola im Stress
+idee: Long-Vola im Stress – Regeln von Markus' Kette (Tag 1); Supervisor optimiert
+  eigenständig
+risk_per_trade: 0.04
 trigger_status:
 - bestätigt
 - Kandidat
-use_final_gates: true
+- beobachten
+use_final_gates: false
 final_ok:
 - freigegeben
-min_score: 2
+min_score: -3
 weights:
   liq_ok: 1
   trig_A: 2
@@ -26,14 +28,47 @@ weights:
   sec_confirm: 1
   sec_against: -1
   earn_in: -2
-strategies_off: []
-triggers_off: []
-max_new_per_day: 3
-max_open_options: 8
-trade_equity: true
+strategies_off:
+- pcs
+- ccs
+- ic
+- ifly
+- pcs_w15
+- ccs_w15
+- ic_w15
+- ifly_w15
+- pcs_w30
+- ccs_w30
+- ic_w30
+- ifly_w30
+- earn_ifly
+- bcs
+- bps
+triggers_off:
+- T01
+- T02
+- T09
+- T14
+max_new_per_day: 2
+max_open_options: 6
+trade_equity: false
 equity_risk: 0.03
 equity_days: 20
 max_open_equity: 5
 regime_block: []
 exit_override: null
-changes: []
+changes:
+- datum: '2026-11-24'
+  was: Nur Long-Vola (lstrad T07, dcal T03)
+  warum: Beide mit positivem OOS (t 2,46 / 3,25) und robust unter Stress (oos_stress
+    lstrad ≈ 0); passt zu Korrektur mit hohem VIX
+- datum: '2026-11-24'
+  was: Final-Gates aus, min_score −3
+  warum: 'DAL-Straddle (Score −2, abgelehnt) wäre sonst gesperrt; Hypothese: Kettengates
+    sind für Long-Vola zu streng'
+- datum: '2026-11-24'
+  was: risk 0,04, max_open 6
+  warum: Prämie verfällt bei ruhigem Markt – kleine Einzelrisiken
+- datum: '2026-11-24'
+  was: Aktienteil aus
+  warum: Saubere Messung der Long-Vola-Hypothese

@@ -1,9 +1,31 @@
-name: Prämienverkäufer
+name: Prämienverkäufer, regimebewusst
 idee: Short-Vola mit begrenztem Risiko nur bei positivem Gamma und positivem Backtest-Erwartungswert
-pause_in: [Crash/Stress]
+pause_in:
+- Crash/Stress
+- Bärenmarkt
 min_oos: 0.0
 need_pos_gamma: true
 new_per_day: 2
 max_open: 6
-risk: 0.05
-changes: []
+risk: 0.04
+changes:
+- datum: '2026-11-24'
+  was: 'Pause auch im Bärenmarkt; Korrektur: halbe Größe, keine bullischen Strukturen'
+  warum: oos_stress aller Short-Vola-Trigger negativ; a5 rät in Korrektur zu halber
+    Größe bei bullischer Short-Vola
+- datum: '2026-11-24'
+  was: Mindest-t 1,0 und Trigger-Status nicht „verworfen“
+  warum: Bisher reichte oos_mean > 0 – T04/T08/T15 haben t < 0,7 und sind verworfen
+    (Rauschen)
+- datum: '2026-11-24'
+  was: Rangfolge zusätzlich × POP
+  warum: Credit-Strukturen mit höherer Gewinnwahrscheinlichkeit bevorzugen
+- datum: '2026-11-24'
+  was: risk 0,05→0,04
+  warum: Seltene große Verluste der Short-Vola begrenzen
+min_t: 1.0
+ok_status:
+- bestätigt
+- Kandidat
+- beobachten
+korrektur_scale: 0.5

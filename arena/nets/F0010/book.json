@@ -1,13 +1,66 @@
 {
- "cash": 100000,
- "open": [],
+ "cash": 75055.01362,
+ "open": [
+  {
+   "id": "F0010-2026-11-23-XLV-long",
+   "kind": "equity",
+   "ticker": "XLV",
+   "dir": "long",
+   "opened": "2026-11-23",
+   "shares": 104,
+   "entry": 179.50970999999998,
+   "stop": 150.67,
+   "target": null,
+   "max_days": 20,
+   "mark": 179.42
+  },
+  {
+   "id": "F0010-2026-11-23-XLP-long",
+   "kind": "equity",
+   "ticker": "XLP",
+   "dir": "long",
+   "opened": "2026-11-23",
+   "shares": 226,
+   "entry": 90.42518999999999,
+   "stop": 77.13,
+   "target": null,
+   "max_days": 20,
+   "mark": 90.38
+  },
+  {
+   "id": "F0010-2026-11-23-SMH-short",
+   "kind": "equity",
+   "ticker": "SMH",
+   "dir": "short",
+   "opened": "2026-11-23",
+   "shares": 10,
+   "entry": 459.94991000000005,
+   "stop": 759.22,
+   "target": null,
+   "max_days": 20,
+   "mark": 460.18
+  },
+  {
+   "id": "F0010-2026-11-23-XBI-short",
+   "kind": "equity",
+   "ticker": "XBI",
+   "dir": "short",
+   "opened": "2026-11-23",
+   "shares": 65,
+   "entry": 147.08642,
+   "stop": 192.84,
+   "target": null,
+   "max_days": 20,
+   "mark": 147.16
+  }
+ ],
  "closed": [],
  "curve": [
   {
    "day": "2026-11-23",
-   "equity": 100000,
-   "risk": 0.0
+   "equity": 99973.37,
+   "risk": 11970.73
   }
  ],
- "n_orders": 0
+ "n_orders": 4
 }

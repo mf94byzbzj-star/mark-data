@@ -1,13 +1,27 @@
 {
- "cash": 100000,
- "open": [],
+ "cash": 91456.07017,
+ "open": [
+  {
+   "id": "K0005-2026-11-23-MRVL-long",
+   "kind": "equity",
+   "ticker": "MRVL",
+   "dir": "long",
+   "opened": "2026-11-23",
+   "shares": 59,
+   "entry": 144.81237,
+   "stop": 102.78,
+   "target": 228.66,
+   "max_days": 20,
+   "mark": 144.74
+  }
+ ],
  "closed": [],
  "curve": [
   {
    "day": "2026-11-23",
-   "equity": 100000,
-   "risk": 0.0
+   "equity": 99995.73,
+   "risk": 2479.91
   }
  ],
- "n_orders": 0
+ "n_orders": 1
 }

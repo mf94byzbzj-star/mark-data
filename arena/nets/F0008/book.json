@@ -1,13 +1,40 @@
 {
- "cash": 100000,
- "open": [],
+ "cash": 42919.684105,
+ "open": [
+  {
+   "id": "F0008-2026-11-23-COF-long",
+   "kind": "equity",
+   "ticker": "COF",
+   "dir": "long",
+   "opened": "2026-11-23",
+   "shares": 189,
+   "entry": 180.10000499999998,
+   "stop": 158.85,
+   "target": 211.75,
+   "max_days": 15,
+   "mark": 180.01
+  },
+  {
+   "id": "F0008-2026-11-23-OXY-long",
+   "kind": "equity",
+   "ticker": "OXY",
+   "dir": "long",
+   "opened": "2026-11-23",
+   "shares": 437,
+   "entry": 52.72635,
+   "stop": 43.56,
+   "target": 66.41,
+   "max_days": 15,
+   "mark": 52.7
+  }
+ ],
  "closed": [],
  "curve": [
   {
    "day": "2026-11-23",
-   "equity": 100000,
-   "risk": 0.0
+   "equity": 99971.47,
+   "risk": 8021.95
   }
  ],
- "n_orders": 0
+ "n_orders": 2
 }

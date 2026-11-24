@@ -1,13 +1,27 @@
 {
- "cash": 100000,
- "open": [],
+ "cash": 274.1419900000037,
+ "open": [
+  {
+   "id": "S0013-2026-11-23-SPY-long",
+   "kind": "equity",
+   "ticker": "SPY",
+   "dir": "long",
+   "opened": "2026-11-23",
+   "shares": 138,
+   "entry": 722.6511449999999,
+   "stop": 7.2229,
+   "target": null,
+   "max_days": 10000,
+   "mark": 722.29
+  }
+ ],
  "closed": [],
  "curve": [
   {
    "day": "2026-11-23",
-   "equity": 100000,
-   "risk": 0.0
+   "equity": 99950.16,
+   "risk": 98729.1
   }
  ],
- "n_orders": 0
+ "n_orders": 1
 }

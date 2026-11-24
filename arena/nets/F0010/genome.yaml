@@ -1,8 +1,18 @@
-name: Sektor-Rotation
-idee: Long die 2 stärksten, short die 2 schwächsten Sektor-ETFs (3 Monate Momentum), alle 20 Tage neu
+name: Duales Sektor-Momentum
+idee: Long die 2 stärksten, short die 2 schwächsten Sektor-ETFs (3 Monate Momentum),
+  alle 20 Tage neu
 lookback: 63
 n_each: 2
 hold: 20
 short_weak: true
 risk: 0.03
-changes: []
+changes:
+- datum: '2026-11-24'
+  was: 'Absolut-Momentum-Filter: long nur bei positiver, short nur bei negativer 3-Monats-Rendite'
+  warum: Reine Relativstärke kauft in Korrekturen auch fallende Sektoren bzw. shortet
+    steigende; Dual Momentum reduziert Drawdowns
+- datum: '2026-11-24'
+  was: Sonst Cash statt Zwangsposition
+  warum: Score = Rendite/Drawdown belohnt Nicht-Handeln in schlechten Phasen
+min_abs_long: 0.0
+max_abs_short: 0.0

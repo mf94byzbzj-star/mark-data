@@ -1,13 +1,15 @@
-name: Klon der Original-Kette
-idee: Regeln von Markus' Kette (Tag 1); Supervisor optimiert eigenständig
-risk_per_trade: 0.1
+name: Prämie nur bei Rückenwind
+idee: Prämie nur bei Rückenwind – Regeln von Markus' Kette (Tag 1); Supervisor optimiert
+  eigenständig
+risk_per_trade: 0.04
 trigger_status:
 - bestätigt
 - Kandidat
-use_final_gates: true
+- beobachten
+use_final_gates: false
 final_ok:
 - freigegeben
-min_score: 2
+min_score: 0
 weights:
   liq_ok: 1
   trig_A: 2
@@ -26,14 +28,47 @@ weights:
   sec_confirm: 1
   sec_against: -1
   earn_in: -2
-strategies_off: []
-triggers_off: []
-max_new_per_day: 3
-max_open_options: 8
-trade_equity: true
+strategies_off:
+- cal_atm
+- cal_put
+- dcal
+- bcs
+- bps
+- lstrad
+- pre_earn
+triggers_off:
+- T04
+- T06
+- T08
+- T10
+- T15
+max_new_per_day: 2
+max_open_options: 6
+trade_equity: false
 equity_risk: 0.03
 equity_days: 20
 max_open_equity: 5
-regime_block: []
-exit_override: null
-changes: []
+regime_block:
+- Korrektur
+- Bärenmarkt
+- Crash/Stress
+exit_override: tp50
+changes:
+- datum: '2026-11-24'
+  was: Nur Short-Vola (Put-Credit-Spreads T05/T12), Long-Vola aus
+  warum: 'Gegenhypothese zu K0004: Prämie verdienen, aber nur in ruhigen/Bullen-Regimen'
+- datum: '2026-11-24'
+  was: regime_block Korrektur/Bär/Crash
+  warum: Bullische Short-Vola im Korrektur-Regime laut a5 nur halbe Größe; hier ganz
+    gesperrt – wartet auf Regimewechsel
+- datum: '2026-11-24'
+  was: Final-Gates aus, min_score 0
+  warum: Sonst praktisch kein Kandidat; Filter über Trigger-Status und Regime
+- datum: '2026-11-24'
+  was: risk 0,04, exit tp50 erzwungen
+  warum: 'Credit Spreads: kleine Gewinne, seltene große Verluste – Risiko je Trade
+    begrenzen, Gewinn früh sichern'
+- datum: '2026-11-24'
+  was: trigger_status + „beobachten“
+  warum: T05/T12 (pcs) stehen auf „beobachten“ – ohne das würde die Short-Vola-Hypothese
+    nie handeln
