@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+data_synth/
+reports_synth/
+lab/reports/*.html
+chain_lab/cache/

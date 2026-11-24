@@ -1,0 +1,3 @@
+# Einkaufsliste des Daten-Agenten: Netze tragen hier Datenwünsche ein (nie selbst abrufen!).
+# Felder: id, netz, quelle (URL/Beschreibung), zweck, häufigkeit, status (offen|angenommen|abgelehnt), begründung
+[]

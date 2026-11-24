@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Options-Desk Agentenkette</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE work: ein Handelsdesk, dicht, nüchtern, präzise
+   IDEA das Leitstand-Pult eines Optionshändlers: Ampeln, Messstreifen, Tickets
+   PICTURE Trade-Tickets mit großem Auszahlungsprofil (Gewinn/Verlust über Kurs, Walls, Spot)
+   COLOUR Stahlgrau-Pult, Schwarz, Weiß, Alarmrot; Grün nur für Gewinnzonen
+   TYPE Inter Tight 600 Titel + Inter Text
+   LAYOUT oben Befund + Kennzahlen-Streifen, darunter Tickets in zwei Spalten; Telefon: eine Spalte */
+:root{color-scheme:light dark;--bg:light-dark(#d5dbe0,#16191c);--panel:light-dark(#ffffff,#1f2327);--ink:light-dark(#0b0c0d,#eef1f3);--mute:light-dark(#4d565e,#9aa4ad);--line:light-dark(#b9c1c8,#2f353b);--red:#e8251a;--grn:light-dark(#0f7a3d,#3ccf7a);--amb:light-dark(#9a6a00,#f0b429);--blu:light-dark(#1d4ed8,#7aa2ff);--soft:light-dark(#eef1f3,#262b30)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:"Inter Tight",Inter,sans-serif;font-weight:600;letter-spacing:-.02em;line-height:1.08;margin:0}
+h1{font-size:clamp(26px,3.4vw,40px);text-wrap:balance}
+h2{font-size:22px;margin-bottom:12px}
+h3{font-size:17px}
+.wrap{max-width:1280px;margin:0 auto;padding:0 max(16px,3vw)}
+header{background:var(--ink);color:var(--bg)}
+header .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;padding-top:12px;padding-bottom:12px}
+header b{font-family:"Inter Tight",Inter,system-ui,sans-serif;font-size:18px}
+header span{color:color-mix(in srgb,var(--bg) 70%,transparent);font-size:13px}
+nav{display:flex;gap:2px;overflow-x:auto;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+nav a{flex:none;padding:12px 14px;color:var(--mute);text-decoration:none;font-weight:500;border-bottom:3px solid transparent;min-height:44px}
+nav a.on{color:var(--ink);border-color:var(--red)}
+.hero{padding:22px 0 10px;display:grid;gap:16px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5em,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.kpi{background:var(--panel);padding:10px 12px}
+.kpi small{display:block;color:var(--mute);font-size:13px}
+.kpi b{font:600 22px "Inter Tight",Inter,system-ui,sans-serif;white-space:nowrap}
+.kpi i{font-style:normal;font-size:13px;color:var(--mute);margin-left:6px;white-space:nowrap}
+section{display:none;padding:8px 0 40px}
+section.on{display:block}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,560px),1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);padding:16px}
+.tk{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;margin-bottom:8px}
+.tk h3{font-size:24px}
+.chip{display:inline-block;padding:2px 9px;font-size:13px;font-weight:600;border:1px solid currentColor;white-space:nowrap}
+.ok{color:var(--grn)}.warn{color:var(--amb)}.bad{color:var(--red)}.mute{color:var(--mute)}
+.fig{position:relative;height:210px;margin:6px 0 10px}
+.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+.fig.tall{height:300px}.fig.big{height:500px}.grid1{display:grid;gap:16px}.rng{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0 10px}.rng>span{color:var(--mute);font-size:13px;margin-right:4px}.rng button{font:500 14px Inter,sans-serif;min-height:40px;padding:6px 14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}.rng button:disabled{opacity:.5}.take{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin:10px 0}.take label{font-size:13px;color:var(--mute);display:grid;gap:2px}.take input{font:16px Inter;padding:8px;min-height:44px;width:8em;border:1px solid var(--line);background:var(--panel);color:var(--ink)}.take button{font:600 14px Inter;min-height:44px;padding:8px 16px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}.take button:disabled{opacity:.5}.rng button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+svg text{font:12px Inter,sans-serif;fill:var(--mute);paint-order:stroke;stroke:var(--panel);stroke-width:3px}
+.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(7.5em,1fr));gap:6px 12px;margin:8px 0}
+.nums div small{display:block;color:var(--mute);font-size:13px}
+.nums div b{font-weight:600;white-space:nowrap}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{color:var(--mute);font-weight:500;cursor:pointer;user-select:none}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+ul.chk{list-style:none;padding:0;margin:8px 0 0;font-size:14px}
+ul.chk li{padding:3px 0 3px 22px;position:relative}
+ul.chk li::before{content:attr(data-s);position:absolute;left:0;font-weight:700}
+.src{font-size:13px;color:var(--mute)}
+details{margin-top:8px}summary{cursor:pointer;color:var(--blu);min-height:32px}
+.bar{height:8px;background:var(--soft);position:relative}
+.bar i{position:absolute;top:0;bottom:0;background:var(--ink)}
+select{font:16px Inter;padding:8px;min-height:44px;background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+.heat td{text-align:right}
+.empty{padding:24px;text-align:center;color:var(--mute)}
+.note{white-space:pre-wrap;font-size:15px}
+@media(max-width:600px){.fig.big{height:380px}th,td{padding:5px 4px}.tk h3{font-size:20px}.kpi i{display:block;margin:0;white-space:normal}.kpi b{font-size:20px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><b>Options-Desk · Agentenkette</b><span id="meta">lädt …</span></div></header>
+<nav id="nav" class="scroll"></nav>
+<div class="wrap">
+<div class="hero"><h1 id="finding">Daten werden geladen …</h1><div class="kpis" id="kpis"></div></div>
+<section id="ideen"></section><section id="positionen"></section><section id="richtung"></section><section id="markt"></section><section id="strategien"></section><section id="forschung"></section><section id="optimierung"></section>
+<p class="src">Quantitative Analyse aus öffentlichen Daten (DoltHub, Cboe 15 min verzögert, FRED, Yahoo). Keine Anlageberatung.</p>
+</div>
+<script>
+{
+const TABS=[["ideen","Trade-Ideen"],["positionen","Positionen"],["richtung","Richtung & Aktien"],["markt","Markt"],["strategien","Strategien & Backtests"],["forschung","Agenten-Log"],["optimierung","Optimierungsvorschläge Modell"]];
+const $=s=>document.querySelector(s);
+const pct=(x,d=1)=>x==null||isNaN(x)?"–":(x*100).toFixed(d)+" %";
+const sp=(x,d=1)=>x==null||isNaN(x)?"–":(x>0?"+":"")+(x*100).toFixed(d)+" %";
+const num=(x,d=2)=>x==null||isNaN(x)?"–":Number(x).toLocaleString("de-DE",{minimumFractionDigits:d,maximumFractionDigits:d});
+const usd=x=>x==null?"–":Number(x).toLocaleString("de-DE",{maximumFractionDigits:0})+" $";
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const vcls=v=>({"freigegeben":"ok","bestätigt":"ok","passt":"ok","ok":"ok","Vorsicht":"warn","Kandidat":"warn","neutral":"warn","halbe Größe":"warn"}[v]||"bad");
+const BIAS={bull:"bullisch",bear:"bärisch",neutral:"neutral"};
+let D=null;const draws=[];const LIVE=[];let RANGE=126;const MON=["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+function fig(cls,fn){const id="f"+Math.random().toString(36).slice(2);draws.push([id,fn]);return `<div class="fig ${cls||""}"><svg id="${id}"></svg></div>`}
+function mount(){for(const [id,fn] of draws.splice(0)){const s=document.getElementById(id);if(!s)continue;const r=()=>{try{fn(s,s.clientWidth,s.clientHeight)}catch(e){console.log(e)}};LIVE.push(r);const ro=new ResizeObserver(r);ro.observe(s)}}
+window.setRange=n=>setRange(n);
+function setRange(n){RANGE=n;document.querySelectorAll(".rng button").forEach(b=>b.classList.toggle("on",+b.dataset.n===n));LIVE.forEach(f=>f())}
+function rangeBar(){return `<div class="rng"><span>Zeitraum</span>${[[63,"3 Monate"],[126,"6 Monate"],[250,"1 Jahr"]].map(([n,l])=>`<button type="button" data-n="${n}" class="${n===RANGE?"on":""}" onclick="setRange(${n})">${l}</button>`).join("")}<span class="src">Tageskerzen · 1 Kerze = 1 Handelstag</span></div>`}
+function lineChart(s,W,H,series,o={}){
+  const m={l:46,r:o.r??14,t:12,b:24};const all=series.flatMap(x=>x.pts);if(!all.length){s.innerHTML="";return}
+  const xs=all.map(p=>+new Date(p[0])),ys=all.map(p=>p[1]);let x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys,o.zero?0:Infinity),y1=Math.max(...ys,o.zero?0:-Infinity);if(y0===y1){y0-=1;y1+=1}
+  const X=v=>m.l+(+new Date(v)-x0)/(x1-x0||1)*(W-m.l-m.r),Y=v=>m.t+(1-(v-y0)/(y1-y0))*(H-m.t-m.b);
+  let g="";const nt=W<520?3:5;for(let i=0;i<=nt;i++){const v=y0+(y1-y0)*i/nt;g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${m.l-6}" y="${Y(v)+4}" text-anchor="end">${o.fmt?o.fmt(v):num(v,1)}</text>`}
+  const yrs=[...new Set(all.map(p=>p[0].slice(0,4)))];yrs.forEach((y,i)=>{if(W<520&&i%2)return;const t=X(y+"-01-01");if(t>m.l&&t<W-m.r)g+=`<text x="${t}" y="${H-6}" text-anchor="middle">${y}</text>`});
+  if(o.split){const t=X(o.split);g+=`<line x1="${t}" x2="${t}" y1="${m.t}" y2="${H-m.b}" stroke="var(--mute)" stroke-dasharray="3 3"/><text x="${t+4}" y="${m.t+10}">Out-of-Sample →</text>`}
+  if(o.zero)g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--ink)" stroke-width=".8"/>`;
+  for(const se of series){g+=`<polyline fill="none" stroke="${se.c}" stroke-width="${se.w||2}" points="${se.pts.map(p=>X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)).join(" ")}"/>`}
+  s.innerHTML=g}
+function payoff(s,W,H,i){
+  const c=i.payoff.curve;if(!c||!c.length){s.innerHTML="";return}const m={l:50,r:12,t:16,b:24};
+  const xs=c.map(p=>p[0]),ys=c.map(p=>p[1]*100);const x0=xs[0],x1=xs[xs.length-1];let y0=Math.min(...ys,0),y1=Math.max(...ys,0);const pad=(y1-y0)*.1;y0-=pad;y1+=pad;
+  const X=v=>m.l+(v-x0)/(x1-x0)*(W-m.l-m.r),Y=v=>m.t+(1-(v-y0)/(y1-y0))*(H-m.t-m.b);
+  let g="";const z=Y(0);
+  const pts=c.map(p=>[X(p[0]),Y(p[1]*100)]);
+  g+=`<clipPath id="u${s.id}"><rect x="0" y="0" width="${W}" height="${z}"/></clipPath><clipPath id="d${s.id}"><rect x="0" y="${z}" width="${W}" height="${H}"/></clipPath>`;
+  const area=`M${pts[0][0]},${z} `+pts.map(p=>`L${p[0]},${p[1]}`).join(" ")+` L${pts[pts.length-1][0]},${z}Z`;
+  g+=`<path d="${area}" fill="var(--grn)" opacity=".18" clip-path="url(#u${s.id})"/><path d="${area}" fill="var(--red)" opacity=".16" clip-path="url(#d${s.id})"/>`;
+  g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${z}" y2="${z}" stroke="var(--ink)" stroke-width=".8"/>`;
+  g+=`<polyline fill="none" stroke="var(--ink)" stroke-width="2.2" points="${pts.map(p=>p.join(",")).join(" ")}"/>`;
+  [y1-pad,0,y0+pad].forEach(v=>g+=`<text x="${m.l-6}" y="${Y(v)+4}" text-anchor="end">${usd(v)}</text>`);
+  const mk=(v,lab,col,row)=>{if(v==null||v<x0||v>x1)return;const t=X(v);g+=`<line x1="${t}" x2="${t}" y1="${m.t}" y2="${H-m.b}" stroke="${col}" stroke-dasharray="${col==="var(--ink)"?"":"4 3"}"/><text x="${t}" y="${row?H-6:m.t-3}" text-anchor="middle" style="fill:${col}">${lab}</text>`};
+  mk(i.spot,"Kurs "+num(i.spot,2),"var(--ink)",0);
+  if(i.gex){mk(i.gex.put_wall,"Put-Wall","var(--red)",1);mk(i.gex.call_wall,"Call-Wall","var(--blu)",1)}
+  s.innerHTML=g}
+function candle(s,W,H,t,extra){
+  const P=D.price?.[t],c0=P?.chart;if(!c0||!c0.c){s.innerHTML=`<text x="12" y="20">keine Kursdaten</text>`;return}
+  const k0=Math.max(0,c0.c.length-RANGE),c={};for(const key of ["d","o","h","l","c","s50","s200"])c[key]=(c0[key]||[]).slice(k0);
+  const g=D.gex?.[t];const m={l:8,r:W<520?84:128,t:22,b:22};const n=c.c.length;
+  const lv=[];if(g){if(g.call_wall)lv.push({v:g.call_wall,l:"Call-Wall",c:"var(--blu)",d:"6 3"});if(g.put_wall)lv.push({v:g.put_wall,l:"Put-Wall",c:"var(--red)",d:"6 3"});if(g.flip)lv.push({v:g.flip,l:"Gamma-Flip",c:"var(--amb)",d:"2 3"})}
+  (P.supports||[]).slice(0,2).forEach(x=>lv.push({v:x[0],l:"Unterst.",c:"var(--mute)",d:"1 3"}));(P.resistances||[]).slice(0,2).forEach(x=>lv.push({v:x[0],l:"Widerst.",c:"var(--mute)",d:"1 3"}));
+  (extra||[]).forEach(x=>lv.push(x));
+  let lo=Math.min(...c.l),hi=Math.max(...c.h);const near=lv.filter(x=>x.v>lo*0.85&&x.v<hi*1.15);near.forEach(x=>{lo=Math.min(lo,x.v);hi=Math.max(hi,x.v)});const pd=(hi-lo)*.04;lo-=pd;hi+=pd;
+  const X=i=>m.l+(i+.5)/n*(W-m.l-m.r),Y=v=>m.t+(1-(v-lo)/(hi-lo))*(H-m.t-m.b),bw=Math.max(1.5,(W-m.l-m.r)/n*.62);
+  let h="";for(let k=0;k<=4;k++){const v=lo+(hi-lo)*k/4;h+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-width=".6"/>`}
+  let pm="";c.d.forEach((d,i)=>{const mm=d.slice(5,7);if(mm!==pm&&i>0){h+=`<line x1="${X(i)}" x2="${X(i)}" y1="${m.t}" y2="${H-m.b}" stroke="var(--line)" stroke-width=".5"/>`;if(!(W<520&&(+mm)%2))h+=`<text x="${X(i)}" y="${H-5}" text-anchor="middle">${MON[+mm-1]}${mm==="01"?" "+d.slice(2,4):""}</text>`}pm=mm});
+  const fd=x=>x.slice(8,10)+"."+x.slice(5,7)+"."+x.slice(2,4);h+=`<text x="${m.l}" y="14" style="fill:var(--ink)">Tageskerzen · ${fd(c.d[0])} – ${fd(c.d[n-1])} (${n} Handelstage)</text>`;
+  const PT=D.patterns?.now?.[t];const xd=d=>{let k=c.d.indexOf(d);if(k>=0)return X(k);if(d<c.d[0])return null;k=c.d.findIndex(z=>z>d);return k<0?X(n-1):X(k)};
+  const ZC={demand:"var(--grn)",fvg_bull:"var(--grn)",supply:"var(--red)",fvg_bear:"var(--red)",gap:"var(--mute)",flag:"var(--blu)",range:"var(--blu)"};
+  if(PT){for(const z of [...(PT.zones||[]),...(PT.gaps||[])]){if(z.hi<lo||z.lo>hi)continue;const x0=z.o!=null?(z.o>n-1?m.l:X(n-1-z.o)):(xd(z.d)??m.l);h+=`<rect x="${x0}" width="${Math.max(2,W-m.r-x0)}" y="${Y(Math.min(z.hi,hi))}" height="${Math.max(1,Y(Math.max(z.lo,lo))-Y(Math.min(z.hi,hi)))}" fill="${ZC[z.kind]||"var(--mute)"}" opacity=".13"/>`}}
+  for(let i=0;i<n;i++){const up=c.c[i]>=c.o[i],col=up?"var(--grn)":"var(--red)";h+=`<line x1="${X(i)}" x2="${X(i)}" y1="${Y(c.h[i])}" y2="${Y(c.l[i])}" stroke="${col}"/><rect x="${X(i)-bw/2}" width="${bw}" y="${Y(Math.max(c.o[i],c.c[i]))}" height="${Math.max(1,Math.abs(Y(c.o[i])-Y(c.c[i])))}" fill="${col}"/>`}
+  const ln=(arr,col)=>{const p=arr.map((v,i)=>v==null?null:`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).filter(Boolean);if(p.length)h+=`<polyline fill="none" stroke="${col}" stroke-width="1.3" points="${p.join(" ")}"/>`};
+  if(PT){const xo=o=>X(n-1-o);
+    const seg=(L,col,dash,w,lab)=>{let x0,x1,y0=L.p[0][1],y1=L.p[1][1];
+      if(L.o){let [o0,o1]=L.o;if(o1>n-1)return;if(o0>n-1){y0=y0+(y1-y0)*(o0-(n-1))/Math.max(o0-o1,1);o0=n-1}x0=xo(o0);x1=xo(o1)}
+      else{x0=xd(L.p[0][0]);x1=xd(L.p[1][0]);if(x1==null)return;if(x0==null)x0=m.l}
+      if((y0<lo&&y1<lo)||(y0>hi&&y1>hi))return;
+      h+=`<line x1="${x0}" y1="${Y(Math.min(Math.max(y0,lo),hi))}" x2="${x1}" y2="${Y(Math.min(Math.max(y1,lo),hi))}" stroke="${col}" stroke-width="${w||1.8}" ${dash?'stroke-dasharray="6 4"':""}/>`;
+      if(lab&&y1>=lo&&y1<=hi)h+=`<text x="${x1-4}" y="${Y(y1)-5}" text-anchor="end" style="fill:${col}">${lab}</text>`};
+    (PT.gaps||[]).forEach(g=>{if(g.hi<lo||g.lo>hi)return;const x0=g.o!=null?(g.o>n-1?m.l:xo(g.o)):(xd(g.d)??m.l);h+=`<text x="${x0+3}" y="${Y(Math.min(g.hi,hi))+12}" style="fill:var(--mute)">Gap ${num(g.lo)}–${num(g.hi)}</text>`});
+    (PT.trendlines||[]).forEach(L=>seg(L,L.kind==="trend_up"?"var(--grn)":"var(--red)",L.broken,L.term==="mittel"?2.4:1.5,(L.term==="mittel"?"TL lang":"TL")+(L.broken?" gebr.":"")));
+    (PT.recent||[]).forEach(e=>{(e.draw||[]).forEach(o=>{if(o.type==="line")seg(o,"var(--amb)",true);if(o.type==="mark"){const x=xd(o.d);if(x!=null)h+=`<text x="${x}" y="${Y(o.y)-6}" text-anchor="middle" style="fill:var(--amb);font-weight:600">${esc(o.text)}</text>`}});
+      const x=xd(e.date);if(x==null)return;const yy=e.dir>0?Y(Math.min(...c.l.slice(Math.max(0,c.d.indexOf(e.date)))))+14:Y(Math.max(...c.h.slice(Math.max(0,c.d.indexOf(e.date)))))-8;
+      const col=e.status==="bestätigt"||e.status==="Kandidat"?(e.dir>0?"var(--grn)":"var(--red)"):"var(--mute)";h+=`<text x="${x}" y="${yy}" text-anchor="middle" style="fill:${col};font-weight:600">${e.dir>0?"▲":"▼"}</text>`})}
+  ln(c.s50||[],"var(--blu)");ln(c.s200||[],"var(--ink)");
+  const sorted=near.map(x=>({...x,y:Y(x.v)})).sort((a,b)=>a.y-b.y);let last=-99;for(const x of sorted){x.ty=Math.max(x.y,last+13);last=x.ty}
+  for(const x of sorted){h+=`<line x1="${m.l}" x2="${W-m.r+4}" y1="${x.y}" y2="${x.y}" stroke="${x.c}" stroke-dasharray="${x.d||""}" stroke-width="${x.w||1.1}"/><text x="${W-m.r+8}" y="${x.ty+4}" style="fill:${x.c}">${x.l} ${num(x.v,x.v>=100?0:2)}</text>`}
+  const lc=c.c[n-1];h+=`<text x="${X(n-1)-4}" y="${Y(lc)-8}" text-anchor="end" style="fill:var(--ink);font-weight:600">${num(lc)}</text>`;
+  s.innerHTML=h}
+function gexBars(s,W,H,t){const g=D.gex?.[t];const p=g?.profile||[];if(!p.length){s.innerHTML=`<text x="12" y="20">keine Gamma-Daten</text>`;return}
+  const m={l:46,r:10,t:14,b:22};const x0=p[0][0],x1=p[p.length-1][0],mx=Math.max(...p.map(x=>Math.abs(x[1])))||1;const X=v=>m.l+(v-x0)/(x1-x0||1)*(W-m.l-m.r),Y=v=>m.t+(1-(v+mx)/(2*mx))*(H-m.t-m.b);const bw=Math.max(1.5,(W-m.l-m.r)/p.length*.7);
+  let h=p.map(([k,v])=>`<rect x="${X(k)-bw/2}" width="${bw}" y="${Math.min(Y(v),Y(0))}" height="${Math.abs(Y(v)-Y(0))}" fill="${v>0?"var(--blu)":"var(--red)"}"/>`).join("");
+  h+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--ink)"/>`;[[g.spot,"Kurs","var(--ink)"],[g.flip,"Flip","var(--amb)"]].forEach(([v,l,c])=>{if(v&&v>x0&&v<x1)h+=`<line x1="${X(v)}" x2="${X(v)}" y1="${m.t}" y2="${H-m.b}" stroke="${c}" stroke-dasharray="4 3"/><text x="${X(v)+4}" y="${m.t+10}" style="fill:${c}">${l}</text>`});
+  [x0,(x0+x1)/2,x1].forEach(v=>h+=`<text x="${X(v)}" y="${H-5}" text-anchor="middle">${num(v,0)}</text>`);h+=`<text x="${m.l-6}" y="${Y(mx)+10}" text-anchor="end">+${num(mx,0)}</text><text x="${m.l-6}" y="${Y(-mx)}" text-anchor="end">−${num(mx,0)}</text>`;s.innerHTML=h}
+function patList(t){const P=D.patterns?.now?.[t];if(!P)return"";const r=P.recent||[];const tl=(P.trendlines||[]).map(L=>`${L.kind==="trend_up"?"Aufwärtstrendlinie":"Abwärtstrendlinie"}${L.broken?" (gebrochen)":""}`);
+  const z=(P.zones||[]).map(z=>({demand:"Nachfragezone",supply:"Angebotszone",fvg_bull:"FVG bullisch",fvg_bear:"FVG bärisch"}[z.kind]+` ${num(z.lo)}–${num(z.hi)}`));const g=(P.gaps||[]).map(x=>`offenes Gap ${num(x.lo)}–${num(x.hi)}`);
+  return `<div class="src" style="margin-top:6px"><b>Chartmuster (Agent 8), letzte 5 Kerzen:</b> ${r.length?r.map(e=>`<span class="chip ${e.status==="bestätigt"?"ok":e.status==="Kandidat"?"warn":"mute"}" title="${esc(e.status)}">${e.dir>0?"▲":"▼"} ${esc(e.label)} · ${e.date.slice(5)} · ${esc(e.status)}</span>`).join(" "):"keine"}<br>${[...tl,...z,...g].map(esc).join(" · ")||""}</div>`}
+function gexLine(g){return g?`<div class="nums"><div><small>Gamma-Regime</small><b class="${g.regime==="positiv"?"ok":"bad"}">${g.regime}</b></div><div><small>Call-Wall</small><b>${num(g.call_wall)}</b></div><div><small>Put-Wall</small><b>${num(g.put_wall)}</b></div><div><small>Gamma-Flip</small><b>${num(g.flip)}</b></div><div><small>Put/Call-OI</small><b>${num(g.pc_oi)}</b></div></div>`:""}
+function legsTable(l){return `<div class="scroll"><table><tr><th>Aktion</th><th>Typ</th><th class="n">Strike</th><th>Verfall</th><th class="n">Bid/Ask</th><th class="n">IV</th><th class="n">Δ</th><th class="n">OI</th></tr>${l.map(x=>`<tr><td>${x.qty>0?"Kauf":"Verkauf"} ${Math.abs(x.qty)}×</td><td>${x.cp==="C"?"Call":"Put"}</td><td class="n">${num(x.strike,x.strike%1?2:0)}</td><td>${x.expiry} <span class="mute">(${x.dte} T)</span></td><td class="n">${num(x.bid)} / ${num(x.ask)}</td><td class="n">${pct(x.iv,0)}</td><td class="n">${num(x.delta)}</td><td class="n">${num(x.oi,0)}</td></tr>`).join("")}</table></div>`}
+function ticket(i){
+  const p=i.payoff,cr=p.debit_fill<0;const pa=i.price_action,mg=i.macro;
+  const checks=[...(i.checks||[]),...(pa?[{s:pa.verdict==="passt"?"✓":pa.verdict==="neutral"?"~":"✗",text:"Chart: Struktur "+pa.verdict}]:[]),...(mg?[{s:mg.status==="ok"?"✓":mg.status==="blockiert"?"✗":"~",text:"Markt: "+mg.status}]:[])];
+  return `<div class="card"><div class="tk"><h3>${i.ticker}</h3><b>${esc(i.strategy_name)}</b><span class="chip ${vcls(i.final)}">${i.final}</span><span class="mute">${BIAS[i.bias]} · ${i.vol==="short"?"Short-Vola":"Long-Vola"}</span></div>
+  <div class="src">${i.trigger} ${esc(i.trigger_name)} · Trigger ${i.trigger_status} · Backtest OOS: Ø ${sp(i.oos_mean)} auf Risiko, Treffer ${pct(i.oos_win,0)}, n=${i.oos_n??"–"}, t=${num(i.oos_t,1)}</div>
+  ${fig("",(s,W,H)=>payoff(s,W,H,i))}
+  <div class="nums"><div><small>${cr?"Einnahme":"Kosten"} je Kontrakt</small><b>${usd(Math.abs(p.debit_fill*100))}</b></div><div><small>Max. Verlust</small><b class="bad">${usd(p.max_loss*100)}</b></div><div><small>Max. Gewinn</small><b class="ok">${usd(p.max_gain*100)}</b></div><div><small>Gewinnchance</small><b>${pct(p.pop,0)}</b></div><div><small>Breakeven</small><b>${p.breakevens.map(b=>num(b,2)).join(" / ")||"–"}</b></div><div><small>Größe (${pct(D.risk.options_per_trade,0)} Risiko)</small><b>${i.contracts} × = ${usd(i.risk_usd)}</b></div></div>
+  ${legsTable(i.legs)}
+  <ul class="chk">${checks.map(c=>`<li data-s="${c.s}" class="${c.s==="✓"?"":c.s==="✗"?"bad":""}">${esc(c.text)}</li>`).join("")}</ul>
+  ${pa&&pa.alternative?`<p><b>Agent 4:</b> Alternative ${esc(pa.alternative.name)} – ${esc(pa.alternative.why)}</p>`:""}
+  <div class="take" data-kind="option" data-key="${esc(i.ticker+"|"+i.trigger)}"><label>Kontrakte <input type="number" min="1" step="1" value="${Math.max(1,i.contracts||1)}" data-f="n"></label><label>Fill je Kontrakt ($) <input type="number" min="0" step="1" value="${Math.round(Math.abs(p.debit_fill*100))}" data-f="px"></label><button type="button" data-take>Eingegangen</button><span class="src" data-msg></span></div>
+  ${askBox("option",i.ticker+"|"+i.trigger)}
+  <details><summary>Begründung: Chart mit Strikes, Gamma, Markt</summary>
+  <h3 style="margin-top:10px">Chart mit Strikes und Gamma-Levels</h3>${rangeBar()}
+  ${fig("big",(s,W,H)=>candle(s,W,H,i.ticker,i.legs.filter(l=>l.qty<0).map(l=>({v:l.strike,l:"Short "+(l.cp==="C"?"Call":"Put"),c:"var(--ink)",w:1.8}))))}
+  ${pa?`<p><b>Preisaktion (Agent 4):</b> ${esc(pa.verdict)} – ${pa.reasons.map(esc).join(" · ")}</p>`:""}
+  <h3>Gamma-Exposure je Strike (Mio. $ je 1 %)</h3>${gexLine(i.gex)}${fig("",(s,W,H)=>gexBars(s,W,H,i.ticker))}
+  ${mg?`<p><b>Markt (Agent 5):</b> ${esc(D.macro.regime)} – ${mg.why.map(esc).join(" · ")}</p>`:""}
+  </details>
+  <details><summary>Signale & Greeks</summary><div class="nums">${Object.entries(i.signals||{}).map(([k,v])=>`<div><small>${k}</small><b>${v==null?"–":num(v,3)}</b></div>`).join("")}${Object.entries(i.greeks_per_contract||{}).map(([k,v])=>`<div><small>${k} / Kontrakt</small><b>${num(v,2)}</b></div>`).join("")}</div></details></div>`}
+function sortable(id,cols,rows){
+  let key=null,dir=-1;const el=$("#"+id);
+  const render=()=>{const r=[...rows];if(key)r.sort((a,b)=>((a[key]??-1e9)>(b[key]??-1e9)?1:-1)*dir);
+    el.innerHTML=`<div class="scroll"><table><tr>${cols.map(c=>`<th class="${c[2]?"n":""}" data-k="${c[0]}">${c[1]}${key===c[0]?(dir>0?" ▲":" ▼"):""}</th>`).join("")}</tr>${r.map(x=>`<tr>${cols.map(c=>`<td class="${c[2]?"n":""}">${c[2]?c[2](x[c[0]],x):esc(x[c[0]])}</td>`).join("")}</tr>`).join("")}</table></div>`;
+    el.querySelectorAll("th").forEach(th=>th.onclick=()=>{const k=th.dataset.k;dir=key===k?-dir:-1;key=k;render()})};
+  render()}
+function renderIdeen(){
+  const top=D.top,all=D.ideas,eq=D.macro.equity_ideas||[];
+  $("#ideen").innerHTML=`<h2>Top-Vorschläge heute</h2>${top.length?`<div class="grid2">${top.map(ticket).join("")}</div>`:`<div class="card empty">Heute kein Trade, der alle Prüfungen besteht. Kein Trade ist auch eine Position.</div>`}
+  <div style="margin-top:24px"><h2>Aktien-Ideen (ohne Hebel)</h2><p class="src">Chart, Trendlinien und Gamma-Levels zum Ticker unter „Richtung & Aktien“.</p>${eq.length?`<div class="scroll card"><table><tr><th>Ticker</th><th>Richtung</th><th class="n">Einstieg</th><th class="n">Stop</th><th class="n">Ziel</th><th class="n">CRV</th><th class="n">Stück</th><th class="n">Position</th><th class="n">Risiko</th><th>Grund</th><th></th></tr>${eq.map(e=>`<tr><td><b>${e.ticker}</b></td><td class="${e.direction==="long"?"ok":"bad"}">${e.direction}</td><td class="n">${num(e.entry)}</td><td class="n">${num(e.stop)}</td><td class="n">${num(e.target)}</td><td class="n">${num(e.crv,1)}</td><td class="n">${e.shares}</td><td class="n">${usd(e.position_usd)}</td><td class="n">${usd(e.risk_usd)}</td><td>${esc(e.reason)}<br><span class="src">${esc(e.evidence)}</span>${(e.sec||[]).map(x=>`<br><span class="src">${esc(x.s)} ${esc(x.text)}</span>`).join("")}</td><td><div class="take" data-kind="equity" data-key="${esc(e.ticker+"|"+e.direction)}"><input type="number" min="1" step="1" value="${e.shares}" data-f="n" aria-label="Stück" style="width:6em"><input type="number" min="0" step="0.01" value="${e.entry}" data-f="px" aria-label="Kaufkurs" style="width:7em"><button type="button" data-take>Eingegangen</button><span class="src" data-msg></span></div>${askBox("equity",e.ticker+"|"+e.direction)}</td></tr>`).join("")}</table></div>`:`<div class="card empty">Heute keine bestätigte Aktien-Idee.</div>`}
+</div>
+  <details style="margin-top:20px"><summary>Alle geprüften Kandidaten (${all.length}), auch abgelehnte</summary><div class="card" id="tCand"></div></details>`;
+  sortable("tCand",[["ticker","Ticker"],["strategy_name","Struktur"],["trigger","Trigger"],["final","Urteil"],["oos_mean","OOS Ø",x=>sp(x)],["oos_win","Treffer",x=>pct(x,0)],["risk_usd","Risiko",x=>usd(x)]],all)}
+function renderRicht(){const P=D.price||{},sig=D.macro.equity_signals||[],evo=D.macro.equity_vs_option||{},eq=D.macro.equity_ideas||[];
+  const order=[...new Set([...eq.map(e=>e.ticker),...D.top.map(i=>i.ticker),...Object.keys(P)])].filter(t=>P[t]);
+  $("#richtung").innerHTML=`<h2>Charts mit Gamma-Levels</h2>${rangeBar()}<p class="src"> <span style="color:var(--blu)">━</span> SMA50 · ━ SMA200 · gestrichelt: Call-Wall (blau), Put-Wall (rot), Gamma-Flip (gelb), Unterstützung/Widerstand (grau) · Trendlinien grün/rot (gestrichelt = gebrochen) · Flächen: Nachfragezone/FVG (grün), Angebotszone/FVG (rot), offene Gaps (grau) · ▲▼ Chartmuster (farbig = Kandidat/bestätigt, grau = ohne belegten Mehrwert), Nackenlinien gelb. Bei Aktien-Ideen zusätzlich Stop und Ziel.</p>
+  <div class="grid1">${order.map(t=>{const p=P[t],e=eq.find(x=>x.ticker===t);const ex=e?[{v:e.stop,l:"Stop",c:"var(--red)",w:1.8},{v:e.target,l:"Ziel",c:"var(--grn)",w:1.8},{v:e.entry,l:"Einstieg",c:"var(--ink)",w:1.2}]:[];
+    return `<div class="card"><div class="tk"><h3>${t}</h3><b>${esc(p.phase)}</b>${e?`<span class="chip ${e.direction==="long"?"ok":"bad"}">${e.direction}</span>`:""}<span class="mute">ADX ${num(p.adx,0)} · RSI ${num(p.rsi14,0)} · 20 T ${sp(p.ret20)}</span></div>${fig("big",(s,W,H)=>candle(s,W,H,t,ex))}${gexLine(D.gex?.[t])}${patList(t)}${(p.notes||[]).length?`<p class="src">${p.notes.map(esc).join(" · ")}</p>`:""}</div>`}).join("")}</div>
+  <details style="margin-top:20px"><summary>Backtest: Aktie oder Option? · Aktien-Signale aus Optionsdaten</summary>
+  <div class="card scroll" style="margin-top:8px"><table><tr><th>Trigger</th><th>Richtung</th><th class="n">Option OOS Ø</th><th class="n">Option SR</th><th class="n">Aktie OOS Ø (R)</th><th class="n">Aktie SR</th><th>Besser</th></tr>${Object.entries(evo).map(([k,v])=>`<tr><td>${k}</td><td>${v.direction}</td><td class="n">${sp(v.option_oos.mean)}</td><td class="n">${num(v.option_oos.sr)}</td><td class="n">${num(v.equity_oos_R.mean)}</td><td class="n">${num(v.equity_oos_R.sr)}</td><td><b>${v.better||"–"}</b></td></tr>`).join("")||`<tr><td colspan=7 class="empty">noch kein gerichteter Trigger bestätigt</td></tr>`}</table></div>
+  <div class="grid2" style="margin-top:12px">${sig.map(e=>`<div class="card"><div class="tk"><h3>${e.id}</h3><b>${esc(e.name)}</b><span class="chip ${vcls(e.status)}">${e.status||"–"}</span></div><div class="src">${esc(e.when)} · ${e.direction} · ${e.hold} Tage · ${esc(e.source)}</div>${metricRow(e)}</div>`).join("")}</div></details>`}
+function metricRow(t){const i=t.is||{},o=t.oos||{},b=t.base_oos||{},s=t.oos_stress||{};return `<div class="scroll"><table><tr><th></th><th class="n">n</th><th class="n">Ø</th><th class="n">Treffer</th><th class="n">t</th><th class="n">Sharpe</th></tr>
+  <tr><td>In-Sample</td><td class="n">${i.n??"–"}</td><td class="n">${sp(i.mean)}</td><td class="n">${pct(i.win,0)}</td><td class="n">${num(i.t,1)}</td><td class="n">${num(i.sharpe_w,2)}</td></tr>
+  <tr><td><b>Out-of-Sample</b></td><td class="n">${o.n??"–"}</td><td class="n"><b>${sp(o.mean)}</b></td><td class="n">${pct(o.win,0)}</td><td class="n"><b>${num(o.t,1)}</b></td><td class="n">${num(o.sharpe_w,2)}</td></tr>
+  <tr><td>OOS 3× Kosten</td><td class="n">${s.n??"–"}</td><td class="n">${sp(s.mean)}</td><td class="n">${pct(s.win,0)}</td><td class="n">${num(s.t,1)}</td><td class="n">–</td></tr>
+  <tr class="mute"><td>Ohne Trigger (OOS)</td><td class="n">${b.n??"–"}</td><td class="n">${sp(b.mean)}</td><td class="n">${pct(b.win,0)}</td><td class="n">${num(b.t,1)}</td><td class="n">${num(b.sharpe_w,2)}</td></tr></table></div>`}
+function trigCard(t){const r2=(D.ticker_rules||[]).find(x=>x.trigger===t.id);
+  return `<div class="card"><div class="tk"><h3>${t.id}</h3><b>${esc(t.name)}</b><span class="chip ${vcls(t.status)}">${t.status||"–"}</span></div>
+  <div class="src">${esc(t.strategy_name)} · Regel: <code>${esc(t.when)}</code></div>
+  ${fig("",(s,W,H)=>lineChart(s,W,H,[{pts:t.curve_base||[],c:"var(--mute)",w:1.2},{pts:t.curve||[],c:"var(--red)",w:2.2}],{split:D.research.split,zero:1,fmt:v=>num(v,1)}))}
+  <div class="src"><span style="color:var(--red)">━</span> mit Trigger · <span class="mute">━</span> Strategie ohne Trigger (kumuliert, Rendite auf Risiko je Woche)</div>
+  ${metricRow(t)}
+  <p class="src"><b>Quelle:</b> ${esc(t.source)}<br><b>Mechanismus:</b> ${esc(t.mechanism)}</p>
+  ${r2?`<details><summary>Agent 2: Ticker-Regeln (${r2.final_rules.length}) & beste Ticker</summary><p>Regeln: ${r2.final_rules.map(r=>`<code>${esc(r)}</code>`).join(" · ")||"keine Verbesserung gefunden"}</p>${metricRow(r2.final)}<p>Beste Ticker: ${r2.tickers.slice(0,10).map(x=>`${x.ticker} (${sp(x.mean,0)}, n=${x.n})`).join(", ")}</p></details>`:""}
+  ${t.firing_now&&t.firing_now.length?`<p><b>Feuert aktuell (letzter Historien-Tag):</b> ${t.firing_now.join(", ")}</p>`:""}</div>`}
+function patTable(){const P=D.patterns;if(!P?.stats)return"";const c=P.counts||{};
+  return `<h2 style="margin-top:28px">Chartmuster-Backtests (Agent 8)</h2><p class="src">${num(P.n_events,0)} Muster-Ereignisse auf Tageskerzen aller Ticker seit 2005. Jedes Muster wird gehandelt (Stop = Invalidierung, Ziel = Kursziel bzw. 2R, max. 20 Tage, 0,1 % Kosten) und mit demselben Einstieg OHNE Muster in gleicher Richtung verglichen – sonst profitieren Long-Muster nur von der allgemeinen Aufwärtsdrift. Out-of-Sample ab ${P.split}. Nur „bestätigt“ und „Kandidat“ fließen in Entscheidungen ein. Stand: ${c["bestätigt"]||0} bestätigt, ${c.Kandidat||0} Kandidaten, ${c.verworfen||0} verworfen.</p>
+  <div class="card scroll"><table><tr><th>Muster</th><th>Familie</th><th>Richtung</th><th class="n">n OOS</th><th class="n">Ø R</th><th class="n">ohne Muster</th><th class="n">Mehrwert</th><th class="n">t (Mehrwert)</th><th class="n">Treffer</th><th>Status</th></tr>${P.stats.map(x=>`<tr title="${esc(x.source)} – ${esc(x.mechanism)}"><td>${esc(x.name)}</td><td>${esc(x.family)}</td><td>${x.dir>0?"long":"short"}</td><td class="n">${x.oos?.n??"–"}</td><td class="n">${num(x.oos?.mean)}</td><td class="n">${num(x.base_oos?.mean)}</td><td class="n ${(x.edge_vs_base||0)>0?"ok":"bad"}">${(x.edge_vs_base>0?"+":"")+num(x.edge_vs_base)}</td><td class="n">${num(x.edge_t,1)}</td><td class="n">${pct(x.oos?.win,0)}</td><td><span class="chip ${vcls(x.status)}">${esc(x.status)}</span></td></tr>`).join("")}</table></div><p class="src">Quellen beim Überfahren einer Zeile. R = Gewinn/Verlust in Vielfachen des Risikos bis zum Stop.</p>`}
+function altTable(tests,title,note){if(!tests||!tests.length)return"";return`<h2 style="margin-top:24px">${title}</h2><p class="src">${note}</p><div class="card scroll"><table><tr><th>Signal</th><th class="n">Halten</th><th>Richtung</th><th class="n">OOS n</th><th class="n">OOS Ø</th><th class="n">Basis Ø</th><th class="n">Mehrwert</th><th class="n">t</th><th class="n">Treffer</th><th>Status</th></tr>${tests.map(r=>`<tr><td>${esc(r.name)}</td><td class="n">${r.h} T</td><td>${r.dir>0?"long":"short"}</td><td class="n">${r.n??"–"}</td><td class="n">${r.oos_mean!=null?sp(r.oos_mean):"–"}</td><td class="n">${r.base_mean!=null?sp(r.base_mean):"–"}</td><td class="n">${r.edge!=null?sp(r.edge):"–"}</td><td class="n">${r.edge_t!=null?num(r.edge_t,1):"–"}</td><td class="n">${r.oos_win!=null?pct(r.oos_win,0):"–"}</td><td class="${r.status==="bestätigt"?"ok":r.status==="Kandidat"?"warn":"bad"}">${esc(r.status)}</td></tr>`).join("")}</table></div>`}
+function renderStrat(){const T=[...D.triggers].sort((a,b)=>({"bestätigt":0,"Kandidat":1}[a.status]??2)-({"bestätigt":0,"Kandidat":1}[b.status]??2));
+  const S=D.strategies||{};
+  $("#strategien").innerHTML=`<h2>Trigger-Backtests (Agent 1)</h2><p class="src">Daten ${D.research.start} bis ${D.research.end}, ${num(D.research.n_trades,0)} simulierte Trades. Walk-forward: Schwellen nur vor ${D.research.split} gewählt, danach Out-of-Sample. Bestätigt = OOS Ø &gt; 0 und nicht schlechter als ohne Trigger, t ≥ 2, beide OOS-Hälften positiv, auch mit 3× Kosten, Benjamini-Hochberg (10 %).</p>
+  <div class="grid2">${T.map(trigCard).join("")}</div>
+  ${patTable()}
+  ${altTable(D.filings?.tests,"SEC-Insider-Signale (Agent 11)","Form-4-Meldungen, Einstieg am ersten Schlusskurs nach der Meldung, Rendite minus SPY. Mehrwert = gegenüber einem beliebigen Tag derselben Aktien. Nur „bestätigt“ verändert Bewertungen (+1/−1).")}
+  ${altTable(D.social?.trends?.tests,"Google-Trends-Signale (Agent 10)","Suchsprung = Suchindex über dem 90.-Perzentil der Abweichung vom 8-Wochen-Median (Schwelle nur In-Sample). Rendite minus SPY gegen beliebigen Tag.")}
+  ${altTable(D.social?.posts?.tests,"Posts wichtiger Personen (Agent 10)","Rendite der genannten Ticker nach dem Post in der Richtung des Posts.")}
+  <h2 style="margin-top:24px">Strategien ohne Trigger (Basis)</h2><div class="card scroll"><table><tr><th>Strategie</th><th class="n">n</th><th class="n">Ø</th><th class="n">Treffer</th><th class="n">t</th></tr>${Object.entries(S).map(([k,v])=>`<tr><td>${esc(v.name)}</td><td class="n">${v.base.n}</td><td class="n">${sp(v.base.mean)}</td><td class="n">${pct(v.base.win,0)}</td><td class="n">${num(v.base.t,1)}</td></tr>`).join("")}</table></div>`}
+function renderMarkt(){const M=D.macro,m=M.market||{},rp=M.regime_perf||{};const regs=["Ruhiger Bullenmarkt","Volatiler Bullenmarkt","Neutral","Korrektur","Bärenmarkt","Crash/Stress"];
+  const E=D.events||{},NW=E.news||{},rk=E.risk||"unbekannt";const rc=rk==="hoch"?"var(--red)":rk==="erhöht"?"var(--amb)":rk==="normal"?"var(--grn)":"var(--mut)";
+  const evHtml=`<h2>Termine & Nachrichten (Agent 9)</h2><p class="src">Vor Terminen mit hoher Wirkung (FOMC, CPI, Arbeitsmarkt, Earnings der Index-Schwergewichte) gibt Agent 3 keine neuen Short-Vola-Trades frei; Agent 7 warnt offene Positionen.</p><div class="grid2"><div class="card"><h3>Nachrichtenlage: <span style="color:${rc}">${esc(rk)}</span>${E.news_stale?' <small style="color:var(--mut)">(nicht von heute)</small>':""}</h3><p class="note">${esc(NW.summary||"–")}</p>${(NW.items||[]).map(it=>`<p style="margin:6px 0"><b style="color:${it.impact==="hoch"?"var(--red)":it.impact==="mittel"?"var(--amb)":"var(--mut)"}">●</b> ${esc(it.headline)}${it.tickers&&it.tickers.length?` <small>(${it.tickers.map(esc).join(", ")})</small>`:""}${it.url?` <a href="${esc(it.url)}" target="_blank" rel="noopener">Quelle</a>`:""}</p>`).join("")}</div><div class="card scroll"><h3>Kalender (nächste 45 Tage)</h3><table><tr><th>Datum</th><th>Zeit ET</th><th>Ereignis</th><th>Wirkung</th><th class="n">in HT</th></tr>${(E.calendar||[]).filter(e=>e.bdays>=0).map(e=>`<tr${e.bdays<=2&&e.impact==="hoch"?' style="background:color-mix(in srgb,var(--red) 14%,transparent)"':""}><td>${esc(e.date)}</td><td>${esc(e.time_et||"")}</td><td>${esc(e.name)}</td><td>${esc(e.impact)}</td><td class="n">${e.bdays}</td></tr>`).join("")}</table></div></div>`;
+  const F=D.filings||{},SO=D.social||{},TRN=SO.trends||{},PO=SO.posts||{};
+  const altHtml=`<div class="grid2" style="margin-top:16px"><div class="card scroll"><h3>SEC-Insider aktiv (Agent 11)</h3>${F.status!=="ok"?`<p class="src">Daten werden geladen.</p>`:`<p class="src">${F.coverage} Aktien, letzte Meldung ${esc(F.last_filing||"–")}</p><table><tr><th>Ticker</th><th>Signal</th><th>Gemeldet</th><th>Status</th></tr>${Object.entries(F.now||{}).flatMap(([t,l])=>l.map(x=>`<tr><td><b>${t}</b></td><td class="${x.dir>0?"ok":"bad"}">${esc(x.name)}</td><td>${esc(x.filed)}</td><td>${esc(x.status)}</td></tr>`)).join("")||`<tr><td colspan=4>keine aktiven Signale</td></tr>`}</table>`}</div><div class="card scroll"><h3>Google Trends – stärkste Suchsprünge (Agent 10)</h3>${TRN.status!=="ok"?`<p class="src">Daten werden geladen.</p>`:`<p class="src">Woche ${esc(TRN.last_week)} · Schwelle ASVI ${num(TRN.threshold,2)} · ${TRN.coverage} Aktien</p><table><tr><th>Ticker</th><th class="n">ASVI</th><th>Signal</th></tr>${(TRN.top||[]).map(x=>`<tr><td><b>${x.ticker}</b></td><td class="n">${num(x.asvi,2)}</td><td>${x.asvi>=TRN.threshold?"Suchsprung":"–"}</td></tr>`).join("")}</table>`}${(PO.recent||[]).length?`<h3 style="margin-top:12px">Wichtige Posts</h3>${PO.recent.slice(0,6).map(x=>`<p style="margin:6px 0"><small>${esc(x.date)} · ${esc(x.person)}</small><br>${esc(x.text)}${x.tickers?.length?` <small>(${x.tickers.map(esc).join(", ")})</small>`:""}${x.url?` <a href="${esc(x.url)}" target="_blank" rel="noopener">Quelle</a>`:""}</p>`).join("")}`:""}</div></div>`;
+  $("#markt").innerHTML=evHtml+altHtml+`<h2 style="margin-top:24px">Marktregime: ${esc(M.regime)}</h2><p class="src">Agent 5 lässt nur Strategien zu, die in diesem Regime historisch positiv waren; Short-Vola im Crash nur mit nachgewiesenem Edge.</p><div class="grid2"><div class="card"><h3>VIX (1 Jahr)</h3>${fig("",(s,W,H)=>lineChart(s,W,H,[{pts:M.series?.vix||[],c:"var(--red)"}],{fmt:v=>num(v,0)}))}</div><div class="card"><h3>VIX / VIX3M (über 1 = Stress)</h3>${fig("",(s,W,H)=>lineChart(s,W,H,[{pts:M.series?.vix_ts||[],c:"var(--ink)"}],{fmt:v=>num(v,2)}))}</div><div class="card"><h3>Marktbreite: Anteil über SMA200</h3>${fig("",(s,W,H)=>lineChart(s,W,H,[{pts:M.series?.breadth200||[],c:"var(--blu)"}],{fmt:v=>pct(v,0)}))}</div><div class="card"><h3>High-Yield-Spread</h3>${fig("",(s,W,H)=>lineChart(s,W,H,[{pts:M.series?.hy_spread||[],c:"var(--amb)"}],{fmt:v=>num(v,1)}))}</div></div>
+  <h2 style="margin-top:24px">Strategie-Rendite je Regime (Ø je Trade auf Risiko, alle Ticker)</h2><div class="card scroll"><table class="heat"><tr><th>Strategie</th>${regs.map(r=>`<th class="n">${r}</th>`).join("")}</tr>${Object.entries(rp).map(([k,v])=>`<tr><td style="text-align:left">${esc(D.strategies[k]?.name||k)}</td>${regs.map(r=>{const c=v[r];if(!c||!c.n)return`<td>–</td>`;const x=c.mean;return`<td style="background:color-mix(in srgb,${x>0?"var(--grn)":"var(--red)"} ${Math.min(Math.abs(x)*300,45)}%,transparent);${r===M.regime?"outline:2px solid var(--ink)":""}">${sp(x)}<br><span class="src">n=${c.n}</span></td>`}).join("")}</tr>`).join("")}</table></div>`}
+function renderLog(){const N=D.notes||{};const ag=[["a1","Agent 1 – Trigger-Forschung"],["a2","Agent 2 – Ticker-Regeln"],["a3","Agent 3 – Live-Trades & GEX"],["a4","Agent 4 – Preisaktion"],["a5","Agent 5 – Makro & Aktien"],["a9","Agent 9 – Termine & Nachrichten"],["a6","Agent 6 – Zusammenfassung"]];
+  $("#forschung").innerHTML=`<h2>Was die Agenten heute gedacht haben</h2><div class="grid2">${ag.map(([k,l])=>`<div class="card"><h3>${l}</h3><p class="note">${esc(N[k]||"–")}</p></div>`).join("")}</div>${N.log?`<h2 style="margin-top:24px">Forschungsprotokoll</h2><div class="card"><p class="note">${esc(N.log)}</p></div>`:""}<h2 style="margin-top:24px">Deine Fragen an die Agenten</h2><div id="qalist"><div class="card empty">lädt …</div></div>`;
+  const use=window.claude?.use;if(!use){$("#qalist").innerHTML='<div class="card empty">Fragen sind nur in der Dashboard-Ansicht verfügbar.</div>';return}
+  use("db").then(db=>{if(!db){$("#qalist").innerHTML='<div class="card empty">Datenbank nicht verfügbar.</div>';return}DB=DB||db;db.collection("questions").onSnapshot(snap=>{const L=snap.docs.filter(d=>d.exists).map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.created||"").localeCompare(a.created||""));
+    $("#qalist").innerHTML=L.length?L.slice(0,30).map(x=>`<div class="card"><p class="src">${esc((x.created||"").slice(0,16).replace("T"," "))} · ${esc(x.key||"")} · <span class="${x.status==="beantwortet"?"ok":"warn"}">${esc(x.status||"")}</span></p><p><b>${esc(x.question)}</b></p>${x.answer?`<p class="note">${esc(x.answer)}</p>`:""}${x.answer_deep?`<p class="note"><b>Vertiefung (Abendlauf):</b> ${esc(x.answer_deep)}</p>`:""}</div>`).join(""):'<div class="card empty">Noch keine Fragen. Unter jedem Vorschlag gibt es ein Fragefeld.</div>'},()=>{})}).catch(()=>{})}
+function hero(){const M=D.macro,m=M.market||{};const ok=D.top.filter(x=>x.final==="freigegeben").length,vo=D.top.filter(x=>x.final==="Vorsicht").length;const conf=D.triggers.filter(t=>t.status==="bestätigt").length,cand=D.triggers.filter(t=>t.status==="Kandidat").length;
+  $("#finding").textContent=D.notes?.headline||`${ok} Trade${ok===1?"":"s"} freigegeben, ${vo} mit Vorsicht – Regime: ${M.regime}`;
+  $("#meta").textContent=`Marktdaten ${D.live_day} · erstellt ${D.generated} · Konto ${usd(D.account)}`;
+  $("#kpis").innerHTML=[["Regime",M.regime,""],["VIX",num(m.vix,1),"Rang "+pct(m.vix_rank,0)],["VIX/VIX3M",num(m.vix_ts,2),m.vix_ts>1?"invertiert":"normal"],["SPY vs. SMA200",sp(m.spy_dist200),"vom Hoch "+sp(m.spy_dd52)],["Marktbreite",pct(m.breadth200,0),"über SMA200"],["Trigger",`${conf} bestätigt`,`${cand} Kandidaten`]].map(([a,b,c])=>`<div class="kpi"><small>${a}</small><b>${b}</b><i>${c}</i></div>`).join("")}
+const SEV={kritisch:"bad",warnung:"warn",info:"mute"};const PST={offen:"warn",freigegeben:"ok",umgesetzt:"ok",abgelehnt:"bad",zurückgestellt:"mute"};
+let PROPS=[],DB=null;
+function propCard(p){const open=p.status==="offen";
+  return `<div class="card" data-id="${esc(p.id)}"><div class="tk"><h3>${esc(p.id)}</h3><b>${esc(p.title)}</b><span class="chip ${PST[p.status]||"mute"}">${esc(p.status)}</span><span class="mute">${esc(p.agent||"")} · ${esc((p.created||"").slice(0,10))}</span></div>
+  <p><b>Befund:</b> ${esc(p.problem)}</p><p><b>Änderung:</b> ${esc(p.change)}</p><p><b>Erwartete Wirkung:</b> ${esc(p.expected)}</p>
+  ${p.evidence?`<p class="src"><b>Beleg:</b> ${esc(p.evidence)}</p>`:""}${p.risk?`<p class="src"><b>Risiko der Änderung:</b> ${esc(p.risk)}</p>`:""}
+  ${open&&DB?`<label class="src" for="c_${esc(p.id)}">Kommentar (optional)</label><textarea id="c_${esc(p.id)}" rows="2" style="width:100%;font:16px Inter;padding:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink)"></textarea>
+  <div class="rng"><button type="button" data-act="freigegeben">Freigeben</button><button type="button" data-act="abgelehnt">Ablehnen</button><button type="button" data-act="zurückgestellt">Zurückstellen</button><span class="src" data-msg></span></div>`:""}
+  ${open&&!DB?`<p class="src">Freigabe hier nicht möglich – im Chat „${esc(p.id)} freigeben“ schreiben.</p>`:""}
+  ${p.decided_at?`<p class="src">Entschieden ${esc(p.decided_at.slice(0,16).replace("T"," "))}${p.comment?` · „${esc(p.comment)}“`:""}</p>`:""}
+  ${p.result?`<p><b>Ergebnis:</b> ${esc(p.result)}</p>`:""}</div>`}
+function drawProps(){const order={offen:0,freigegeben:1,umgesetzt:2,zurückgestellt:3,abgelehnt:4};const L=[...PROPS].sort((a,b)=>(order[a.status]??9)-(order[b.status]??9)||String(b.created).localeCompare(String(a.created)));
+  const n=L.filter(p=>p.status==="offen").length;const a=document.querySelector('nav a[href="#optimierung"]');if(a)a.textContent="Optimierungsvorschläge Modell"+(n?` (${n})`:"");
+  $("#props").innerHTML=L.length?`<div class="grid1">${L.map(propCard).join("")}</div>`:`<div class="card empty">Noch keine Vorschläge. Der Supervisor schlägt Optimierungen vor, sobald die Historie vollständig geladen ist und belastbare Backtests vorliegen.</div>`}
+async function decide(btn){const card=btn.closest("[data-id]"),id=card.dataset.id,act=btn.dataset.act,msg=card.querySelector("[data-msg]");
+  card.querySelectorAll("button").forEach(b=>b.disabled=true);msg.textContent="speichere …";
+  try{await DB.doc("proposals/"+id).update({status:act,decided_at:new Date().toISOString(),comment:(card.querySelector("textarea")?.value||"").slice(0,1000)});msg.textContent="gespeichert – der Supervisor setzt Freigegebenes im nächsten Lauf um."}
+  catch(e){msg.textContent="Speichern fehlgeschlagen ("+(e?.code||e)+")";card.querySelectorAll("button").forEach(b=>b.disabled=false)}}
+function learnHtml(){const L=D.learn;if(!L)return"";const W=L.weights||{},E=L.effects||{},C=L.curve||[],I=L.improvement;
+  const st=x=>x&&x.n?`${pct(x.win,0)} / ${sp(x.ror)} <span class="src">(n=${x.n})</span>`:"–";
+  return`<h2 style="margin-top:24px">Selbstlernen aus den Papier-Trades</h2><p class="src">Jede Idee wird mit ihren Bewertungsfaktoren als Papier-Trade geführt. Das Lernmodul kalibriert daraus automatisch die Gewichte – nur wenn die neuen Gewichte die jüngsten 30 % der Trades nachweislich besser sortieren. Feste Sperren (Liquidität, Termine, Edge-Regeln, Risiko) lernt es nie weg.</p>
+  <div class="card"><p><b>${esc(L.note||"")}</b></p><p class="src">${L.n_closed_options} geschlossene Options-Papier-Trades · ${L.n_closed_all} insgesamt${L.validation?` · Validierung: Rangkorrelation ${num(L.validation.rank_corr_old,2)} → ${num(L.validation.rank_corr_new,2)}`:""}</p>
+  ${I?`<p>Seit Lernbeginn (${esc(I.since)}): freigegebene Trades Treffer ${pct(I.before.win,0)} → <b>${pct(I.after.win,0)}</b>, Ø ${sp(I.before.ror)} → <b>${sp(I.after.ror)}</b> je Trade (t=${num(I.t,1)}, ${(I.t||0)>=2?"signifikant":"noch nicht signifikant"})</p>`:""}</div>
+  ${C.length?`<h3 style="margin-top:14px">Lernkurve je Monat (Trefferquote / Ø Rendite auf Risiko)</h3><div class="card scroll"><table><tr><th>Monat</th><th>Alle Options-Ideen</th><th>Freigegeben</th><th>Angezeigte Top-Ideen</th><th>Aktien-Ideen (R)</th></tr>${C.map(m=>`<tr><td>${m.month}</td><td>${st(m.all)}</td><td>${st(m.freigegeben)}</td><td>${st(m.top)}</td><td>${st(m.equity)}</td></tr>`).join("")}</table></div>`:""}
+  <h3 style="margin-top:14px">Gewichte der Bewertungsfaktoren</h3><div class="card scroll"><table><tr><th>Faktor</th><th class="n">Start</th><th class="n">Aktuell</th><th class="n">Trades mit</th><th class="n">Ø mit</th><th class="n">Ø ohne</th><th class="n">t</th></tr>${Object.entries(W).map(([k,v])=>{const e=E[k]||{};return`<tr><td>${esc(FACT[k]||k)}</td><td class="n">${num(v.prior,1)}</td><td class="n ${v.w>v.prior?"ok":v.w<v.prior?"bad":""}">${num(v.w,2)}</td><td class="n">${e.n_with??"–"}</td><td class="n">${e.mean_with!=null?sp(e.mean_with):"–"}</td><td class="n">${e.mean_without!=null?sp(e.mean_without):"–"}</td><td class="n">${e.t!=null?num(e.t,1):"–"}</td></tr>`}).join("")}</table></div>
+  ${(L.history||[]).length?`<h3 style="margin-top:14px">Verlauf der automatischen Anpassungen</h3><div class="card"><ul class="chk">${L.history.map(h=>`<li data-s="i">${esc(h.date)}: ${Object.entries(h.changes).map(([k,[a,b]])=>`${esc(FACT[k]||k)} ${num(a,1)}→${num(b,1)}`).join(", ")} <span class="src">(n=${h.n}, Rangkorrelation ${num(h.rank_corr_old,2)}→${num(h.rank_corr_new,2)})</span></li>`).join("")}</ul></div>`:""}`}
+const FACT={liq_ok:"Liquidität ok",trig_A:"Trigger bestätigt (A)",trig_B:"Trigger Kandidat (B)",gex_neg_sv:"Short-Vola bei negativem Gamma",gex_pos_sv:"Short-Vola bei positivem Gamma",pwall_ok:"Short-Put an/unter Put-Wall",pwall_above:"Short-Put über Put-Wall",cwall_ok:"Short-Call an/über Call-Wall",cwall_below:"Short-Call unter Call-Wall",gex_neg_lv:"Long-Vola bei negativem Gamma",gex_pos_lv:"Long-Vola bei positivem Gamma",event_warn:"Termin/Nachricht – Warnung",event_in_life:"Makro-Termin in der Laufzeit",event_near:"Makro-Termin in 2 Tagen",sec_confirm:"SEC-Filings bestätigen",sec_against:"SEC-Filings dagegen",earn_in:"Earnings in der Laufzeit"};
+function renderOpt(){const A=D.audit||{findings:[],counts:{}};const c=A.counts||{};
+  $("#optimierung").innerHTML=`<h2>Gesundheitscheck der Kette</h2><p class="src">Supervisor-Prüfung vom ${esc(A.generated||"–")}: Daten, Backtests, Lookahead, Live-Trades, Risiko, Dashboard. Fehler behebt der Supervisor sofort; Änderungen am Modell nur nach deiner Freigabe.</p>
+  <div class="kpis" style="margin-bottom:12px"><div class="kpi"><small>Kritisch</small><b class="${c.kritisch?"bad":"ok"}">${c.kritisch||0}</b></div><div class="kpi"><small>Warnungen</small><b class="${c.warnung?"warn":"ok"}">${c.warnung||0}</b></div><div class="kpi"><small>Hinweise</small><b>${c.info||0}</b></div></div>
+  ${(A.findings||[]).length?`<div class="card"><ul class="chk">${A.findings.map(f=>`<li data-s="${f.sev==="kritisch"?"✗":f.sev==="warnung"?"!":"i"}" class="${SEV[f.sev]}"><b>${esc(f.area)}:</b> ${esc(f.text)}${f.fix?` <span class="src">→ ${esc(f.fix)}</span>`:""}</li>`).join("")}</ul></div>`:`<div class="card empty">Keine Befunde.</div>`}
+  ${learnHtml()}
+  <h2 style="margin-top:24px">Optimierungsvorschläge</h2><p class="src">Freigeben = der Supervisor setzt die Änderung im nächsten täglichen Lauf um, testet sie und trägt das Ergebnis hier ein. Nichts wird ohne Freigabe geändert.</p><div id="props"><div class="card empty">lädt …</div></div>`;
+  $("#props").addEventListener("click",e=>{const b=e.target.closest("button[data-act]");if(b)decide(b)});
+  PROPS=(D.proposals||[]).map(p=>({...p}));drawProps();
+  const use=window.claude?.use;if(!use)return;
+  use("db").then(db=>{if(!db)return;DB=db;const tm=setTimeout(()=>{const p=$("#props");if(p)p.insertAdjacentHTML("afterbegin",'<p class="src">Freigabe-Datenbank antwortet noch nicht – Stand aus dem letzten Lauf.</p>')},10000);
+    db.collection("proposals").onSnapshot(snap=>{if(!snap.metadata.fromCache)clearTimeout(tm);const live=snap.docs.filter(d=>d.exists).map(d=>({id:d.id,...d.data()}));
+      const ids=new Set(live.map(p=>p.id));PROPS=[...live,...(D.proposals||[]).filter(p=>!ids.has(p.id))];drawProps()},e=>{clearTimeout(tm)})}).catch(()=>{})}
+let POSDB=[];const LV={Handeln:"bad",Beobachten:"warn",OK:"ok"};
+async function takePosition(box){const msg=box.querySelector("[data-msg]"),n=+box.querySelector('[data-f="n"]').value,px=+box.querySelector('[data-f="px"]').value;
+  if(!DB){msg.textContent="Datenbank nicht verfügbar – im Chat melden";return}if(!(n>0)||!(px>0)){msg.textContent="Anzahl und Preis eingeben";return}
+  const [t,x]=box.dataset.key.split("|");let doc;
+  if(box.dataset.kind==="option"){const i=D.ideas.find(z=>z.ticker===t&&z.trigger===x);if(!i)return;const sign=i.payoff.debit_fill<0?-1:1;
+    doc={kind:"option",ticker:t,trigger:x,strategy:i.strategy,strategy_name:i.strategy_name,legs:i.legs.map(l=>({expiry:l.expiry,cp:l.cp,strike:l.strike,qty:l.qty})),contracts:n,entry_price:sign*px/100,
+      max_loss:Math.max(0.01,i.payoff.max_loss+(sign*px/100-i.payoff.debit_fill)),expr:i.expr||null,gex_entry:{...(i.gex||{}),spot:i.spot},regime_entry:D.macro.regime,spot_entry:i.spot}}
+  else{const e=(D.macro.equity_ideas||[]).find(z=>z.ticker===t&&z.direction===x);if(!e)return;doc={kind:"equity",ticker:t,direction:x,shares:n,entry_price:px,stop:e.stop,target:e.target,regime_entry:D.macro.regime,reason:e.reason}}
+  const id=(D.live_day||"")+"-"+t+"-"+Date.now().toString(36);Object.assign(doc,{id,opened:new Date().toISOString().slice(0,10),status:"offen"});
+  box.querySelector("button").disabled=true;msg.textContent="speichere …";
+  try{await DB.doc("positions/"+id).set(doc);msg.textContent="übernommen – Agent 7 überwacht die Position ab dem nächsten Lauf."}catch(err){msg.textContent="Fehler ("+(err?.code||err)+")";box.querySelector("button").disabled=false}}
+async function closePosition(btn){const id=btn.dataset.close;btn.disabled=true;try{await DB.doc("positions/"+id).update({status:"geschlossen",closed_at:new Date().toISOString().slice(0,10)})}catch(e){btn.disabled=false;alertBox("Schließen fehlgeschlagen")}}
+function alertBox(t){const s=$("#posmsg");if(s)s.textContent=t}
+function posCard(p){const ev=(D.positions?.positions||[]).find(e=>e.id===p.id);const lvl=ev?.level||"neu";
+  const legs=p.kind==="option"?p.legs.map(l=>`${l.qty>0?"+":""}${l.qty} ${l.cp==="C"?"Call":"Put"} ${num(l.strike,l.strike%1?2:0)} ${l.expiry}`).join(" · "):`${p.direction} ${p.shares} Stück @ ${num(p.entry_price)} · Stop ${num(p.stop)} · Ziel ${num(p.target)}`;
+  return `<div class="card"><div class="tk"><h3>${esc(p.ticker)}</h3><b>${esc(p.strategy_name||p.strategy||"Aktie")}</b><span class="chip ${LV[lvl]||"mute"}">${lvl==="neu"?"neu – wird im nächsten Lauf bewertet":lvl}</span><span class="mute">seit ${esc(p.opened)}${p.kind==="option"?` · ${p.contracts} Kontrakt${p.contracts>1?"e":""}`:""}</span></div>
+  <p class="src">${esc(legs)}</p>
+  ${ev?`<div class="nums"><div><small>Kurs</small><b>${num(ev.spot)}</b></div><div><small>P&L</small><b class="${(ev.pnl_usd||0)>=0?"ok":"bad"}">${usd(ev.pnl_usd)}</b></div>${ev.dte!=null?`<div><small>Tage bis Verfall</small><b>${ev.dte}</b></div>`:""}${ev.pct_max_profit!=null?`<div><small>Anteil Prämie verdient</small><b>${pct(ev.pct_max_profit,0)}</b></div>`:""}${ev.pnl_ror!=null?`<div><small>P&L / max. Verlust</small><b>${sp(ev.pnl_ror,0)}</b></div>`:""}</div>
+  <ul class="chk">${ev.alerts.map(a=>`<li data-s="${a.level==="Handeln"?"!":a.level==="Beobachten"?"~":"✓"}" class="${LV[a.level]||""}">${esc(a.text)}</li>`).join("")}</ul>`:""}
+  ${DB?`<div class="rng"><button type="button" data-close="${esc(p.id)}">Geschlossen</button></div>`:""}</div>`}
+function drawPos(){const L=POSDB.filter(p=>p.status==="offen");const ev=D.positions||{};const nH=(ev.positions||[]).filter(e=>e.level==="Handeln"&&L.some(p=>p.id===e.id)).length;
+  const a=document.querySelector('nav a[href="#positionen"]');if(a)a.textContent="Positionen"+(nH?` (${nH} ⚠)`:"");
+  $("#poslist").innerHTML=L.length?`<div class="grid2">${L.map(posCard).join("")}</div>`:`<div class="card empty">Keine offenen Positionen. In „Trade-Ideen“ oder „Richtung & Aktien“ mit „Eingegangen“ übernehmen.</div>`}
+function renderPos(){const ev=D.positions||{},T=ev.track||{};
+  $("#positionen").innerHTML=`<h2>Offene Positionen</h2><p class="src">Agent 7 prüft jede Position abends nach US-Schluss und zusätzlich ca. 1,5 Std. vor Handelsschluss. Stand der letzten Prüfung: ${esc(ev.stamp||"–")}${ev.intraday?" (untertägig)":""}. Bei „Handeln“ kommt eine Push-Nachricht.</p><p class="src" id="posmsg"></p><div id="poslist"><div class="card empty">lädt …</div></div>
+  <h2 style="margin-top:28px">Performance aller angezeigten Ideen (Papier-Trades)</h2><p class="src">Laufender Echtgeld-unabhängiger Test: Jede angezeigte Idee wird automatisch eröffnet – Optionen zum Fill-Preis (1 Kontrakt), Aktien mit der vorgeschlagenen Stückzahl – und nach festen Regeln geschlossen (Optionen wie im Backtest, Aktien bei Stop, Ziel oder nach 20 Handelstagen). Daneben laufen alle übrigen Kandidaten mit, auch abgelehnte, als Vergleich.</p>
+  <div class="kpis"><div class="kpi"><small>Angezeigte Ideen offen</small><b>${T.n_open_shown??0}</b></div><div class="kpi"><small>Angezeigte Ideen: P&L</small><b class="${(T.shown_all?.pnl_usd||0)>=0?"ok":"bad"}">${usd(T.shown_all?.pnl_usd)}</b><i>n=${T.shown_all?.n??0}</i></div><div class="kpi"><small>Top-Optionsideen Ø/Trade</small><b>${sp(T.top_options?.mean)}</b><i>Treffer ${pct(T.top_options?.win,0)}</i></div><div class="kpi"><small>Aktien-Ideen Ø (R)</small><b>${num(T.equity?.mean)}</b><i>Treffer ${pct(T.equity?.win,0)}</i></div><div class="kpi"><small>Alle Kandidaten Ø/Trade</small><b>${sp(T.all?.mean)}</b><i>n=${T.all?.n??0}</i></div><div class="kpi"><small>Backtest-Erwartung</small><b>${sp(T.vs_backtest?.backtest_erwartung)}</b></div></div>
+  ${(T.open_shown||[]).length?`<div class="card scroll" style="margin-top:12px"><h3>Offene Papier-Trades der angezeigten Ideen</h3><table><tr><th>Ticker</th><th>Art</th><th>Richtung</th><th>Eröffnet</th><th class="n">Einstieg</th><th class="n">Stop</th><th class="n">Ziel</th><th class="n">Stand</th></tr>${T.open_shown.map(o=>`<tr><td><b>${o.ticker}</b></td><td>${o.kind==="paper_equity"?"Aktie":esc(o.strategy||"Option")}</td><td class="${o.direction==="long"?"ok":o.direction==="short"?"bad":""}">${esc(o.direction||"–")}</td><td>${esc(o.opened)}</td><td class="n">${num(o.entry)}</td><td class="n">${o.stop!=null?num(o.stop):"–"}</td><td class="n">${o.target!=null?num(o.target):"–"}</td><td class="n">${o.last_pnl!=null?(o.kind==="paper_equity"?num(o.last_pnl)+" R":sp(o.last_pnl)):"–"}</td></tr>`).join("")}</table></div>`:""}
+  ${T.n_closed?`<div class="grid2" style="margin-top:12px"><div class="card"><h3>Kumulierter P&L in $</h3>${fig("",(s,W,H)=>lineChart(s,W,H,[{pts:T.curve_all||[],c:"var(--mute)",w:1.2},{pts:T.curve||[],c:"var(--red)",w:2.2}],{zero:1,fmt:v=>usd(v)}))}<p class="src"><span style="color:var(--red)">━</span> angezeigte Ideen · <span class="mute">━</span> alle Options-Kandidaten</p></div><div class="card scroll"><h3>Nach Urteil und Strike-Wahl</h3><table><tr><th>Gruppe</th><th class="n">n</th><th class="n">Ø</th><th class="n">Treffer</th><th class="n">P&L</th></tr>${[...Object.entries(T.by_verdict||{}),...Object.entries(T.by_gamma||{})].map(([k,v])=>`<tr><td>${esc(k)}</td><td class="n">${v.n}</td><td class="n">${sp(v.mean)}</td><td class="n">${pct(v.win,0)}</td><td class="n">${usd(v.pnl_usd)}</td></tr>`).join("")}</table></div></div>
+  <div class="card scroll" style="margin-top:12px"><h3>Zuletzt geschlossen</h3><table><tr><th>Ticker</th><th>Strategie</th><th>Richtung</th><th>Angezeigt</th><th>Urteil</th><th>Eröffnet</th><th>Geschlossen</th><th>Grund</th><th class="n">Ergebnis</th><th class="n">P&L</th></tr>${(T.recent||[]).map(r=>`<tr><td>${r.ticker}</td><td>${r.strategy}</td><td class="${r.direction==="long"?"ok":r.direction==="short"?"bad":""}">${esc(r.direction||"–")}</td><td>${r.top?"ja":"–"}</td><td>${r.verdict}</td><td>${r.opened}</td><td>${r.closed}</td><td>${r.reason}</td><td class="n ${r.ror>0?"ok":"bad"}">${r.strategy==="equity"?num(r.ror)+" R":sp(r.ror)}</td><td class="n">${usd(r.usd)}</td></tr>`).join("")}</table></div>`:`<div class="card empty" style="margin-top:12px">Noch keine geschlossenen Papier-Trades. ${T.n_open??0} laufen (davon ${T.n_open_shown??0} angezeigte Ideen); sie schließen nach ihren Regeln (z. B. 50 % Gewinn, Stop/Ziel, Verfall).</div>`}`;
+  $("#poslist").addEventListener("click",e=>{const b=e.target.closest("button[data-close]");if(b)closePosition(b)});
+  POSDB=(ev.positions||[]).map(p=>({...p}));drawPos();
+  const use=window.claude?.use;if(!use)return;
+  use("db").then(db=>{if(!db)return;DB=db;db.collection("positions").onSnapshot(snap=>{POSDB=snap.docs.filter(d=>d.exists).map(d=>({id:d.id,...d.data()}));drawPos()},()=>{})}).catch(()=>{})}
+function route(){const h=(location.hash||"#ideen").slice(1);const id=TABS.some(t=>t[0]===h)?h:"ideen";document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id===id));document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+id));mount()}
+$("#nav").innerHTML=TABS.map(([k,l])=>`<a href="#${k}">${l}</a>`).join("");
+fetch("data/summary.json").then(r=>r.json()).then(d=>{D=d;hero();[renderIdeen,renderPos,renderRicht,renderMarkt,renderStrat,renderLog,renderOpt].forEach(f=>{try{f()}catch(e){console.log(f.name,e)}});route()}).catch(e=>{$("#finding").textContent="Daten konnten nicht geladen werden: "+e});
+addEventListener("hashchange",route);
+
+/* ---------- Fragen an das Agentennetzwerk ---------- */
+const QA_ON={v:null};
+function askBox(kind,key){return`<div class="ask" data-kind="${kind}" data-key="${esc(key)}" style="margin-top:10px"><textarea rows="2" placeholder="Frage an die Agenten zu diesem Vorschlag (z. B. Warum dieser Strike? Was passiert bei FOMC? Lieber Calendar?)" style="width:100%;box-sizing:border-box"></textarea><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px"><button type="button" data-ask>Fragen</button><label class="src"><input type="checkbox" data-deep> im Abendlauf mit eigenen Backtests vertiefen</label></div><div class="ans note" aria-live="polite"></div></div>`}
+function slim(o,depth=0){if(o==null||typeof o!=="object")return o;if(Array.isArray(o))return o.length>40?{n:o.length,last:o.slice(-5).map(x=>slim(x,depth+1))}:o.map(x=>slim(x,depth+1));const r={};for(const[k,v]of Object.entries(o)){if(["ohlc","bars","profile","series","yearly","draw"].includes(k))continue;r[k]=depth>4?"…":slim(v,depth+1)}return r}
+function askContext(kind,key){const [t,x]=key.split("|");
+  const idea=kind==="option"?(D.ideas||D.top||[]).find(i=>i.ticker===t&&i.trigger===x):(D.macro?.equity_ideas||[]).find(e=>e.ticker===t&&e.direction===x);
+  const trig=kind==="option"?(D.triggers||[]).find(z=>z.id===x):null;const E=D.events||{};
+  return slim({heute:D.live_day,konto:D.account,risiko:D.risk,vorschlag:idea,trigger_backtest:trig,preisaktion:(D.price||{})[t],
+    makro:{regime:D.macro?.regime,markt:D.macro?.market},termine:(E.calendar||[]).filter(e=>e.bdays>=0).slice(0,12),nachrichten:E.news,
+    sec_insider:(D.filings?.now||{})[t]||[],google_trends:(D.social?.trends?.now||[]).find(z=>z.ticker===t)||null,
+    lernmodul:{gewichte:D.learn?.weights,notiz:D.learn?.note},offene_positionen:(D.positions?.positions||[]).filter(p=>p.ticker===t)})}
+const ASK_SYS=`Du bist das Agentennetzwerk der Options-Agentenkette von Markus (Agenten 0–11: Trigger-Forschung, Ticker-Regeln, Live-Trades mit Gamma-Strikes, Preisaktion, Makro, Dashboard, Positionen, Chartmuster, Termine & Nachrichten, Posts & Google Trends, SEC-Filings, Supervisor mit Lernmodul). Beantworte die Frage zu GENAU diesem Vorschlag auf Deutsch, knapp (max. ~180 Wörter), konkret mit Zahlen.
+Regeln: Nutze ausschließlich die mitgegebenen Daten (JSON) und die Werkzeuge; erfinde keine Kurse, Quotes, Studien oder Backtest-Ergebnisse. Wenn eine Antwort einen neuen Backtest oder Live-Daten bräuchte, die nicht vorliegen, sag das klar und empfiehl „im Abendlauf vertiefen“. Nenne, welcher Agent welchen Befund liefert. Weise auf Risiken hin (Termine, Gamma, Liquidität), keine Anlageberatung, Markus entscheidet.`;
+async function ask(box){const q=box.querySelector("textarea").value.trim(),out=box.querySelector(".ans"),btn=box.querySelector("button[data-ask]");
+  if(!q){out.innerHTML='<span class="bad">Bitte zuerst eine Frage eingeben.</span>';return}
+  const kind=box.dataset.kind,key=box.dataset.key,deep=box.querySelector("[data-deep]").checked;const ctx=askContext(kind,key);
+  btn.disabled=true;out.textContent="Die Agenten denken nach …";
+  let sample=null;try{sample=window.claude?.use?await window.claude.use("sample"):null}catch(e){sample=null}
+  let answer="";
+  if(sample){try{const r=await sample([{role:"user",content:ASK_SYS+"\n\nDATEN:\n"+JSON.stringify(ctx)+"\n\nFRAGE VON MARKUS:\n"+q}],{modelTier:"complex",cache:false,
+      tools:[{name:"ticker_daten",description:"Preisaktion, Chartmuster und GEX-Daten eines anderen Tickers aus dem Dashboard",inputSchema:{type:"object",properties:{ticker:{type:"string"}},required:["ticker"]},execute:({ticker})=>slim({preisaktion:(D.price||{})[ticker?.toUpperCase()],ideen:(D.ideas||[]).filter(i=>i.ticker===ticker?.toUpperCase()).map(i=>({strategie:i.strategy_name,final:i.final,checks:i.checks}))})},
+             {name:"strategie_backtests",description:"Backtest-Kennzahlen aller Trigger, Chartmuster, SEC- und Trends-Signale",inputSchema:{type:"object",properties:{}},execute:()=>slim({trigger:(D.triggers||[]).map(t=>({id:t.id,name:t.name,status:t.status,oos:t.oos})),sec:D.filings?.tests,trends:D.social?.trends?.tests})}],
+      onText:({text})=>{answer=text;out.textContent=text}});answer=r.text;out.textContent=answer}
+    catch(e){out.textContent=e?.code==="not_granted"?"Live-Antwort nicht freigegeben – Frage wird im Abendlauf beantwortet.":"Live-Antwort gerade nicht möglich ("+(e?.code||"Fehler")+") – Frage wird im Abendlauf beantwortet."}}
+  else out.textContent="Live-Antwort hier nicht verfügbar – Frage wird im Abendlauf beantwortet.";
+  try{if(DB){await DB.collection("questions").add({created:new Date().toISOString(),kind,key,question:q.slice(0,2000),answer:(answer||"").slice(0,6000),deep:deep||!answer,status:(deep||!answer)?"offen":"beantwortet",day:D.live_day});
+      out.insertAdjacentHTML("beforeend",`<p class="src">${(deep||!answer)?"Gespeichert – der Abendlauf prüft die Frage mit eigenen Daten/Backtests und antwortet im Reiter Agenten-Log.":"Gespeichert."}</p>`)}}catch(e){}
+  btn.disabled=false}
+document.addEventListener("click",e=>{const b=e.target.closest("button[data-ask]");if(b)ask(b.closest(".ask"))});
+document.addEventListener("click",e=>{const b=e.target.closest("button[data-take]");if(b)takePosition(b.closest(".take"))});
+if(window.claude?.use)window.claude.use("db").then(db=>{if(db)DB=db}).catch(()=>{});
+}
+</script>
+</body>
+</html>

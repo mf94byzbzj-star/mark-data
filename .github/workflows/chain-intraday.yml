@@ -1,0 +1,25 @@
+name: Agentenkette – Untertägiger Schnappschuss
+on:
+  schedule:
+    - cron: "25 19 * * 1-5"    # ~14:25 New York (Winterzeit) / 15:25 (Sommerzeit): Ketten für den Positionswächter
+  push:
+    paths: ["chain_data/.run_intraday"]
+  workflow_dispatch:
+concurrency:
+  group: chain-intraday
+  cancel-in-progress: true
+permissions:
+  contents: write
+jobs:
+  intraday:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -q pandas pyyaml requests scipy
+      - run: |
+          git config user.name "data-bot"
+          git config user.email "data-bot@users.noreply.github.com"
+          python chain/fetch/fetch.py intraday

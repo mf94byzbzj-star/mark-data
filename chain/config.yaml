@@ -1,0 +1,36 @@
+# Agentenkette – Konfiguration (unabhängig vom Options-Quant-Agenten in config.yaml)
+
+# Universum: liquide US-Optionswerte. Historie stammt aus DoltHub (S&P-500/400/600-Werte + SPDR-ETFs),
+# QQQ/IWM/DIA fehlen dort und haben nur Live-Daten (Cboe) – sie wachsen über die eigene Aufzeichnung.
+universe:
+  etfs: [SPY, MDY, XLK, XLF, XLE, XLV, XLY, XLP, XLI, XLU, XLB, XLRE, XLC, XBI, KRE, XRT, XOP, XME, XHB, GLD, SLV, QQQ, IWM, DIA, TLT, HYG, SMH, EEM, FXI, EWZ, USO, ARKK]
+  stocks: [AAPL, MSFT, NVDA, AMZN, META, GOOGL, GOOG, TSLA, AVGO, AMD, NFLX, CRM, ORCL, ADBE, INTC, MU, QCOM, TXN, AMAT, LRCX, KLAC, MRVL, ANET, CSCO, IBM, NOW, INTU, PANW, CRWD, PLTR, UBER, ABNB, BKNG, SHOP, SNOW, COIN, MSTR, SMCI, DELL, HPQ,
+           JPM, BAC, WFC, C, GS, MS, SCHW, AXP, V, MA, PYPL, BLK, COF,
+           UNH, LLY, JNJ, PFE, MRK, ABBV, AMGN, GILD, BMY, CVS, MRNA, ISRG, TMO, DHR,
+           WMT, COST, HD, LOW, TGT, MCD, SBUX, NKE, KO, PEP, PG, DIS, CMCSA, T, VZ,
+           XOM, CVX, COP, OXY, SLB, HAL, DVN, FCX, NEM,
+           BA, CAT, DE, GE, HON, LMT, RTX, UPS, FDX, UNP, F, GM, DAL, UAL, CCL, LVS, WYNN]
+
+account_size: 100000          # USD – Kontogröße für die Positionsgröße (anpassen)
+risk:
+  options_per_trade: 0.02     # max. Verlust je Optionstrade (2 %)
+  equity_per_trade: 0.03      # Verlust bis Stop je Aktientrade (ungehebelt, daher höher)
+  equity_max_position: 0.20   # max. Positionsgröße je Aktie (Anteil Konto)
+  max_ideas: 8                # max. Trade-Ideen pro Tag (je Optionen und Aktien)
+  max_total_option_risk: 0.10 # Summe max. Verluste aller vorgeschlagenen Optionstrades (10 %)
+  max_total_equity_exposure: 1.0  # Summe aller Aktienpositionen max. 100 % des Kontos (ungehebelt)
+only_defined_risk: true       # keine nackten Short-Optionen
+
+research:
+  in_sample_frac: 0.6         # Walk-forward: 60 % Kalibrierung, 40 % Out-of-Sample
+  fdr_q: 0.10                 # Benjamini-Hochberg
+  min_oos_trades: 40
+  min_oos_t: 2.0              # geclusterter t-Wert (Monats-Cluster)
+  cand_t: 1.5                 # P001: Kandidat erst ab OOS t >= 1,5 und Vorsprung > 0, sonst „beobachten“
+  pattern_min_R: 0.10         # P004: Chartmuster handelbar erst ab OOS Ø ≥ +0,10 R je Trade
+  cost_mult_stress: 3.0       # Kosten-Stresstest
+  slippage_frac: 0.5          # Anteil des halben Bid-Ask-Spreads je Leg (Normalfall)
+
+live:
+  min_open_interest: 100
+  max_rel_spread: 0.25

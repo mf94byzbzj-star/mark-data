@@ -1,0 +1,12 @@
+2026-11: 308454 Zeilen, 0 neue Ticker-Tage (111s)
+2026-10: 450194 Zeilen, 0 neue Ticker-Tage (156s)
+2019-01: 0 Zeilen, 0 neue Ticker-Tage (0s)
+Klon-Backfill vollständig; ohne DoltHub-Daten: ['ARKK', 'EEM', 'EWZ', 'FXI', 'GLD', 'HYG', 'IWM', 'QQQ', 'SHOP', 'SLV', 'SMH', 'SNOW', 'TLT', 'USO']
+volhist 2019: 47298 Zeilen
+volhist 2020: 248989 Zeilen
+volhist 2021: 231413 Zeilen
+volhist 2022: 230773 Zeilen
+volhist 2023: 221222 Zeilen
+volhist 2024: 280818 Zeilen
+volhist 2025: 397529 Zeilen
+volhist 2026: 349235 Zeilen

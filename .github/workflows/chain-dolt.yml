@@ -1,0 +1,50 @@
+name: Agentenkette – DoltHub-Historie
+on:
+  schedule:
+    - cron: "15 2 * * *"       # täglich: neue Tage über die API (wenige Abfragen)
+  push:
+    paths: ["chain_data/.run_backfill"]
+  workflow_dispatch:
+    inputs:
+      mode: { description: "dolt (API, neue Tage) | clone (kompletter Backfill über lokalen Klon)", default: "dolt" }
+concurrency:
+  group: chain-data
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  dolt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -q pandas pyyaml requests scipy
+      - name: Modus bestimmen
+        id: m
+        run: |
+          M="${{ github.event.inputs.mode }}"
+          if [ -z "$M" ]; then
+            if [ "${{ github.event_name }}" = "push" ] && grep -q clone chain_data/.run_backfill; then M=clone; else M=dolt; fi
+          fi
+          # Fehlt die Historie noch weitgehend, immer über den Klon
+          N=$(ls chain_data/surface/*.csv.gz 2>/dev/null | wc -l)
+          if [ "$N" -lt 20 ]; then M=clone; fi
+          # Klon-Backfill noch nicht vollständig -> Klon (setzt beim letzten geladenen Monat fort)
+          if ! grep -q '"clone_complete": true' chain_data/surface/_state.json 2>/dev/null; then M=clone; fi
+          echo "mode=$M" >> $GITHUB_OUTPUT; echo "Modus: $M"
+      - name: Platz schaffen + Dolt installieren + klonen
+        if: steps.m.outputs.mode == 'clone'
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android /opt/hostedtoolcache/CodeQL /usr/local/share/boost || true
+          df -h / | tail -1
+          sudo bash -c 'curl -sL https://github.com/dolthub/dolt/releases/latest/download/install.sh | bash'
+          dolt config --global --add user.email bot@example.com; dolt config --global --add user.name bot
+          time dolt clone --depth 1 post-no-preference/options /tmp/opts
+          du -sh /tmp/opts; df -h / | tail -1
+      - name: Daten laden
+        run: |
+          git config user.name "data-bot"
+          git config user.email "data-bot@users.noreply.github.com"
+          if [ "${{ steps.m.outputs.mode }}" = "clone" ]; then python chain/fetch/fetch.py clone /tmp/opts; else python chain/fetch/fetch.py dolt; fi

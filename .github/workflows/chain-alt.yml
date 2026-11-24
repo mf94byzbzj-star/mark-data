@@ -1,0 +1,30 @@
+name: Agentenkette – Insider & Google Trends
+on:
+  schedule:
+    - cron: "50 22 * * 1-5"    # nach dem Tagesabruf: SEC-Form-4 + Google Trends
+  push:
+    paths: ["chain_data/.run_alt"]
+  workflow_dispatch:
+concurrency:
+  group: chain-alt
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  alt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -q pandas pyyaml requests pytrends
+      - run: |
+          git config user.name "data-bot"
+          git config user.email "data-bot@users.noreply.github.com"
+      - name: SEC Insider (Form 4)
+        run: python chain/fetch/fetch_alt.py insider
+        env: { ALT_BUDGET_MIN: "60", SEC_USER_AGENT: "${{ secrets.SEC_USER_AGENT }}" }
+      - name: Google Trends
+        run: python chain/fetch/fetch_alt.py trends
+        env: { ALT_BUDGET_MIN: "40" }
