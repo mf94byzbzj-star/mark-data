@@ -406,6 +406,11 @@ def run(today=None):
     ss.selection(st, today)                   # Kohorten nach 21 aktiven Handelstagen: klonen/eliminieren, Rücksprung prüfen
     st["last_day"] = str(today)
     ss.save_state(st)
+    try:
+        from arena import health
+        health.run(st, today)                 # Technik-Supervisor
+    except Exception as e:
+        print("health", e)
     ss.write_summary(st)
     return st
 

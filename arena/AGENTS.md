@@ -39,7 +39,16 @@ Einmalige Orders des Supervisors: `arena/nets/<ID>/orders.json` (gleiche Form) �
 - Nach dem Denk-Lauf: `python -m arena.engine <letzter Handelstag>` ausführen, damit die freigegebenen Netze noch am selben Tag
   handeln (der Code lässt einen Nachlauf nur zu, wenn an dem Tag pausiert war).
 
+## Zwei Supervisor-Rollen
+- **Technik-Supervisor** (Code `arena/health.py` bei jedem Tageslauf + Schritt 0 jedes Denk-Laufs): Daten aktuell? Signale zum
+  Datentag passend? Workflows grün? Netze ohne Absturz, heute bewertet, Kasse nicht negativ? Herzschlag? Fehler SOFORT beheben
+  (Abrufcode, Engine, Netz-Code), dokumentieren in `arena/tech_log.md`. Keine inhaltlichen Änderungen an Strategien.
+- **Super-Supervisor + Netz-Supervisoren** (inhaltlich): Auswahl, Mutation, Analyse, Anweisungen – siehe unten.
+
 ## Denk-Lauf (täglich kurz, sonntags ausführlich – Reihenfolge)
+0. **Technik-Supervisor:** `python -m arena.health` und `arena/out/health.json` lesen; jeden Befund „kritisch“/„warnung“ prüfen und
+   beheben (z. B. Workflow neu starten per Marker `chain_data/.run_daily`/`.run_alt`/`.run_backfill`, Code reparieren, Signale
+   mit `python -m chain.run a1 a2 a10 a11 a9 a3 a8 a4 a5` neu rechnen). Kurz in `arena/tech_log.md` festhalten.
 1. `git pull`; `arena/state.json`, `arena/out/summary.json` lesen.
 2. **Neue Netze mit `mutation_pending: true`** (Status „wartet“ oder frisch „lebt“): je Netz als dessen Supervisor denken:
    - Eltern-Netz auswerten (book.json der Eltern, notes.md: was lief gut/schlecht, welche Trades, welches Regime).
