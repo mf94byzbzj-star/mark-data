@@ -106,7 +106,7 @@ def _welch(a, b):
 
 def selection(st, today):
     for c in st["cohorts"]:
-        if c["status"] != "läuft" or (today - dt.date.fromisoformat(c["born"])).days < CFG["cohort_days"]:
+        if c["status"] != "läuft" or c.get("active_days", 0) < CFG["cohort_trading_days"]:
             continue
         comp = [st["nets"][i] for i in c["members"]]
         elig = sorted([n for n in comp if (n.get("m") or {}).get("n_trades", 0) >= CFG["min_trades_to_win"]],
@@ -201,7 +201,7 @@ def write_summary(st):
                      "m": n.get("m"), "idea": g.get("idee") or g.get("name"), "changes": g.get("changes", [])[-3:]})
     alive = [n for n in nets if n["status"] == "lebt"]
     comp = [n for n in alive if n["kind"] in ("klon", "frei")]
-    out = {"updated": str(dt.date.today()), "round": len(st["rounds"]), "cohorts": st["cohorts"][-8:], "rounds": st["rounds"][-30:],
+    out = {"updated": str(dt.date.today()), "round": len(st["rounds"]), "pause": st.get("pause"), "cohorts": st["cohorts"][-8:], "rounds": st["rounds"][-30:],
            "alert": st["alert"], "rollbacks": st["rollbacks"], "best_round": st["best_round"], "pending": len(st["pending"]),
            "alive": len(comp), "controls_alive": len(alive) - len(comp), "nets": nets, "curves": curves, "rules": CFG,
            "pop": {"mean_ret": round(float(np.mean([(n["m"] or {}).get("ret", 0) for n in comp])), 5) if comp else None,

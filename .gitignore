@@ -4,3 +4,8 @@ data_synth/
 reports_synth/
 lab/reports/*.html
 chain_lab/cache/
+chain_lab/out/a7_positions.json
+chain_lab/out/a0_*.json
+chain_lab/out/notes.json
+chain_lab/positions/
+chain_lab/track/

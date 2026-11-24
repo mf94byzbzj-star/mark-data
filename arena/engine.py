@@ -343,12 +343,29 @@ def run(today=None):
     st = ss.load_state()
     days = data.live_days()
     base = os.path.join(data.D, "live", days[-1]) if days else None
-    if st.get("last_day") == str(today):
+    if st.get("last_day") == str(today) and st.get("traded_day") == str(today):
         print("heute schon gelaufen")
-        return st
+        return st   # Nachlauf am selben Tag nur, wenn vorher wegen Pause nicht gehandelt wurde (z. B. nach dem Denk-Lauf)
     fresh = bool(days) and days[-1] == str(today)   # nur an Tagen mit frischer Cboe-Kette handeln (kein Handel auf alten Kursen)
     if fresh:
         ss.births(st, today)                  # neue Kohorte (wöchentlich) vor dem Handel
+    # Ohne Claude kein Handel: Arena pausiert, wenn der letzte Denk-Lauf zu lange her ist; eine Kohorte pausiert,
+    # solange ein Netz noch auf seinen Supervisor wartet (mutation_pending). Bestehende Stops/Ausstiege laufen weiter.
+    hb = jl(os.path.join(A, "heartbeat.json"), {}) or {}
+    last = hb.get("last_think")
+    gpause = (not last) or (today - dt.date.fromisoformat(last)).days > CFG.get("think_max_age_days", 9)
+    st["pause"] = {"global": gpause, "last_think": last,
+                   "reason": None if not gpause else ("noch kein Claude-Denk-Lauf" if not last else f"letzter Claude-Denk-Lauf {last} – wartet auf Claude-Kontingent")}
+    cpause = {}
+    for c in st["cohorts"]:
+        if c["status"] == "läuft":
+            waiting = [i for i in c["members"] if st["nets"][i].get("mutation_pending")]
+            cpause[c["id"]] = gpause or bool(waiting)
+            c["paused"] = cpause[c["id"]]
+            c["waiting"] = waiting
+            if fresh and not cpause[c["id"]] and c.get("last_active") != str(today):
+                c["active_days"] = c.get("active_days", 0) + 1
+                c["last_active"] = str(today)
     ctx = context(today)
     for net in [n for n in st["nets"].values() if n["status"] == "lebt"]:
         bp = os.path.join(NETS, net["id"], "book.json")
@@ -367,10 +384,10 @@ def run(today=None):
                 orders = policy_spy(ctx, book)
             else:
                 orders = []
-            if not fresh:
+            if not fresh or cpause.get(net.get("cohort"), True):
                 orders = []
             manual = os.path.join(NETS, net["id"], "orders.json")   # Orders des Supervisors aus dem Wochenlauf
-            if fresh and os.path.exists(manual):
+            if fresh and not cpause.get(net.get("cohort"), True) and os.path.exists(manual):
                 orders = (json.load(open(manual)) or []) + orders
                 os.remove(manual)
             lg = execute(book, orders, ctx, today, net["id"])
@@ -378,11 +395,15 @@ def run(today=None):
         except Exception as e:
             lg, net["last_error"] = [], f"{type(e).__name__}: {e}"[:300]
         eq, rk = mark_book(book, today, base)
+        if book["curve"] and book["curve"][-1]["day"] == str(today):
+            book["curve"].pop()
         book["curve"].append({"day": str(today), "equity": round(eq, 2), "risk": round(rk, 2)})
         jd(book, bp)
         net["m"] = metrics(book)
         net["last_orders"] = [x for x in lg if x.get("ok")][:10]
-    ss.selection(st, today)                   # Kohorten nach 30 Tagen: klonen/eliminieren, Rücksprung prüfen
+    if fresh and any(not v for v in cpause.values()):
+        st["traded_day"] = str(today)
+    ss.selection(st, today)                   # Kohorten nach 21 aktiven Handelstagen: klonen/eliminieren, Rücksprung prüfen
     st["last_day"] = str(today)
     ss.save_state(st)
     ss.write_summary(st)

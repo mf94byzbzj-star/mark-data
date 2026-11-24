@@ -1,0 +1,39 @@
+name: Markus-Regeln (Kontrolle, eingefroren)
+idee: Unveränderte Regeln der Original-Kette als Vergleich
+risk_per_trade: 0.1
+trigger_status:
+- bestätigt
+- Kandidat
+use_final_gates: true
+final_ok:
+- freigegeben
+min_score: 2
+weights:
+  liq_ok: 1
+  trig_A: 2
+  trig_B: 0
+  gex_neg_sv: -1
+  gex_pos_sv: 1
+  pwall_ok: 0.5
+  pwall_above: 0
+  cwall_ok: 0.5
+  cwall_below: 0
+  gex_neg_lv: 1
+  gex_pos_lv: 0
+  event_warn: -1
+  event_in_life: 0
+  event_near: 0
+  sec_confirm: 1
+  sec_against: -1
+  earn_in: -2
+strategies_off: []
+triggers_off: []
+max_new_per_day: 3
+max_open_options: 8
+trade_equity: true
+equity_risk: 0.03
+equity_days: 20
+max_open_equity: 5
+regime_block: []
+exit_override: null
+changes: []

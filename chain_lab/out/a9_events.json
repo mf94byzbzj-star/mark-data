@@ -1,0 +1,193 @@
+{
+ "date": "2026-11-24",
+ "calendar": [
+  {
+   "date": "2026-11-26",
+   "time_et": "",
+   "type": "Feiertag",
+   "name": "Thanksgiving – US-Börsen geschlossen",
+   "impact": "mittel",
+   "source": "https://www.nyse.com/markets/hours-calendars",
+   "bdays": 2
+  },
+  {
+   "date": "2026-11-27",
+   "time_et": "13:00",
+   "type": "Feiertag",
+   "name": "Black Friday – Handelsschluss 13:00 ET (dünne Liquidität)",
+   "impact": "mittel",
+   "source": "https://www.nyse.com/markets/hours-calendars",
+   "bdays": 3
+  },
+  {
+   "date": "2026-12-04",
+   "time_et": "08:30",
+   "type": "NFP",
+   "name": "Arbeitsmarktbericht November",
+   "impact": "hoch",
+   "source": "https://www.bls.gov/schedule/2026/12_sched_list.htm",
+   "bdays": 8
+  },
+  {
+   "date": "2026-12-09",
+   "time_et": "14:00",
+   "type": "FOMC",
+   "name": "FOMC-Zinsentscheid + Projektionen",
+   "impact": "hoch",
+   "source": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+   "bdays": 11
+  },
+  {
+   "date": "2026-12-10",
+   "time_et": "",
+   "type": "Earnings",
+   "name": "Earnings AVGO",
+   "impact": "mittel",
+   "ticker": "AVGO",
+   "source": "Earnings-Daten (yfinance)",
+   "bdays": 12
+  },
+  {
+   "date": "2026-12-10",
+   "time_et": "08:30",
+   "type": "CPI",
+   "name": "Verbraucherpreise (CPI) November",
+   "impact": "hoch",
+   "source": "https://www.bls.gov/schedule/news_release/cpi.htm",
+   "bdays": 12
+  },
+  {
+   "date": "2026-12-18",
+   "time_et": "16:00",
+   "type": "OpEx",
+   "name": "Großer Verfall (Hexensabbat)",
+   "impact": "mittel",
+   "source": "berechnet (3. Freitag)",
+   "bdays": 18
+  },
+  {
+   "date": "2026-12-24",
+   "time_et": "13:00",
+   "type": "Feiertag",
+   "name": "Heiligabend – Handelsschluss 13:00 ET",
+   "impact": "mittel",
+   "source": "https://www.nyse.com/markets/hours-calendars",
+   "bdays": 22
+  },
+  {
+   "date": "2026-12-25",
+   "time_et": "",
+   "type": "Feiertag",
+   "name": "Weihnachten – US-Börsen geschlossen",
+   "impact": "mittel",
+   "source": "https://www.nyse.com/markets/hours-calendars",
+   "bdays": 23
+  },
+  {
+   "date": "2027-01-01",
+   "time_et": "",
+   "type": "Feiertag",
+   "name": "Neujahr – US-Börsen geschlossen",
+   "impact": "mittel",
+   "source": "https://www.nyse.com/markets/hours-calendars",
+   "bdays": 28
+  },
+  {
+   "date": "2027-01-08",
+   "time_et": "08:30",
+   "type": "NFP",
+   "name": "Arbeitsmarktbericht Dezember",
+   "impact": "hoch",
+   "source": "https://www.bls.gov/schedule/2027/01_sched_list.htm",
+   "bdays": 33
+  }
+ ],
+ "news": {
+  "date": "2026-11-24",
+  "risk": "erhöht",
+  "summary": "Kräftige Gegenbewegung nach Korrektur: Nvidia setzt Jensen Huang wieder als CEO ein, NVDA ~+32 %, Nasdaq ~+6,8 %, S&P 500 ~+5 % (Intraday), VIX von 35,9 (Fr.) auf ~27. Vorher 7 Verlusttage, S&P ~12 % unter Oktober-Hoch. Fed: Markt erwartet Anhebung am 9.12.; PCE und BIP am Mittwoch. CRWD übernimmt ZS (43,9 Mrd. $). Thanksgiving: Do geschlossen, Fr verkürzt.",
+  "items": [
+   {
+    "headline": "Nvidia setzt Jensen Huang wieder als CEO ein – NVDA über +30 %, Nasdaq bester Tag seit April 2025",
+    "impact": "hoch",
+    "scope": "ticker",
+    "tickers": [
+     "NVDA",
+     "MU"
+    ],
+    "url": "https://finance.yahoo.com/markets/live/stock-market-today-monday-november-23-dow-sp-500-nasdaq-nvidia-reinstates-jensen-huang-141511975.html"
+   },
+   {
+    "headline": "Vorwoche: S&P 500 −8,6 %, Nasdaq −10 %, S&P in Korrektur, VIX auf 7-Monats-Hoch; Inflationsdaten stützen Fed-Anhebung im Dezember",
+    "impact": "hoch",
+    "scope": "markt",
+    "tickers": [
+     "SPY",
+     "QQQ"
+    ],
+    "url": "https://www.abc.net.au/news/2026-11-23/asx-markets-business-live-news-november-23/107414602"
+   },
+   {
+    "headline": "CrowdStrike kauft Zscaler für 43,9 Mrd. $ – CRWD ca. −11 %; MU ca. +19 %, TSLA ca. +13 %",
+    "impact": "mittel",
+    "scope": "ticker",
+    "tickers": [
+     "CRWD",
+     "MU",
+     "TSLA"
+    ],
+    "url": "https://www.fool.com/coverage/stock-market-today/2026/11/23/stock-market-midday-nov-23-nasdaq-surges-nearly-7-as-jensen-huang-s-return-sparks-historic-ai-rebound/"
+   },
+   {
+    "headline": "Trump begrüßt Huangs Rückkehr; Finanzminister Bessent: Entscheidung von China-Ermittlungen abhängig",
+    "impact": "niedrig",
+    "scope": "ticker",
+    "tickers": [
+     "NVDA"
+    ],
+    "url": "https://finance.yahoo.com/markets/stocks/articles/trump-throws-weight-behind-jensen-041337724.html"
+   }
+  ]
+ },
+ "news_stale": false,
+ "next_high": [
+  {
+   "date": "2026-12-04",
+   "time_et": "08:30",
+   "type": "NFP",
+   "name": "Arbeitsmarktbericht November",
+   "impact": "hoch",
+   "source": "https://www.bls.gov/schedule/2026/12_sched_list.htm",
+   "bdays": 8
+  },
+  {
+   "date": "2026-12-09",
+   "time_et": "14:00",
+   "type": "FOMC",
+   "name": "FOMC-Zinsentscheid + Projektionen",
+   "impact": "hoch",
+   "source": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+   "bdays": 11
+  },
+  {
+   "date": "2026-12-10",
+   "time_et": "08:30",
+   "type": "CPI",
+   "name": "Verbraucherpreise (CPI) November",
+   "impact": "hoch",
+   "source": "https://www.bls.gov/schedule/news_release/cpi.htm",
+   "bdays": 12
+  },
+  {
+   "date": "2027-01-08",
+   "time_et": "08:30",
+   "type": "NFP",
+   "name": "Arbeitsmarktbericht Dezember",
+   "impact": "hoch",
+   "source": "https://www.bls.gov/schedule/2027/01_sched_list.htm",
+   "bdays": 33
+  }
+ ],
+ "risk": "erhöht",
+ "blackout_short_vol": []
+}

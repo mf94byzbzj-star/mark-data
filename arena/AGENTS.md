@@ -30,7 +30,16 @@ Orders: `{"type":"option","cid":…, "risk":0.05}` · `{"type":"equity","ticker"
 "target":…|null, "risk":0.03, "max_days":20}` · `{"type":"close","id":…}`. `risk` = Anteil des Kontos bis Stop/Max-Verlust (≤ 0,10).
 Einmalige Orders des Supervisors: `arena/nets/<ID>/orders.json` (gleiche Form) – werden am nächsten Handelstag ausgeführt.
 
-## Wöchentlicher Denk-Lauf (Reihenfolge)
+## Ohne Claude kein Handel (Markus, 24.11.2026)
+- Jeder Denk-Lauf schreibt am Ende `arena/heartbeat.json` = `{"last_think": "<YYYY-MM-DD>"}`.
+- Ist der letzte Denk-Lauf älter als 9 Tage (z. B. Claude-Kontingent aufgebraucht), pausiert die Arena: kein neuer Handel, keine
+  Auswahl, die 21-Handelstage-Uhr der Kohorten steht. Bestehende Stops/Ausstiege laufen weiter (Schutz). Sobald wieder gedacht
+  wird, geht es weiter.
+- Eine Kohorte pausiert, solange eines ihrer Netze `mutation_pending` hat (neue Netze handeln erst nach ihrem Supervisor).
+- Nach dem Denk-Lauf: `python -m arena.engine <letzter Handelstag>` ausführen, damit die freigegebenen Netze noch am selben Tag
+  handeln (der Code lässt einen Nachlauf nur zu, wenn an dem Tag pausiert war).
+
+## Denk-Lauf (täglich kurz, sonntags ausführlich – Reihenfolge)
 1. `git pull`; `arena/state.json`, `arena/out/summary.json` lesen.
 2. **Neue Netze mit `mutation_pending: true`** (Status „wartet“ oder frisch „lebt“): je Netz als dessen Supervisor denken:
    - Eltern-Netz auswerten (book.json der Eltern, notes.md: was lief gut/schlecht, welche Trades, welches Regime).
@@ -45,4 +54,4 @@ Einmalige Orders des Supervisors: `arena/nets/<ID>/orders.json` (gleiche Form) �
    (Regime? zu viel Risiko? zu ähnliche Netze? Überanpassung?) und Anweisungen in `arena/instructions.md` schreiben, die alle
    Supervisoren im nächsten Lauf befolgen. Rücksprung führt der Code automatisch aus; danach Neustart kommentieren.
 5. Datenwünsche der Netze (`chain_data/requests.yaml`) als Daten-Agent bearbeiten.
-6. Commit „Arena: Wochenlauf <Datum>“ und push. Nie Kontrollen, config.yaml oder fremde Depots (book.json) verändern.
+6. `arena/heartbeat.json` schreiben, Nachlauf `python -m arena.engine <letzter Handelstag>`, dann Commit „Arena: Denk-Lauf <Datum>“ und push. Nie Kontrollen, config.yaml oder fremde Depots (book.json) verändern.

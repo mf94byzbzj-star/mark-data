@@ -1,0 +1,8 @@
+name: Sektor-Rotation
+idee: Long die 2 stärksten, short die 2 schwächsten Sektor-ETFs (3 Monate Momentum), alle 20 Tage neu
+lookback: 63
+n_each: 2
+hold: 20
+short_weak: true
+risk: 0.03
+changes: []

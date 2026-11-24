@@ -1,0 +1,9 @@
+name: Prämienverkäufer
+idee: Short-Vola mit begrenztem Risiko nur bei positivem Gamma und positivem Backtest-Erwartungswert
+pause_in: [Crash/Stress]
+min_oos: 0.0
+need_pos_gamma: true
+new_per_day: 2
+max_open: 6
+risk: 0.05
+changes: []

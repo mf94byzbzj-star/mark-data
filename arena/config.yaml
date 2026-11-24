@@ -3,7 +3,9 @@ account: 100000            # Startkapital je Netz (simuliert)
 max_risk_per_trade: 0.10   # max. Verlust je Trade 10 % des Kontos (Markus, 24.11.2026); kein Gesamtlimit, aber keine negative Kaufkraft
 max_position_frac: 1.0     # Aktienposition max. 100 % des Kontos (ungehebelt)
 cohort_size: 10            # neue Netze je Woche (anfangs 5 Klon-Netze + 5 freie Netze)
-cohort_days: 30            # Lebensdauer bis zur Auswahl
+cohort_days: 30            # Lebensdauer bis zur Auswahl (Kalendertage, nur zur Planung)
+cohort_trading_days: 21    # Auswahl nach 21 aktiven Handelstagen (≈ 30 Kalendertage); Pausen zählen nicht
+think_max_age_days: 9      # ohne Claude-Denk-Lauf länger als 9 Tage → Arena pausiert (kein neuer Handel, Uhr steht)
 survivors: 5               # die besten 5 einer Kohorte werden je 2× geklont, die schlechtesten 5 eliminiert
 min_dd_for_score: 0.02     # Score = Rendite / max(Max-Drawdown, 2 %)  (Rendite pro Risiko)
 min_trades_to_win: 2       # Netze mit weniger Trades können nicht unter die Besten kommen

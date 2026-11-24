@@ -1,0 +1,144 @@
+{
+ "trends": {
+  "status": "keine Daten",
+  "tests": [],
+  "now": []
+ },
+ "posts": {
+  "tests": [],
+  "people": [
+   {
+    "person": "Trump",
+    "n": 37,
+    "status": "zu wenig Historie (< 40 Posts mit Ticker)"
+   }
+  ],
+  "recent": [
+   {
+    "date": "2026-11-23",
+    "person": "Trump",
+    "text": "Gratuliert Nvidia zur Wiedereinsetzung von Jensen Huang als CEO: „absolut großartige Entscheidung“.",
+    "tickers": [
+     "NVDA"
+    ],
+    "dir": 1,
+    "url": "https://finance.yahoo.com/markets/live/stock-market-today-monday-november-23-dow-sp-500-nasdaq-nvidia-reinstates-jensen-huang-141511975.html"
+   },
+   {
+    "date": "2026-11-22",
+    "person": "Trump",
+    "text": "Hofft, dass der Nvidia-Vorstand Jensen Huang wieder einstellt – das Beste für das Unternehmen und die USA.",
+    "tickers": [
+     "NVDA"
+    ],
+    "dir": 1,
+    "url": "https://finance.yahoo.com/markets/stocks/articles/trump-throws-weight-behind-jensen-041337724.html"
+   },
+   {
+    "date": "2026-07-01",
+    "person": "Trump",
+    "text": "Lobt Micron als eines der 'HEISSESTEN' Unternehmen der Welt nach 250-Mio.-$-Zusage für Trump Accounts.",
+    "tickers": [
+     "MU"
+    ],
+    "dir": 1,
+    "url": "https://247wallst.com/investing/2026/07/01/trump-just-called-micron-the-hottest-company-in-the-world-the-market-yawned-and-dumped-it-10/"
+   },
+   {
+    "date": "2026-02-21",
+    "person": "Trump",
+    "text": "Netflix muss Board-Mitglied Susan Rice sofort feuern oder 'die Konsequenzen tragen'.",
+    "tickers": [
+     "NFLX"
+    ],
+    "dir": -1,
+    "url": "https://techcrunch.com/2026/02/22/trump-says-netflix-will-face-consequences-if-it-doesnt-fire-board-member-susan-rice/"
+   },
+   {
+    "date": "2026-01-09",
+    "person": "Trump",
+    "text": "Fordert ab 20. Januar für ein Jahr Obergrenze von 10% für Kreditkartenzinsen.",
+    "tickers": [
+     "JPM",
+     "C",
+     "XLF"
+    ],
+    "dir": -1,
+    "url": "https://fortune.com/2026/01/10/trump-one-year-cap-credit-card-interest-rates-10-percent/"
+   },
+   {
+    "date": "2026-01-07",
+    "person": "Trump",
+    "text": "Raytheon reagiert am wenigsten auf Bedarf, gibt Geld für Aktienrückkäufe aus – Pentagon-Käufe könnten enden.",
+    "tickers": [
+     "RTX"
+    ],
+    "dir": -1,
+    "url": "https://www.stripes.com/theaters/us/2026-01-07/trump-threat-pentagon-purchases-raytheon-20333526.html"
+   },
+   {
+    "date": "2026-01-07",
+    "person": "Trump",
+    "text": "Militärbudget 2027 soll 1,5 Billionen $ statt 1 Billion betragen ('Traum-Militär').",
+    "tickers": [
+     "LMT"
+    ],
+    "dir": 1,
+    "url": "https://defensescoop.com/2026/01/07/trump-calls-for-1-5-trillion-defense-budget-2027/"
+   },
+   {
+    "date": "2025-12-08",
+    "person": "Trump",
+    "text": "Nvidia darf H200-Chips an zugelassene Kunden in China liefern, 25% gehen an die USA.",
+    "tickers": [
+     "NVDA"
+    ],
+    "dir": 1,
+    "url": "https://fortune.com/2025/12/08/trump-nvidia-china-chip-sales-approved-customers-xi-jinping-jensen-huang/"
+   },
+   {
+    "date": "2025-10-12",
+    "person": "Trump",
+    "text": "'Macht euch keine Sorgen um China, alles wird gut!' – USA wollen China helfen, nicht schaden.",
+    "tickers": [
+     "SPY",
+     "QQQ"
+    ],
+    "dir": 1,
+    "url": "https://fortune.com/2025/10/12/stock-market-today-dow-futures-trump-tariffs-china-trade-war-taco/"
+   },
+   {
+    "date": "2025-10-10",
+    "person": "Trump",
+    "text": "Wegen Seltene-Erden-Exportkontrollen droht massive Zollerhöhung; später 100% Zusatzzoll auf China ab 1. Nov.",
+    "tickers": [
+     "SPY",
+     "QQQ",
+     "SMH"
+    ],
+    "dir": -1,
+    "url": "https://www.presidency.ucsb.edu/documents/truth-social-posts-october-10-2025"
+   },
+   {
+    "date": "2025-09-26",
+    "person": "Trump",
+    "text": "Microsoft soll Lisa Monaco (Global Affairs) sofort entlassen – sie sei eine Bedrohung der nationalen Sicherheit.",
+    "tickers": [
+     "MSFT"
+    ],
+    "dir": -1,
+    "url": "https://techcrunch.com/2025/09/27/trump-demands-microsoft-fire-global-affairs-head-lisa-monaco/"
+   },
+   {
+    "date": "2025-08-22",
+    "person": "Trump",
+    "text": "USA besitzen nun 10% an Intel – großartiger Deal für Amerika und Intel.",
+    "tickers": [
+     "INTC"
+    ],
+    "dir": 1,
+    "url": "https://www.presidency.ucsb.edu/documents/truth-social-posts-august-22-2025"
+   }
+  ]
+ }
+}
