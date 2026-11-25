@@ -1,2 +1,1 @@
-cboe 2026-11-23: 142 ok, fehler 0 []
-prices fehler: keine
+cboe 2026-11-24: 138 ok, fehler 4 ['CRWD: cboe 429', 'PLTR: cboe 429', 'DHR: cboe 429', 'WMT: cboe 429']
