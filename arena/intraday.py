@@ -58,10 +58,14 @@ def run():
         return
     tb = {t: x[x.index.date == today] for t, x in bars.items()}
     ctx = {"day": str(today), "time": str(now.time())[:5], "bars": tb, "closes": None}
+    decs = sorted(f for f in os.listdir(os.path.join(E.A, "decisions"))) if os.path.isdir(os.path.join(E.A, "decisions")) else []
+    lastdec = E.jl(os.path.join(E.A, "decisions", decs[-1]), {}) if decs else {}
     for net in [n for n in st["nets"].values() if n["status"] == "lebt" and n["kind"] == "frei"]:
         c = next((c for c in st["cohorts"] if c["id"] == net.get("cohort")), {})
         if c.get("paused") or net.get("mutation_pending"):
             continue
+        if not (lastdec.get(net["id"]) or {}).get("allow_intraday"):
+            continue     # Intraday nur, wenn der Supervisor (Claude) es im letzten Entscheidungslauf freigegeben hat
         p = os.path.join(E.NETS, net["id"], "strategy.py")
         spec = importlib.util.spec_from_file_location(f"s_{net['id']}", p)
         mod = importlib.util.module_from_spec(spec)

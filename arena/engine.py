@@ -237,7 +237,7 @@ def exits(book, today, base, genome):
             b = bar(p["ticker"], today)
             d = 1 if p["dir"] == "long" else -1
             if b is not None and str(b.name.date()) >= p["opened"]:
-                same_day = str(b.name.date()) == p["opened"]
+                same_day = str(b.name.date()) == p["opened"] and not p.get("at_open")
                 op, lo, hi, cl = float(b["Open"]), float(b["Low"]), float(b["High"]), float(b["Close"])
                 if same_day:
                     if p.get("exit") == "close":                     # Intraday-Einstieg, Ausstieg zum Schluss desselben Tages
@@ -321,7 +321,7 @@ def execute(book, orders, ctx, today, net_id):
                 continue
             if o["type"] == "add":                        # Pyramiding (im Gewinn) oder DCA (im Verlust, Stop nicht erreicht)
                 p = next((x for x in book["open"] if x["id"] == o["id"] and x["kind"] == "equity"), None)
-                px = last_close(p["ticker"], today) if p else None
+                px = (float(o["fill_px"]) if o.get("fill_px") else last_close(p["ticker"], today)) if p else None
                 if not p or not px:
                     log.append({"o": o, "ok": False, "why": "Aktienposition unbekannt"})
                     continue
@@ -476,85 +476,188 @@ def metrics(book):
 
 
 # ------------------------------------------------------------------ Tageslauf
+DEC = os.path.join(A, "decisions")
+PROP = os.path.join(A, "out", "proposals")
+CONTROLS = ("markus", "zufall", "spy")
+
+
+def reprice(c, base):
+    """Struktur zum heutigen Kettenpreis neu bewerten (Mitte ± ¼ Spanne je Leg). Max-Verlust verschiebt sich um die Preisänderung."""
+    ch = chain_of(base, c["ticker"]) if base else None
+    if ch is None:
+        return None
+    debit = 0.0
+    for l in c["legs"]:
+        r = ch[(ch.expiry == l["expiry"]) & (ch.cp == l["cp"]) & ((ch.strike - l["strike"]).abs() < 1e-6)]
+        if not len(r) or not (r.iloc[0].ask > 0):
+            return None
+        mid, sp = (r.iloc[0].bid + r.iloc[0].ask) / 2, r.iloc[0].ask - r.iloc[0].bid
+        debit += l["qty"] * (mid + (0.25 * sp if l["qty"] > 0 else -0.25 * sp))
+    old = float(c["payoff"]["debit_fill"])
+    pay = dict(c["payoff"], debit_fill=round(debit, 4), max_loss=round(float(c["payoff"]["max_loss"]) + (debit - old), 4))
+    if not pay["max_loss"] > 0:
+        return None
+    return dict(c, payoff=pay)
+
+
+def execute_decisions(st, D, T, base):
+    """Entscheidungen vom Abend nach Handelstag D am Handelstag T ausführen: Aktien zur Eröffnung von T, Optionen zum Kettenpreis von T."""
+    dec = jl(os.path.join(DEC, f"{D}.json"), {}) or {}
+    prop = jl(os.path.join(PROP, f"{D}.json"), {}) or {}
+    cmap = {c["cid"]: c for c in prop.get("candidates", [])}
+    log = {}
+    for nid, d in dec.items():
+        net = st["nets"].get(nid)
+        if not net or net["status"] not in ("lebt", "weiter") or net.get("mutation_pending"):
+            continue
+        bp = os.path.join(NETS, nid, "book.json")
+        book = jl(bp) or new_book()
+        orders, cands = [], []
+        for o in d.get("orders", []):
+            o = {k: v for k, v in o.items() if k != "fill_px"}
+            if net["status"] == "weiter" or book.get("halted"):
+                if o.get("type") not in ("modify", "close"):
+                    continue
+            if o.get("type") == "option":
+                c = cmap.get(o.get("cid"))
+                rc = reprice(c, base) if c else None
+                if rc:
+                    cands.append(rc)
+            elif o.get("type") in ("equity", "add"):
+                t = o.get("ticker") or next((p["ticker"] for p in book["open"] if p["id"] == o.get("id")), None)
+                b = bar(t, T) if t else None
+                if b is None or str(b.name.date()) != str(T):
+                    continue
+                d_ = 1 if o.get("direction", "long") == "long" else -1
+                if o.get("type") == "add":
+                    pos = next((p for p in book["open"] if p["id"] == o.get("id")), None)
+                    d_ = 1 if (pos or {}).get("dir") == "long" else -1
+                at_close = o.get("entry") == "close"          # z. B. Overnight: Einstieg zum Schlusskurs von T
+                op = float(b["Close"] if at_close else b["Open"])
+                if o.get("type") == "equity" and ((d_ > 0 and float(o["stop"]) >= op) or (d_ < 0 and float(o["stop"]) <= op)):
+                    continue      # Kurs schon jenseits des Stops – Order verfällt
+                o["fill_px"] = op * (1 + 0.0005 * d_)
+                o["_at_open"] = not at_close
+            orders.append(o)
+        lg = execute(book, orders, {"candidates": cands}, T, nid)
+        opened_close = {o.get("ticker") for o in orders if o.get("type") == "equity" and not o.get("_at_open", True)}
+        for p in book["open"]:
+            if p["opened"] == str(T) and "why" not in p:
+                p["why"] = (next((o.get("why") for o in orders if o.get("ticker") == p["ticker"] and o.get("why")), None) or d.get("why") or "")[:300]
+                p["decided"] = str(D)
+                if p["kind"] == "equity" and p["ticker"] not in opened_close:
+                    p["at_open"] = True
+        jd(book, bp)
+        log[nid] = lg
+    st.setdefault("executed", []).append(str(D))
+    st["executed"] = st["executed"][-60:]
+    return log
+
+
+def proposals(st, today, ctx, base):
+    """Vorschläge für den Abend: Code (Genom/strategy.py) schlägt vor, Claude (Netz-Supervisor) entscheidet.
+    Kontrollen (Markus-Regeln, Zufall, SPY) entscheiden mechanisch und werden direkt als Entscheidung eingetragen."""
+    nets_out, auto = {}, {}
+    for net in [n for n in st["nets"].values() if n["status"] in ("lebt", "weiter")]:
+        book = jl(os.path.join(NETS, net["id"], "book.json")) or new_book()
+        g = yaml.safe_load(open(os.path.join(NETS, net["id"], "genome.yaml"))) or {}
+        try:
+            if net["kind"] in ("klon", "markus"):
+                sug = policy_chain(g, ctx, book)
+            elif net["kind"] == "frei":
+                sug = policy_free(net, ctx, book)
+            elif net["kind"] == "zufall":
+                sug = policy_random(ctx, book, today, net["id"])
+            elif net["kind"] == "spy":
+                sug = policy_spy(ctx, book)
+            else:
+                sug = []
+            net["last_error"] = None
+        except Exception as e:
+            sug, net["last_error"] = [], f"{type(e).__name__}: {e}"[:300]
+        sug = [{k: v for k, v in o.items() if k != "fill_px"} for o in (sug or [])]
+        eq, rk = mark_book(book, today, None)
+        if net["kind"] in CONTROLS:
+            auto[net["id"]] = {"orders": sug, "why": "mechanische Kontrolle"}
+            continue
+        nets_out[net["id"]] = {
+            "kind": net["kind"], "status": net["status"], "cohort": net.get("cohort"), "idea": g.get("idee") or g.get("name"),
+            "mutation_pending": net.get("mutation_pending", False), "halted": book.get("halted", False),
+            "equity": round(eq, 0), "cash": round(book["cash"], 0), "risk_open": round(rk, 0), "lev": round(gross_equity(book) / eq, 2) if eq > 0 else None,
+            "m": net.get("m"), "open": [{k: p.get(k) for k in ("id", "kind", "ticker", "dir", "strategy", "opened", "entry", "mark", "stop", "target",
+                                                               "max_days", "trail", "let_run", "shares", "n", "max_loss", "why")} for p in book["open"]],
+            "closed_last": book["closed"][-5:], "suggested": sug}
+    cand = [{k: c.get(k) for k in ("cid", "ticker", "strategy", "strategy_name", "vol", "bias", "spot", "trigger", "trigger_status", "oos_mean",
+                                   "oos_win", "oos_n", "oos_t", "verdict", "final", "score", "payoff", "legs", "gex")} for c in ctx["candidates"]]
+    out = {"day": str(today), "regime": ctx.get("regime"), "market": ctx.get("market"), "events": (ctx.get("events") or {}).get("next_high"),
+           "news": ((ctx.get("events") or {}).get("news") or {}).get("summary"), "candidates": cand, "equity_ideas": ctx["equity_ideas"],
+           "equity_signals": ctx["equity_signals"], "filings": ctx.get("filings"), "trends": ctx.get("trends"), "nets": nets_out,
+           "how": "Entscheidungen in arena/decisions/<day>.json; Ausführung am nächsten Handelstag (Aktien zur Eröffnung, Optionen zum Kettenpreis)."}
+    jd(out, os.path.join(PROP, f"{today}.json"))
+    dp = os.path.join(DEC, f"{today}.json")
+    dec = jl(dp, {}) or {}
+    dec.update(auto)
+    jd(dec, dp)
+
+
 def run(today=None):
     from arena import supersupervisor as ss
     st = ss.load_state()
     days = data.live_days()
     # Handelstag = letzter US-Handelstag mit Cboe-Kette (nicht das UTC-Datum – GitHub-Zeitpläne laufen oft Stunden zu spät)
     today = today or (dt.date.fromisoformat(days[-1]) if days else dt.date.today())
-    base = os.path.join(data.D, "live", days[-1]) if days else None
-    if st.get("last_day") == str(today) and st.get("traded_day") == str(today):
+    base = os.path.join(data.D, "live", str(today)) if days and str(today) in days else None
+    if st.get("last_day") == str(today):
         print("heute schon gelaufen")
-        return st   # Nachlauf am selben Tag nur, wenn vorher wegen Pause nicht gehandelt wurde (z. B. nach dem Denk-Lauf)
-    fresh = bool(days) and days[-1] == str(today)   # nur an Tagen mit frischer Cboe-Kette handeln (kein Handel auf alten Kursen)
+        return st
+    fresh = base is not None
     if fresh:
-        ss.births(st, today)                  # neue Kohorte (wöchentlich) vor dem Handel
-    # Ohne Claude kein Handel: Arena pausiert, wenn der letzte Denk-Lauf zu lange her ist; eine Kohorte pausiert,
-    # solange ein Netz noch auf seinen Supervisor wartet (mutation_pending). Bestehende Stops/Ausstiege laufen weiter.
+        ss.births(st, today)
     hb = jl(os.path.join(A, "heartbeat.json"), {}) or {}
     last = hb.get("last_think")
     gpause = (not last) or (today - dt.date.fromisoformat(last)).days > CFG.get("think_max_age_days", 9)
     st["pause"] = {"global": gpause, "last_think": last,
-                   "reason": None if not gpause else ("noch kein Claude-Denk-Lauf" if not last else f"letzter Claude-Denk-Lauf {last} – wartet auf Claude-Kontingent")}
-    cpause = {}
+                   "reason": None if not gpause else ("noch kein Claude-Entscheidungslauf" if not last else f"letzter Claude-Entscheidungslauf {last} – wartet auf Claude-Kontingent")}
     for c in st["cohorts"]:
         if c["status"] == "läuft":
             waiting = [i for i in c["members"] if st["nets"][i].get("mutation_pending")]
-            cpause[c["id"]] = gpause or bool(waiting)
-            c["paused"] = cpause[c["id"]]
+            c["paused"] = gpause or bool(waiting)
             c["waiting"] = waiting
-            if fresh and not cpause[c["id"]] and c.get("last_active") != str(today):
+            if fresh and not c["paused"] and c.get("last_active") != str(today):
                 c["active_days"] = c.get("active_days", 0) + 1
                 c["last_active"] = str(today)
-    ctx = context(today)
+    # 1) Entscheidungen von Claude (und Kontrollen) aus den Vortagen zur heutigen Eröffnung ausführen
+    if fresh:
+        for D in sorted(f[:-5] for f in os.listdir(DEC) if f.endswith(".json")) if os.path.isdir(DEC) else []:
+            if D < str(today) and D not in st.get("executed", []):
+                execute_decisions(st, D, today, base)
+    # 2) Tagesbuchhaltung: Zinsen, Bewertung, Stops/Ziele/Zeit, Margin Call, Drawdown-Stopp
     for net in [n for n in st["nets"].values() if n["status"] in ("lebt", "weiter")]:
-        retired = net["status"] == "weiter"   # Gewinner nach der Auswahl: offene Trades laufen nach ihren Regeln aus, keine neuen
         bp = os.path.join(NETS, net["id"], "book.json")
         book = jl(bp) or new_book()
         g = yaml.safe_load(open(os.path.join(NETS, net["id"], "genome.yaml"))) or {}
-        finance(book, today)
-        mark_book(book, today, base)
-        exits(book, today, base, g)
-        risk_controls(book, today, base, g)
         try:
-            if net["kind"] == "klon" or net["kind"] == "markus":
-                orders = policy_chain(g, ctx, book)
-            elif net["kind"] == "frei":
-                orders = policy_free(net, ctx, book)
-            elif net["kind"] == "zufall":
-                orders = policy_random(ctx, book, today, net["id"])
-            elif net["kind"] == "spy":
-                orders = policy_spy(ctx, book)
-            else:
-                orders = []
-            orders = [{k: v for k, v in o.items() if k != "fill_px"} for o in (orders or [])]   # Fill-Preise setzt nur der Code
-            if retired or book.get("halted"):
-                orders = [o for o in orders if o.get("type") in ("modify", "close")]
-            if not fresh or (cpause.get(net.get("cohort"), True) and not retired):
-                orders = []
-            manual = os.path.join(NETS, net["id"], "orders.json")   # Orders des Supervisors aus dem Wochenlauf
-            if fresh and not cpause.get(net.get("cohort"), True) and os.path.exists(manual):
-                orders = (json.load(open(manual)) or []) + orders
-                os.remove(manual)
-            lg = execute(book, orders, ctx, today, net["id"])
-            net["last_error"] = None
+            finance(book, today)
+            mark_book(book, today, base)
+            exits(book, today, base, g)
+            risk_controls(book, today, base, g)
         except Exception as e:
-            lg, net["last_error"] = [], f"{type(e).__name__}: {e}"[:300]
+            net["last_error"] = f"Buchhaltung {type(e).__name__}: {e}"[:300]
         eq, rk = mark_book(book, today, base)
         if book["curve"] and book["curve"][-1]["day"] == str(today):
             book["curve"].pop()
         book["curve"].append({"day": str(today), "equity": round(eq, 2), "risk": round(rk, 2)})
         jd(book, bp)
         net["m"] = metrics(book)
-        net["last_orders"] = [x for x in lg if x.get("ok")][:10]
-    if fresh and any(not v for v in cpause.values()):
-        st["traded_day"] = str(today)
-    ss.selection(st, today)                   # Kohorten nach 21 aktiven Handelstagen: klonen/eliminieren, Rücksprung prüfen
+    # 3) Vorschläge für den Entscheidungslauf von Claude
+    if fresh:
+        proposals(st, today, context(today), base)
+    ss.selection(st, today)
     st["last_day"] = str(today)
     ss.save_state(st)
     try:
         from arena import health
-        health.run(st, today)                 # Technik-Supervisor
+        health.run(st, today)
     except Exception as e:
         print("health", e)
     ss.write_summary(st)

@@ -1,0 +1,1468 @@
+{
+ "day": "2026-11-24",
+ "regime": "Korrektur",
+ "market": {
+  "spy_dd52": -0.077411,
+  "spy_dist200": -0.016209,
+  "spy_ret20": -0.066107,
+  "vix": 26.36,
+  "vix_rank": 0.574933,
+  "vix_ts": 1.034943,
+  "breadth200": 0.428571,
+  "hy_spread": 3.63,
+  "hy_chg20": 0.45,
+  "curve_10y2y": 0.28,
+  "nfci": -0.478
+ },
+ "events": [
+  {
+   "date": "2026-12-04",
+   "time_et": "08:30",
+   "type": "NFP",
+   "name": "Arbeitsmarktbericht November",
+   "impact": "hoch",
+   "source": "https://www.bls.gov/schedule/2026/12_sched_list.htm",
+   "bdays": 7
+  },
+  {
+   "date": "2026-12-09",
+   "time_et": "14:00",
+   "type": "FOMC",
+   "name": "FOMC-Zinsentscheid + Projektionen",
+   "impact": "hoch",
+   "source": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+   "bdays": 10
+  },
+  {
+   "date": "2026-12-10",
+   "time_et": "08:30",
+   "type": "CPI",
+   "name": "Verbraucherpreise (CPI) November",
+   "impact": "hoch",
+   "source": "https://www.bls.gov/schedule/news_release/cpi.htm",
+   "bdays": 11
+  },
+  {
+   "date": "2027-01-08",
+   "time_et": "08:30",
+   "type": "NFP",
+   "name": "Arbeitsmarktbericht Dezember",
+   "impact": "hoch",
+   "source": "https://www.bls.gov/schedule/2027/01_sched_list.htm",
+   "bdays": 32
+  }
+ ],
+ "news": null,
+ "candidates": [
+  {
+   "cid": "DAL|T07|lstrad",
+   "ticker": "DAL",
+   "strategy": "lstrad",
+   "strategy_name": "Long Straddle ATM (14 T halten)",
+   "vol": "long",
+   "bias": "neutral",
+   "spot": 83.9,
+   "trigger": "T07",
+   "trigger_status": "Kandidat",
+   "oos_mean": 0.497946,
+   "oos_win": 0.428571,
+   "oos_n": 28,
+   "oos_t": 1.268912,
+   "verdict": "abgelehnt",
+   "final": "abgelehnt",
+   "score": -2,
+   "payoff": {
+    "debit_mid": 8.1,
+    "debit_fill": 9.05,
+    "max_loss": 9.011,
+    "max_gain": 40.082,
+    "breakevens": [
+     75.95,
+     94.05
+    ],
+    "pop": 0.36,
+    "ev_model": -1.099,
+    "expected_move": 9.84,
+    "first_expiry": "2026-12-24",
+    "curve": [
+     [
+      52.48,
+      23.47
+     ],
+     [
+      54.52,
+      21.429
+     ],
+     [
+      56.56,
+      19.388
+     ],
+     [
+      58.6,
+      17.346
+     ],
+     [
+      60.64,
+      15.305
+     ],
+     [
+      62.69,
+      13.264
+     ],
+     [
+      64.73,
+      11.222
+     ],
+     [
+      66.77,
+      9.181
+     ],
+     [
+      68.81,
+      7.14
+     ],
+     [
+      70.85,
+      5.099
+     ],
+     [
+      72.89,
+      3.057
+     ],
+     [
+      74.93,
+      1.016
+     ],
+     [
+      76.98,
+      -1.025
+     ],
+     [
+      79.02,
+      -3.067
+     ],
+     [
+      81.06,
+      -5.108
+     ],
+     [
+      83.1,
+      -7.149
+     ],
+     [
+      85.14,
+      -8.909
+     ],
+     [
+      87.18,
+      -6.868
+     ],
+     [
+      89.22,
+      -4.827
+     ],
+     [
+      91.26,
+      -2.785
+     ],
+     [
+      93.31,
+      -0.744
+     ],
+     [
+      95.35,
+      1.297
+     ],
+     [
+      97.39,
+      3.338
+     ],
+     [
+      99.43,
+      5.38
+     ],
+     [
+      101.47,
+      7.421
+     ],
+     [
+      103.51,
+      9.462
+     ],
+     [
+      105.55,
+      11.504
+     ],
+     [
+      107.59,
+      13.545
+     ],
+     [
+      109.64,
+      15.586
+     ],
+     [
+      111.68,
+      17.628
+     ],
+     [
+      113.72,
+      19.669
+     ],
+     [
+      115.76,
+      21.71
+     ],
+     [
+      117.8,
+      23.752
+     ],
+     [
+      119.84,
+      25.793
+     ],
+     [
+      121.88,
+      27.834
+     ],
+     [
+      123.93,
+      29.875
+     ],
+     [
+      125.97,
+      31.917
+     ],
+     [
+      128.01,
+      33.958
+     ],
+     [
+      130.05,
+      35.999
+     ],
+     [
+      132.09,
+      38.041
+     ],
+     [
+      134.13,
+      40.082
+     ]
+    ]
+   },
+   "legs": [
+    {
+     "expiry": "2026-12-24",
+     "dte": 30,
+     "cp": "C",
+     "strike": 85.0,
+     "qty": 1,
+     "bid": 2.4,
+     "ask": 3.8,
+     "mid": 3.1,
+     "iv": 0.351,
+     "delta": 0.4981,
+     "gamma": 0.0385,
+     "theta": -0.0663,
+     "vega": 0.0978,
+     "oi": 2.0,
+     "volume": 0.0,
+     "rel_spread": 0.451613
+    },
+    {
+     "expiry": "2026-12-24",
+     "dte": 30,
+     "cp": "P",
+     "strike": 85.0,
+     "qty": 1,
+     "bid": 3.8,
+     "ask": 6.2,
+     "mid": 5.0,
+     "iv": 0.4673,
+     "delta": -0.5092,
+     "gamma": 0.0392,
+     "theta": -0.0674,
+     "vega": 0.0975,
+     "oi": 4.0,
+     "volume": 0.0,
+     "rel_spread": 0.48
+    }
+   ],
+   "gex": {
+    "spot": 83.9,
+    "net_gex": 55610131.866385,
+    "call_wall": 95.0,
+    "put_wall": 80.0,
+    "flip": null,
+    "regime": "positiv",
+    "above_flip": null,
+    "profile": [
+     [
+      72.0,
+      -0.015
+     ],
+     [
+      72.5,
+      -1.036
+     ],
+     [
+      73.0,
+      -0.016
+     ],
+     [
+      74.0,
+      -0.013
+     ],
+     [
+      75.0,
+      -0.082
+     ],
+     [
+      76.0,
+      -0.048
+     ],
+     [
+      77.0,
+      -0.164
+     ],
+     [
+      77.5,
+      -0.609
+     ],
+     [
+      78.0,
+      -0.051
+     ],
+     [
+      79.0,
+      -0.042
+     ],
+     [
+      80.0,
+      -1.681
+     ],
+     [
+      81.0,
+      -0.174
+     ],
+     [
+      82.0,
+      -0.059
+     ],
+     [
+      82.5,
+      0.262
+     ],
+     [
+      83.0,
+      -0.203
+     ],
+     [
+      84.0,
+      0.341
+     ],
+     [
+      85.0,
+      4.498
+     ],
+     [
+      86.0,
+      2.922
+     ],
+     [
+      87.0,
+      0.091
+     ],
+     [
+      87.5,
+      18.047
+     ],
+     [
+      88.0,
+      2.431
+     ],
+     [
+      89.0,
+      -0.066
+     ],
+     [
+      90.0,
+      2.24
+     ],
+     [
+      91.0,
+      0.047
+     ],
+     [
+      92.0,
+      0.05
+     ],
+     [
+      92.5,
+      0.553
+     ],
+     [
+      93.0,
+      0.02
+     ],
+     [
+      94.0,
+      0.013
+     ],
+     [
+      95.0,
+      25.179
+     ],
+     [
+      96.0,
+      0.029
+     ]
+    ],
+    "key_levels": [
+     95.0,
+     87.5,
+     85.0,
+     105.0,
+     86.0,
+     88.0,
+     90.0,
+     80.0
+    ],
+    "pc_oi": 0.236013
+   }
+  }
+ ],
+ "equity_ideas": [
+  {
+   "ticker": "SCHW",
+   "direction": "long",
+   "entry": 93.91,
+   "stop": 91.9,
+   "target": 97.93,
+   "shares": 212,
+   "position_usd": 19909.0,
+   "risk_usd": 426.0,
+   "crv": 2.0,
+   "reason": "Chartmuster Ausbruch Abwärtstrendlinie",
+   "evidence": "OOS Ø +0.18 R je Trade, Trefferquote 43% (Kandidat, Mehrwert gegenüber Einstieg ohne Muster)",
+   "source": "Muster:trendline_break_up",
+   "status": "Kandidat",
+   "sec": []
+  },
+  {
+   "ticker": "AMGN",
+   "direction": "long",
+   "entry": 473.94,
+   "stop": 457.08,
+   "target": 507.65,
+   "shares": 42,
+   "position_usd": 19905.0,
+   "risk_usd": 708.0,
+   "crv": 2.0,
+   "reason": "Chartmuster Ausbruch Abwärtstrendlinie",
+   "evidence": "OOS Ø +0.18 R je Trade, Trefferquote 43% (Kandidat, Mehrwert gegenüber Einstieg ohne Muster)",
+   "source": "Muster:trendline_break_up",
+   "status": "Kandidat",
+   "sec": []
+  }
+ ],
+ "equity_signals": [
+  {
+   "id": "E01",
+   "name": "Steiler Put-Skew → schwächere Aktie",
+   "direction": "short",
+   "hold": 20,
+   "firing_now": [
+    "MRVL",
+    "COIN",
+    "GE",
+    "INTC",
+    "NOW",
+    "C",
+    "V",
+    "AAPL",
+    "META",
+    "KLAC",
+    "UNH",
+    "MU",
+    "GOOG",
+    "CAT",
+    "BLK",
+    "AXP",
+    "GOOGL",
+    "JPM",
+    "AMZN",
+    "COST",
+    "LLY",
+    "MSFT",
+    "QCOM",
+    "AMD",
+    "NFLX",
+    "TSLA",
+    "AVGO",
+    "ORCL"
+   ],
+   "status": "verworfen"
+  },
+  {
+   "id": "E02",
+   "name": "Niedrige IV im Aufwärtstrend → Trend hält",
+   "direction": "long",
+   "hold": 20,
+   "firing_now": [
+    "TGT",
+    "XLP",
+    "XLRE",
+    "DAL",
+    "PYPL"
+   ],
+   "status": "beobachten"
+  },
+  {
+   "id": "E03",
+   "name": "Panik im Aufwärtstrend → Erholung",
+   "direction": "long",
+   "hold": 10,
+   "firing_now": [],
+   "status": "beobachten"
+  },
+  {
+   "id": "E04",
+   "name": "Invertierte Term-Structure im Abwärtstrend → weitere Schwäche",
+   "direction": "short",
+   "hold": 10,
+   "firing_now": [
+    "GS",
+    "MS",
+    "COF",
+    "FCX",
+    "UAL",
+    "INTU",
+    "HON",
+    "GE",
+    "ANET",
+    "T",
+    "XLC",
+    "CSCO",
+    "BKNG",
+    "SMCI",
+    "LVS",
+    "SCHW",
+    "QCOM",
+    "QQQ",
+    "SMH",
+    "FXI",
+    "EWZ",
+    "ARKK",
+    "MDY",
+    "XLB",
+    "DIA",
+    "IBM",
+    "KLAC",
+    "SPY",
+    "HAL",
+    "XLU",
+    "INTC",
+    "CVS",
+    "CAT",
+    "XOP",
+    "TXN",
+    "AXP",
+    "LRCX",
+    "AMAT",
+    "AMD",
+    "NEM",
+    "NVDA"
+   ],
+   "status": "verworfen"
+  },
+  {
+   "id": "E05",
+   "name": "Vola-Crush im Aufwärtstrend → Fortsetzung",
+   "direction": "long",
+   "hold": 10,
+   "firing_now": [
+    "LOW",
+    "TGT",
+    "XLRE",
+    "DAL"
+   ],
+   "status": "beobachten"
+  },
+  {
+   "id": "E06",
+   "name": "Hohe Call-Nachfrage (flacher Skew) mit Momentum → Long",
+   "direction": "long",
+   "hold": 20,
+   "firing_now": [],
+   "status": "bestätigt"
+  }
+ ],
+ "filings": {
+  "NFLX": [
+   {
+    "sig": "I5",
+    "name": "Cluster-Verkauf (≥ 3 Insider, ohne 10b5-1)",
+    "dir": -1,
+    "filed": "2026-11-05",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   }
+  ],
+  "INTC": [
+   {
+    "sig": "I1",
+    "name": "Insider-Kauf",
+    "dir": 1,
+    "filed": "2026-11-04",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   },
+   {
+    "sig": "I3",
+    "name": "Opportunistischer Insider-Kauf",
+    "dir": 1,
+    "filed": "2026-11-04",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   },
+   {
+    "sig": "I4",
+    "name": "CEO/CFO-Kauf",
+    "dir": 1,
+    "filed": "2026-11-04",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   }
+  ],
+  "TXN": [
+   {
+    "sig": "I5",
+    "name": "Cluster-Verkauf (≥ 3 Insider, ohne 10b5-1)",
+    "dir": -1,
+    "filed": "2026-10-29",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   }
+  ],
+  "SMCI": [
+   {
+    "sig": "I1",
+    "name": "Insider-Kauf",
+    "dir": 1,
+    "filed": "2026-11-10",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   },
+   {
+    "sig": "I3",
+    "name": "Opportunistischer Insider-Kauf",
+    "dir": 1,
+    "filed": "2026-11-10",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   }
+  ],
+  "AXP": [
+   {
+    "sig": "I5",
+    "name": "Cluster-Verkauf (≥ 3 Insider, ohne 10b5-1)",
+    "dir": -1,
+    "filed": "2026-11-06",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   }
+  ],
+  "CVS": [
+   {
+    "sig": "I1",
+    "name": "Insider-Kauf",
+    "dir": 1,
+    "filed": "2026-11-06",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   },
+   {
+    "sig": "I3",
+    "name": "Opportunistischer Insider-Kauf",
+    "dir": 1,
+    "filed": "2026-11-06",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   },
+   {
+    "sig": "I4",
+    "name": "CEO/CFO-Kauf",
+    "dir": 1,
+    "filed": "2026-11-06",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   }
+  ],
+  "DHR": [
+   {
+    "sig": "I5",
+    "name": "Cluster-Verkauf (≥ 3 Insider, ohne 10b5-1)",
+    "dir": -1,
+    "filed": "2026-11-10",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   }
+  ],
+  "KO": [
+   {
+    "sig": "I5",
+    "name": "Cluster-Verkauf (≥ 3 Insider, ohne 10b5-1)",
+    "dir": -1,
+    "filed": "2026-11-18",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   }
+  ],
+  "PG": [
+   {
+    "sig": "I5",
+    "name": "Cluster-Verkauf (≥ 3 Insider, ohne 10b5-1)",
+    "dir": -1,
+    "filed": "2026-11-05",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   }
+  ],
+  "CVX": [
+   {
+    "sig": "I5",
+    "name": "Cluster-Verkauf (≥ 3 Insider, ohne 10b5-1)",
+    "dir": -1,
+    "filed": "2026-11-13",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   }
+  ],
+  "BA": [
+   {
+    "sig": "I1",
+    "name": "Insider-Kauf",
+    "dir": 1,
+    "filed": "2026-11-18",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   },
+   {
+    "sig": "I2",
+    "name": "Cluster-Kauf (≥ 2 Insider)",
+    "dir": 1,
+    "filed": "2026-11-03",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   },
+   {
+    "sig": "I3",
+    "name": "Opportunistischer Insider-Kauf",
+    "dir": 1,
+    "filed": "2026-11-18",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   }
+  ],
+  "CAT": [
+   {
+    "sig": "I1",
+    "name": "Insider-Kauf",
+    "dir": 1,
+    "filed": "2026-11-13",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   },
+   {
+    "sig": "I2",
+    "name": "Cluster-Kauf (≥ 2 Insider)",
+    "dir": 1,
+    "filed": "2026-11-13",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   },
+   {
+    "sig": "I3",
+    "name": "Opportunistischer Insider-Kauf",
+    "dir": 1,
+    "filed": "2026-11-13",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   }
+  ],
+  "FDX": [
+   {
+    "sig": "I5",
+    "name": "Cluster-Verkauf (≥ 3 Insider, ohne 10b5-1)",
+    "dir": -1,
+    "filed": "2026-11-10",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   }
+  ],
+  "DAL": [
+   {
+    "sig": "I5",
+    "name": "Cluster-Verkauf (≥ 3 Insider, ohne 10b5-1)",
+    "dir": -1,
+    "filed": "2026-11-09",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   }
+  ],
+  "UAL": [
+   {
+    "sig": "I5",
+    "name": "Cluster-Verkauf (≥ 3 Insider, ohne 10b5-1)",
+    "dir": -1,
+    "filed": "2026-11-10",
+    "h": 21,
+    "status": "verworfen",
+    "edge": null,
+    "edge_t": null
+   }
+  ]
+ },
+ "trends": [
+  {
+   "ticker": "NVDA",
+   "asvi": 1.71,
+   "svi": 100.0,
+   "week": "2026-11-22"
+  },
+  {
+   "ticker": "CRWD",
+   "asvi": 0.83,
+   "svi": 32.0,
+   "week": "2026-11-22"
+  },
+  {
+   "ticker": "AMD",
+   "asvi": 0.45,
+   "svi": 44.0,
+   "week": "2026-11-22"
+  }
+ ],
+ "nets": {
+  "K0001": {
+   "kind": "klon",
+   "status": "lebt",
+   "cohort": 1,
+   "idea": "Kern-Edge (nur OOS-belegte Trigger) – Regeln von Markus' Kette (Tag 1); Supervisor optimiert eigenständig",
+   "mutation_pending": false,
+   "halted": false,
+   "equity": 100000.0,
+   "cash": 100000.0,
+   "risk_open": 0.0,
+   "lev": 0.0,
+   "m": {
+    "lev": 0.0,
+    "fees": 0.0,
+    "halted": false,
+    "equity": 100000.0,
+    "ret": 0.0,
+    "maxdd": 0.0,
+    "score": 0.0,
+    "n_trades": 0,
+    "n_closed": 0,
+    "win": null,
+    "risk_used": 0.0,
+    "worst_r": 0.0,
+    "n_open": 0
+   },
+   "open": [],
+   "closed_last": [],
+   "suggested": []
+  },
+  "K0002": {
+   "kind": "klon",
+   "status": "lebt",
+   "cohort": 1,
+   "idea": "Defensiv mit Aktien-Mustern – Regeln von Markus' Kette (Tag 1); Supervisor optimiert eigenständig",
+   "mutation_pending": false,
+   "halted": false,
+   "equity": 99303.0,
+   "cash": -55114.0,
+   "risk_open": 6008.0,
+   "lev": 1.56,
+   "m": {
+    "lev": 1.56,
+    "fees": 0.0,
+    "halted": false,
+    "equity": 99303.49,
+    "ret": -0.00697,
+    "maxdd": -0.00693,
+    "score": -0.3483,
+    "n_trades": 3,
+    "n_closed": 0,
+    "win": null,
+    "risk_used": 0.0401,
+    "worst_r": 0.0,
+    "n_open": 3
+   },
+   "open": [
+    {
+     "id": "K0002-2026-11-23-MRVL-long",
+     "kind": "equity",
+     "ticker": "MRVL",
+     "dir": "long",
+     "strategy": null,
+     "opened": "2026-11-23",
+     "entry": 144.81237,
+     "mark": 131.57,
+     "stop": 102.78,
+     "target": 228.66,
+     "max_days": 20,
+     "trail": null,
+     "let_run": null,
+     "shares": 47,
+     "n": null,
+     "max_loss": null,
+     "why": null
+    },
+    {
+     "id": "K0002-2026-11-24-SCHW-long",
+     "kind": "equity",
+     "ticker": "SCHW",
+     "dir": "long",
+     "strategy": null,
+     "opened": "2026-11-24",
+     "entry": 93.956955,
+     "mark": 93.91,
+     "stop": 91.9,
+     "target": 97.93,
+     "max_days": 20,
+     "trail": null,
+     "let_run": false,
+     "shares": 988,
+     "n": null,
+     "max_loss": null,
+     "why": null
+    },
+    {
+     "id": "K0002-2026-11-24-AMGN-long",
+     "kind": "equity",
+     "ticker": "AMGN",
+     "dir": "long",
+     "strategy": null,
+     "opened": "2026-11-24",
+     "entry": 474.17697,
+     "mark": 473.94,
+     "stop": 457.08,
+     "target": 507.65,
+     "max_days": 20,
+     "trail": null,
+     "let_run": false,
+     "shares": 117,
+     "n": null,
+     "max_loss": null,
+     "why": null
+    }
+   ],
+   "closed_last": [],
+   "suggested": []
+  },
+  "K0003": {
+   "kind": "klon",
+   "status": "lebt",
+   "cohort": 1,
+   "idea": "Prämie nur bei Rückenwind – Regeln von Markus' Kette (Tag 1); Supervisor optimiert eigenständig",
+   "mutation_pending": false,
+   "halted": false,
+   "equity": 100000.0,
+   "cash": 100000.0,
+   "risk_open": 0.0,
+   "lev": 0.0,
+   "m": {
+    "lev": 0.0,
+    "fees": 0.0,
+    "halted": false,
+    "equity": 100000.0,
+    "ret": 0.0,
+    "maxdd": 0.0,
+    "score": 0.0,
+    "n_trades": 0,
+    "n_closed": 0,
+    "win": null,
+    "risk_used": 0.0,
+    "worst_r": 0.0,
+    "n_open": 0
+   },
+   "open": [],
+   "closed_last": [],
+   "suggested": []
+  },
+  "K0004": {
+   "kind": "klon",
+   "status": "lebt",
+   "cohort": 1,
+   "idea": "Long-Vola im Stress – Regeln von Markus' Kette (Tag 1); Supervisor optimiert eigenständig",
+   "mutation_pending": false,
+   "halted": false,
+   "equity": 99620.0,
+   "cash": 96380.0,
+   "risk_open": 3619.0,
+   "lev": 0.0,
+   "m": {
+    "lev": 0.0,
+    "fees": 0.0,
+    "halted": false,
+    "equity": 99620.0,
+    "ret": -0.0038,
+    "maxdd": 0.0,
+    "score": -0.19,
+    "n_trades": 1,
+    "n_closed": 0,
+    "win": null,
+    "risk_used": 0.0363,
+    "worst_r": 0.0,
+    "n_open": 1
+   },
+   "open": [
+    {
+     "id": "K0004-2026-11-23-DAL|T07|lstrad",
+     "kind": "option",
+     "ticker": "DAL",
+     "dir": null,
+     "strategy": "lstrad",
+     "opened": "2026-11-23",
+     "entry": 9.05,
+     "mark": 8.1,
+     "stop": null,
+     "target": null,
+     "max_days": null,
+     "trail": null,
+     "let_run": null,
+     "shares": null,
+     "n": 4,
+     "max_loss": 9.047,
+     "why": null
+    }
+   ],
+   "closed_last": [],
+   "suggested": []
+  },
+  "K0005": {
+   "kind": "klon",
+   "status": "lebt",
+   "cohort": 1,
+   "idea": "Original-Kette mit halbem Risiko – Regeln von Markus' Kette (Tag 1); Supervisor optimiert eigenständig",
+   "mutation_pending": false,
+   "halted": false,
+   "equity": 99126.0,
+   "cash": -93717.0,
+   "risk_open": 7514.0,
+   "lev": 1.95,
+   "m": {
+    "lev": 1.95,
+    "fees": 0.0,
+    "halted": false,
+    "equity": 99126.16,
+    "ret": -0.00874,
+    "maxdd": -0.0087,
+    "score": -0.4369,
+    "n_trades": 3,
+    "n_closed": 0,
+    "win": null,
+    "risk_used": 0.0503,
+    "worst_r": 0.0,
+    "n_open": 3
+   },
+   "open": [
+    {
+     "id": "K0005-2026-11-23-MRVL-long",
+     "kind": "equity",
+     "ticker": "MRVL",
+     "dir": "long",
+     "strategy": null,
+     "opened": "2026-11-23",
+     "entry": 144.81237,
+     "mark": 131.57,
+     "stop": 102.78,
+     "target": 228.66,
+     "max_days": 20,
+     "trail": null,
+     "let_run": null,
+     "shares": 59,
+     "n": null,
+     "max_loss": null,
+     "why": null
+    },
+    {
+     "id": "K0005-2026-11-24-SCHW-long",
+     "kind": "equity",
+     "ticker": "SCHW",
+     "dir": "long",
+     "strategy": null,
+     "opened": "2026-11-24",
+     "entry": 93.956955,
+     "mark": 93.91,
+     "stop": 91.9,
+     "target": 97.93,
+     "max_days": 20,
+     "trail": null,
+     "let_run": false,
+     "shares": 1234,
+     "n": null,
+     "max_loss": null,
+     "why": null
+    },
+    {
+     "id": "K0005-2026-11-24-AMGN-long",
+     "kind": "equity",
+     "ticker": "AMGN",
+     "dir": "long",
+     "strategy": null,
+     "opened": "2026-11-24",
+     "entry": 474.17697,
+     "mark": 473.94,
+     "stop": 457.08,
+     "target": 507.65,
+     "max_days": 20,
+     "trail": null,
+     "let_run": false,
+     "shares": 146,
+     "n": null,
+     "max_loss": null,
+     "why": null
+    }
+   ],
+   "closed_last": [],
+   "suggested": []
+  },
+  "F0006": {
+   "kind": "frei",
+   "status": "lebt",
+   "cohort": 1,
+   "idea": "Aktien long im intakten Aufwärtstrend (Kurs > SMA50 > SMA200) mit bestem risikobereinigtem Momentum",
+   "mutation_pending": false,
+   "halted": false,
+   "equity": 100000.0,
+   "cash": 100000.0,
+   "risk_open": 0.0,
+   "lev": 0.0,
+   "m": {
+    "lev": 0.0,
+    "fees": 0.0,
+    "halted": false,
+    "equity": 100000.0,
+    "ret": 0.0,
+    "maxdd": 0.0,
+    "score": 0.0,
+    "n_trades": 0,
+    "n_closed": 0,
+    "win": null,
+    "risk_used": 0.0,
+    "worst_r": 0.0,
+    "n_open": 0
+   },
+   "open": [],
+   "closed_last": [],
+   "suggested": []
+  },
+  "F0007": {
+   "kind": "frei",
+   "status": "lebt",
+   "cohort": 1,
+   "idea": "Short-Vola mit begrenztem Risiko nur bei positivem Gamma und positivem Backtest-Erwartungswert",
+   "mutation_pending": false,
+   "halted": false,
+   "equity": 100000.0,
+   "cash": 100000.0,
+   "risk_open": 0.0,
+   "lev": 0.0,
+   "m": {
+    "lev": 0.0,
+    "fees": 0.0,
+    "halted": false,
+    "equity": 100000.0,
+    "ret": 0.0,
+    "maxdd": 0.0,
+    "score": 0.0,
+    "n_trades": 0,
+    "n_closed": 0,
+    "win": null,
+    "risk_used": 0.0,
+    "worst_r": 0.0,
+    "n_open": 0
+   },
+   "open": [],
+   "closed_last": [],
+   "suggested": []
+  },
+  "F0008": {
+   "kind": "frei",
+   "status": "lebt",
+   "cohort": 1,
+   "idea": "In Panik überverkaufte Aktien kaufen (VIX hoch, VIX-Kurve invertiert), sonst billige Vola kaufen",
+   "mutation_pending": false,
+   "halted": false,
+   "equity": 100516.0,
+   "cash": 26843.0,
+   "risk_open": 12017.0,
+   "lev": 0.73,
+   "m": {
+    "lev": 0.73,
+    "fees": 0.0,
+    "halted": false,
+    "equity": 100515.75,
+    "ret": 0.00516,
+    "maxdd": 0.0,
+    "score": 0.2579,
+    "n_trades": 3,
+    "n_closed": 0,
+    "win": null,
+    "risk_used": 0.0999,
+    "worst_r": 0.0,
+    "n_open": 3
+   },
+   "open": [
+    {
+     "id": "F0008-2026-11-23-COF-long",
+     "kind": "equity",
+     "ticker": "COF",
+     "dir": "long",
+     "strategy": null,
+     "opened": "2026-11-23",
+     "entry": 180.10000499999998,
+     "mark": 181.36,
+     "stop": 158.85,
+     "target": 211.75,
+     "max_days": 15,
+     "trail": null,
+     "let_run": null,
+     "shares": 189,
+     "n": null,
+     "max_loss": null,
+     "why": null
+    },
+    {
+     "id": "F0008-2026-11-23-OXY-long",
+     "kind": "equity",
+     "ticker": "OXY",
+     "dir": "long",
+     "strategy": null,
+     "opened": "2026-11-23",
+     "entry": 52.72635,
+     "mark": 53.38,
+     "stop": 43.56,
+     "target": 66.41,
+     "max_days": 15,
+     "trail": null,
+     "let_run": null,
+     "shares": 437,
+     "n": null,
+     "max_loss": null,
+     "why": null
+    },
+    {
+     "id": "F0008-2026-11-24-UNH-long",
+     "kind": "equity",
+     "ticker": "UNH",
+     "dir": "long",
+     "strategy": null,
+     "opened": "2026-11-24",
+     "entry": 342.05093999999997,
+     "mark": 341.88,
+     "stop": 257.06,
+     "target": 469.11,
+     "max_days": 15,
+     "trail": null,
+     "let_run": false,
+     "shares": 47,
+     "n": null,
+     "max_loss": null,
+     "why": null
+    }
+   ],
+   "closed_last": [],
+   "suggested": []
+  },
+  "F0009": {
+   "kind": "frei",
+   "status": "lebt",
+   "cohort": 1,
+   "idea": "Aktien mit aktiven Insider-Käufen kaufen (Cluster, opportunistisch, CEO/CFO), Google-Trends-Sprung erhöht die Größe",
+   "mutation_pending": false,
+   "halted": false,
+   "equity": 100000.0,
+   "cash": 100000.0,
+   "risk_open": 0.0,
+   "lev": 0.0,
+   "m": {
+    "lev": 0.0,
+    "fees": 0.0,
+    "halted": false,
+    "equity": 100000.0,
+    "ret": 0.0,
+    "maxdd": 0.0,
+    "score": 0.0,
+    "n_trades": 0,
+    "n_closed": 0,
+    "win": null,
+    "risk_used": 0.0,
+    "worst_r": 0.0,
+    "n_open": 0
+   },
+   "open": [],
+   "closed_last": [],
+   "suggested": []
+  },
+  "F0010": {
+   "kind": "frei",
+   "status": "lebt",
+   "cohort": 1,
+   "idea": "Long die 2 stärksten, short die 2 schwächsten Sektor-ETFs (3 Monate Momentum), alle 20 Tage neu",
+   "mutation_pending": false,
+   "halted": false,
+   "equity": 100570.0,
+   "cash": 75055.0,
+   "risk_open": 11971.0,
+   "lev": 0.54,
+   "m": {
+    "lev": 0.54,
+    "fees": 0.12,
+    "halted": false,
+    "equity": 100569.85,
+    "ret": 0.0057,
+    "maxdd": 0.0,
+    "score": 0.2849,
+    "n_trades": 4,
+    "n_closed": 0,
+    "win": null,
+    "risk_used": 0.1194,
+    "worst_r": 0.0,
+    "n_open": 4
+   },
+   "open": [
+    {
+     "id": "F0010-2026-11-23-XLV-long",
+     "kind": "equity",
+     "ticker": "XLV",
+     "dir": "long",
+     "strategy": null,
+     "opened": "2026-11-23",
+     "entry": 179.50970999999998,
+     "mark": 184.72,
+     "stop": 150.67,
+     "target": null,
+     "max_days": 20,
+     "trail": null,
+     "let_run": null,
+     "shares": 104,
+     "n": null,
+     "max_loss": null,
+     "why": null
+    },
+    {
+     "id": "F0010-2026-11-23-XLP-long",
+     "kind": "equity",
+     "ticker": "XLP",
+     "dir": "long",
+     "strategy": null,
+     "opened": "2026-11-23",
+     "entry": 90.42518999999999,
+     "mark": 91.88,
+     "stop": 77.13,
+     "target": null,
+     "max_days": 20,
+     "trail": null,
+     "let_run": null,
+     "shares": 226,
+     "n": null,
+     "max_loss": null,
+     "why": null
+    },
+    {
+     "id": "F0010-2026-11-23-SMH-short",
+     "kind": "equity",
+     "ticker": "SMH",
+     "dir": "short",
+     "strategy": null,
+     "opened": "2026-11-23",
+     "entry": 459.94991000000005,
+     "mark": 426.75,
+     "stop": 759.22,
+     "target": null,
+     "max_days": 20,
+     "trail": null,
+     "let_run": null,
+     "shares": 10,
+     "n": null,
+     "max_loss": null,
+     "why": null
+    },
+    {
+     "id": "F0010-2026-11-23-XBI-short",
+     "kind": "equity",
+     "ticker": "XBI",
+     "dir": "short",
+     "strategy": null,
+     "opened": "2026-11-23",
+     "entry": 147.08642,
+     "mark": 156.82,
+     "stop": 192.84,
+     "target": null,
+     "max_days": 20,
+     "trail": null,
+     "let_run": null,
+     "shares": 65,
+     "n": null,
+     "max_loss": null,
+     "why": null
+    }
+   ],
+   "closed_last": [],
+   "suggested": []
+  }
+ },
+ "how": "Entscheidungen in arena/decisions/<day>.json; Ausführung am nächsten Handelstag (Aktien zur Eröffnung, Optionen zum Kettenpreis)."
+}

@@ -13,7 +13,16 @@ Alles hier ist simuliert (Papierdepots je 100.000 $). Quantitative Analyse, kein
   (Tagebuch des Supervisors). Typen: `klon` (Regeln der Original-Kette, Genom frei änderbar), `frei` (eigene Logik),
   Kontrollen `markus` (eingefroren), `zufall`, `spy` – Kontrollen nie verändern.
 - **Super-Supervisor** (`arena/supersupervisor.py` + dieser Lauf): Kohorten, Auswahl, Klonen, Rücksprung.
-- Tageslauf (`arena/engine.py`) ist reiner Code; dieser Wochenlauf ist das „Denken“.
+- **Claude entscheidet jeden Trade (Markus, 25.11.2026).** Der Code ist nur noch Werkzeug: Daten, Vorschläge (Genom/strategy.py),
+  Buchhaltung, feste Risikoregeln. Ablauf je Handelstag D:
+  1. Tageslauf nach Börsenschluss (`arena/engine.py`): führt die Entscheidungen des Vorabends zur Eröffnung von D aus (Aktien zum
+     Eröffnungskurs, Optionen zum Kettenpreis von D, `entry:"close"` zum Schlusskurs), bucht Zinsen, Stops, Ziele, Zeit, Margin Call,
+     Drawdown-Stopp, und schreibt `arena/out/proposals/<D>.json` (Markt, Kandidaten mit echten Kettenpreisen, je Netz Depot,
+     offene Positionen, Vorschläge seines Codes).
+  2. **Entscheidungslauf (Claude, täglich):** jeder Netz-Supervisor liest die Vorschläge und entscheidet selbst – übernehmen,
+     ändern, verwerfen oder eigene Trades aus allen Kandidaten/Tickern, Stops nachziehen, Gewinner laufen lassen, nachkaufen,
+     schließen. Ergebnis: `arena/decisions/<D>.json`, Prüfung mit `python -m arena.validate <D>`.
+  3. Nächster Tageslauf führt aus. Kontrollen (Markus-Regeln, Zufall, SPY) bleiben mechanisch.
 
 ## Feste Spielregeln (nur Markus ändert sie, `arena/config.yaml`)
 - Nur Positionen mit begrenztem Risiko (Optionen nur aus der Kandidatenliste mit echten Kettenpreisen; Aktien mit Stop).
@@ -25,7 +34,14 @@ Alles hier ist simuliert (Papierdepots je 100.000 $). Quantitative Analyse, kein
 - Gleiche Fills und Kosten für alle; kein Blick in die Zukunft (nur Daten bis heute); keine Netzwerkzugriffe in strategy.py.
 - Score = Rendite / max(Max-Drawdown, 2 %) nach 30 Tagen; mind. 2 Trades, sonst kein Sieger.
 
-## Schnittstelle freier Netze: `decide(ctx) -> list[order]`
+## Entscheidungsdatei `arena/decisions/<D>.json`
+`{"<NETZ-ID>": {"why": "Lagebild und Begründung des Supervisors (2–5 Sätze)", "allow_intraday": false,
+               "orders": [ {…Order wie unten…, "why": "Begründung dieses Trades"} ]}}`
+- Kein Eintrag bzw. leere orders = bewusst nichts tun (trotzdem kurz begründen). Kontroll-Netze trägt der Code selbst ein.
+- Jede neue Position braucht Haltedauer (`max_days` bzw. Ausstiegsregel) und Stop. Feste Regeln prüft der Code ohnehin.
+- `allow_intraday: true` erlaubt dem Netz am nächsten Tag das Intraday-Fenster (decide_intraday) – nur wenn begründet.
+
+## Schnittstelle freier Netze (Vorschlags-Code): `decide(ctx) -> list[order]`
 `ctx`: `day`, `regime`, `market` (vix, vix_ts, spy_dd52 …), `candidates` (Optionsstrukturen: cid, ticker, strategy, vol, bias,
 payoff{debit_fill,max_loss,max_gain,pop}, legs, oos_mean/oos_win/oos_t, trigger_status, score, factors, final, gex),
 `equity_ideas`, `equity_signals`, `price` (Preisaktion der Kandidaten), `patterns`, `events`, `filings` (SEC je Ticker),

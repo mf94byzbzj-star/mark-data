@@ -533,5 +533,6 @@
   "reason": null
  },
  "last_day": "2026-11-24",
- "traded_day": "2026-11-24"
+ "traded_day": "2026-11-24",
+ "executed": []
 }
