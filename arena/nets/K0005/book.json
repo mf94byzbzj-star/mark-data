@@ -1,5 +1,5 @@
 {
- "cash": 91456.07017,
+ "cash": -93716.64991999998,
  "open": [
   {
    "id": "K0005-2026-11-23-MRVL-long",
@@ -13,6 +13,40 @@
    "target": 228.66,
    "max_days": 20,
    "mark": 131.57
+  },
+  {
+   "id": "K0005-2026-11-24-SCHW-long",
+   "kind": "equity",
+   "ticker": "SCHW",
+   "dir": "long",
+   "opened": "2026-11-24",
+   "shares": 1234,
+   "entry": 93.956955,
+   "stop": 91.9,
+   "target": 97.93,
+   "max_days": 20,
+   "trail": null,
+   "let_run": false,
+   "exit": null,
+   "risk0": 2538.28,
+   "mark": 93.91
+  },
+  {
+   "id": "K0005-2026-11-24-AMGN-long",
+   "kind": "equity",
+   "ticker": "AMGN",
+   "dir": "long",
+   "opened": "2026-11-24",
+   "shares": 146,
+   "entry": 474.17697,
+   "stop": 457.08,
+   "target": 507.65,
+   "max_days": 20,
+   "trail": null,
+   "let_run": false,
+   "exit": null,
+   "risk0": 2496.16,
+   "mark": 473.94
   }
  ],
  "closed": [],
@@ -23,12 +57,13 @@
    "risk": 2479.91
   },
   {
-   "day": "2026-11-25",
-   "equity": 99218.7,
-   "risk": 2479.91
+   "day": "2026-11-24",
+   "equity": 99126.16,
+   "risk": 7514.35
   }
  ],
- "n_orders": 1,
- "last_fin": "2026-11-25",
- "peak": 100000
+ "n_orders": 3,
+ "last_fin": "2026-11-24",
+ "peak": 100000,
+ "fees": 0.0
 }

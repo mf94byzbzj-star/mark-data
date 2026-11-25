@@ -477,10 +477,11 @@ def metrics(book):
 
 # ------------------------------------------------------------------ Tageslauf
 def run(today=None):
-    today = today or dt.date.today()
     from arena import supersupervisor as ss
     st = ss.load_state()
     days = data.live_days()
+    # Handelstag = letzter US-Handelstag mit Cboe-Kette (nicht das UTC-Datum – GitHub-Zeitpläne laufen oft Stunden zu spät)
+    today = today or (dt.date.fromisoformat(days[-1]) if days else dt.date.today())
     base = os.path.join(data.D, "live", days[-1]) if days else None
     if st.get("last_day") == str(today) and st.get("traded_day") == str(today):
         print("heute schon gelaufen")

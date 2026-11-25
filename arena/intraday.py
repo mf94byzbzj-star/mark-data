@@ -44,6 +44,9 @@ def fetch():
 def run():
     now = pd.Timestamp.now(tz="America/New_York")
     today = now.date()
+    if not (now.hour == 15 and 10 <= now.minute <= 58) or now.weekday() >= 5:
+        print(f"außerhalb des Intraday-Fensters ({now:%H:%M} New York) – kein Handel (GitHub-Zeitplan verspätet?)")
+        return
     bars = fetch()
     if not bars or "SPY" not in bars or bars["SPY"].index[-1].date() != today:
         print("keine heutigen 5-Minuten-Kurse (Feiertag?)")

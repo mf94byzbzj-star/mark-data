@@ -1,5 +1,5 @@
 {
- "cash": 42919.684105,
+ "cash": 26843.289925,
  "open": [
   {
    "id": "F0008-2026-11-23-COF-long",
@@ -26,6 +26,23 @@
    "target": 66.41,
    "max_days": 15,
    "mark": 53.38
+  },
+  {
+   "id": "F0008-2026-11-24-UNH-long",
+   "kind": "equity",
+   "ticker": "UNH",
+   "dir": "long",
+   "opened": "2026-11-24",
+   "shares": 47,
+   "entry": 342.05093999999997,
+   "stop": 257.06,
+   "target": 469.11,
+   "max_days": 15,
+   "trail": null,
+   "let_run": false,
+   "exit": null,
+   "risk0": 3994.57,
+   "mark": 341.88
   }
  ],
  "closed": [],
@@ -36,12 +53,13 @@
    "risk": 8021.95
   },
   {
-   "day": "2026-11-25",
-   "equity": 100523.78,
-   "risk": 8021.95
+   "day": "2026-11-24",
+   "equity": 100515.75,
+   "risk": 12016.52
   }
  ],
- "n_orders": 2,
- "last_fin": "2026-11-25",
- "peak": 100523.784105
+ "n_orders": 3,
+ "last_fin": "2026-11-24",
+ "peak": 100523.784105,
+ "fees": 0.0
 }

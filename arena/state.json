@@ -14,7 +14,7 @@
    "last_error": null,
    "m": {
     "lev": 0.0,
-    "fees": 0,
+    "fees": 0.0,
     "halted": false,
     "equity": 100000.0,
     "ret": 0.0,
@@ -42,21 +42,52 @@
    "born": "2026-11-23",
    "last_error": null,
    "m": {
-    "lev": 0.06,
-    "fees": 0,
+    "lev": 1.56,
+    "fees": 0.0,
     "halted": false,
-    "equity": 99377.61,
-    "ret": -0.00622,
-    "maxdd": -0.00619,
-    "score": -0.3112,
-    "n_trades": 1,
+    "equity": 99303.49,
+    "ret": -0.00697,
+    "maxdd": -0.00693,
+    "score": -0.3483,
+    "n_trades": 3,
     "n_closed": 0,
     "win": null,
-    "risk_used": 0.0198,
+    "risk_used": 0.0401,
     "worst_r": 0.0,
-    "n_open": 1
+    "n_open": 3
    },
-   "last_orders": []
+   "last_orders": [
+    {
+     "o": {
+      "type": "equity",
+      "ticker": "SCHW",
+      "direction": "long",
+      "stop": 91.9,
+      "target": 97.93,
+      "risk": 0.02,
+      "max_days": 20,
+      "trail": null,
+      "let_run": false
+     },
+     "ok": true,
+     "shares": 988
+    },
+    {
+     "o": {
+      "type": "equity",
+      "ticker": "AMGN",
+      "direction": "long",
+      "stop": 457.08,
+      "target": 507.65,
+      "risk": 0.02,
+      "max_days": 20,
+      "trail": null,
+      "let_run": false
+     },
+     "ok": true,
+     "shares": 117
+    }
+   ]
   },
   "K0003": {
    "id": "K0003",
@@ -72,7 +103,7 @@
    "last_error": null,
    "m": {
     "lev": 0.0,
-    "fees": 0,
+    "fees": 0.0,
     "halted": false,
     "equity": 100000.0,
     "ret": 0.0,
@@ -101,7 +132,7 @@
    "last_error": null,
    "m": {
     "lev": 0.0,
-    "fees": 0,
+    "fees": 0.0,
     "halted": false,
     "equity": 99620.0,
     "ret": -0.0038,
@@ -129,21 +160,52 @@
    "born": "2026-11-23",
    "last_error": null,
    "m": {
-    "lev": 0.08,
-    "fees": 0,
+    "lev": 1.95,
+    "fees": 0.0,
     "halted": false,
-    "equity": 99218.7,
-    "ret": -0.00781,
-    "maxdd": -0.00777,
-    "score": -0.3907,
-    "n_trades": 1,
+    "equity": 99126.16,
+    "ret": -0.00874,
+    "maxdd": -0.0087,
+    "score": -0.4369,
+    "n_trades": 3,
     "n_closed": 0,
     "win": null,
-    "risk_used": 0.0249,
+    "risk_used": 0.0503,
     "worst_r": 0.0,
-    "n_open": 1
+    "n_open": 3
    },
-   "last_orders": []
+   "last_orders": [
+    {
+     "o": {
+      "type": "equity",
+      "ticker": "SCHW",
+      "direction": "long",
+      "stop": 91.9,
+      "target": 97.93,
+      "risk": 0.025,
+      "max_days": 20,
+      "trail": null,
+      "let_run": false
+     },
+     "ok": true,
+     "shares": 1234
+    },
+    {
+     "o": {
+      "type": "equity",
+      "ticker": "AMGN",
+      "direction": "long",
+      "stop": 457.08,
+      "target": 507.65,
+      "risk": 0.025,
+      "max_days": 20,
+      "trail": null,
+      "let_run": false
+     },
+     "ok": true,
+     "shares": 146
+    }
+   ]
   },
   "F0006": {
    "id": "F0006",
@@ -159,7 +221,7 @@
    "last_error": null,
    "m": {
     "lev": 0.0,
-    "fees": 0,
+    "fees": 0.0,
     "halted": false,
     "equity": 100000.0,
     "ret": 0.0,
@@ -188,7 +250,7 @@
    "last_error": null,
    "m": {
     "lev": 0.0,
-    "fees": 0,
+    "fees": 0.0,
     "halted": false,
     "equity": 100000.0,
     "ret": 0.0,
@@ -216,21 +278,35 @@
    "born": "2026-11-23",
    "last_error": null,
    "m": {
-    "lev": 0.57,
-    "fees": 0,
+    "lev": 0.73,
+    "fees": 0.0,
     "halted": false,
-    "equity": 100523.78,
-    "ret": 0.00524,
+    "equity": 100515.75,
+    "ret": 0.00516,
     "maxdd": 0.0,
-    "score": 0.2619,
-    "n_trades": 2,
+    "score": 0.2579,
+    "n_trades": 3,
     "n_closed": 0,
     "win": null,
-    "risk_used": 0.08,
+    "risk_used": 0.0999,
     "worst_r": 0.0,
-    "n_open": 2
+    "n_open": 3
    },
-   "last_orders": []
+   "last_orders": [
+    {
+     "o": {
+      "type": "equity",
+      "ticker": "UNH",
+      "direction": "long",
+      "stop": 257.06,
+      "target": 469.11,
+      "risk": 0.04,
+      "max_days": 15
+     },
+     "ok": true,
+     "shares": 47
+    }
+   ]
   },
   "F0009": {
    "id": "F0009",
@@ -246,7 +322,7 @@
    "last_error": null,
    "m": {
     "lev": 0.0,
-    "fees": 0,
+    "fees": 0.0,
     "halted": false,
     "equity": 100000.0,
     "ret": 0.0,
@@ -275,12 +351,12 @@
    "last_error": null,
    "m": {
     "lev": 0.54,
-    "fees": 0,
+    "fees": 0.12,
     "halted": false,
-    "equity": 100569.97,
+    "equity": 100569.85,
     "ret": 0.0057,
     "maxdd": 0.0,
-    "score": 0.285,
+    "score": 0.2849,
     "n_trades": 4,
     "n_closed": 0,
     "win": null,
@@ -303,21 +379,52 @@
    "born": "2026-11-23",
    "last_error": null,
    "m": {
-    "lev": 0.09,
-    "fees": 0,
+    "lev": 1.94,
+    "fees": 0.0,
     "halted": false,
-    "equity": 99059.79,
-    "ret": -0.0094,
-    "maxdd": -0.00935,
-    "score": -0.4701,
-    "n_trades": 1,
+    "equity": 98968.59,
+    "ret": -0.01031,
+    "maxdd": -0.01026,
+    "score": -0.5157,
+    "n_trades": 3,
     "n_closed": 0,
     "win": null,
-    "risk_used": 0.03,
+    "risk_used": 0.0533,
     "worst_r": 0.0,
-    "n_open": 1
+    "n_open": 3
    },
-   "last_orders": []
+   "last_orders": [
+    {
+     "o": {
+      "type": "equity",
+      "ticker": "SCHW",
+      "direction": "long",
+      "stop": 91.9,
+      "target": 97.93,
+      "risk": 0.03,
+      "max_days": 20,
+      "trail": null,
+      "let_run": false
+     },
+     "ok": true,
+     "shares": 1478
+    },
+    {
+     "o": {
+      "type": "equity",
+      "ticker": "AMGN",
+      "direction": "long",
+      "stop": 457.08,
+      "target": 507.65,
+      "risk": 0.03,
+      "max_days": 20,
+      "trail": null,
+      "let_run": false
+     },
+     "ok": true,
+     "shares": 92
+    }
+   ]
   },
   "Z0012": {
    "id": "Z0012",
@@ -333,7 +440,7 @@
    "last_error": null,
    "m": {
     "lev": 0.0,
-    "fees": 0,
+    "fees": 0.0,
     "halted": false,
     "equity": 98955.0,
     "ret": -0.01045,
@@ -362,7 +469,7 @@
    "last_error": null,
    "m": {
     "lev": 1.0,
-    "fees": 0,
+    "fees": 0.0,
     "halted": false,
     "equity": 99465.78,
     "ret": -0.00534,
@@ -406,8 +513,8 @@
    "status": "läuft",
    "paused": false,
    "waiting": [],
-   "active_days": 1,
-   "last_active": "2026-11-23"
+   "active_days": 2,
+   "last_active": "2026-11-24"
   }
  ],
  "rounds": [],
@@ -425,6 +532,6 @@
   "last_think": "2026-11-24",
   "reason": null
  },
- "last_day": "2026-11-25",
- "traded_day": "2026-11-23"
+ "last_day": "2026-11-24",
+ "traded_day": "2026-11-24"
 }

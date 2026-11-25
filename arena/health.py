@@ -93,8 +93,13 @@ def run(st=None, today=None):
             add("warnung", "Netz", f"{n['id']}: noch keine Bewertung")
         elif st.get("last_day") and cv[-1]["day"] != st["last_day"]:
             add("warnung", "Netz", f"{n['id']}: zuletzt bewertet {cv[-1]['day']}, Arena {st['last_day']}")
-        if b and b.get("cash", 0) < -1:
-            add("kritisch", "Netz", f"{n['id']}: Kasse negativ ({b['cash']:.0f} $) – Regelbruch")
+        if b and cv:   # Margin erlaubt: geprüft wird die Kaufkraft (Brutto-Aktien ≤ 2 × Kontowert) statt einer negativen Kasse
+            eqv = cv[-1]["equity"]
+            gross = sum(abs(p["shares"] * p.get("mark", p["entry"])) for p in b.get("open", []) if p["kind"] == "equity")
+            if eqv <= 0:
+                add("kritisch", "Netz", f"{n['id']}: Kontowert ≤ 0")
+            elif gross > 2.05 * eqv:
+                add("kritisch", "Netz", f"{n['id']}: Hebel {gross / eqv:.2f}× über Reg-T-Grenze 2×")
     hb = (_j(os.path.join(A, "heartbeat.json"), {}) or {}).get("last_think")
     if not hb or (today - dt.date.fromisoformat(hb)).days > 2:
         add("warnung", "Denk-Lauf", f"Letzter Claude-Denk-Lauf: {hb or 'nie'}", "geplante Aufgabe „Arena – Denk-Lauf“ prüfen")
