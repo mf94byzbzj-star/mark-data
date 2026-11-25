@@ -372,7 +372,7 @@
     },
     {
      "feature": "atr_pct",
-     "rule": "atr_pct <= 0.0252403",
+     "rule": "atr_pct <= 0.0252404",
      "label": "atr_pct <= 0.02524",
      "is": {
       "n": 447,
@@ -412,7 +412,7 @@
     },
     {
      "feature": "adx14",
-     "rule": "adx14 <= 20.3495",
+     "rule": "adx14 <= 20.3476",
      "label": "adx14 <= 20.35",
      "is": {
       "n": 447,
@@ -452,7 +452,7 @@
     },
     {
      "feature": "dist200",
-     "rule": "dist200 > 0.0702613",
+     "rule": "dist200 > 0.0702612",
      "label": "dist200 > 0.07026",
      "is": {
       "n": 447,
@@ -492,7 +492,7 @@
     },
     {
      "feature": "dist50",
-     "rule": "dist50 > 0.0124785",
+     "rule": "dist50 > 0.0124784",
      "label": "dist50 > 0.01248",
      "is": {
       "n": 447,
@@ -750,23 +750,23 @@
       "end": "2024-09-09"
      },
      "oos": {
-      "n": 260,
-      "mean": 0.111224,
+      "n": 258,
+      "mean": 0.112849,
       "median": 0.157,
-      "win": 0.626923,
-      "t": 1.777647,
-      "p": 0.037731,
-      "sharpe_w": 1.822662,
-      "maxdd_w": -2.077186,
-      "avg_win": 0.461125,
-      "avg_loss": -0.476754,
+      "win": 0.627907,
+      "t": 1.786897,
+      "p": 0.036977,
+      "sharpe_w": 1.889533,
+      "maxdd_w": -1.779624,
+      "avg_win": 0.461944,
+      "avg_loss": -0.476248,
       "tickers": 92,
       "start": "2024-10-14",
       "end": "2026-10-26"
      },
      "is_gain": 0.065436,
-     "oos_gain": -0.043229,
-     "kept_share": 0.298834,
+     "oos_gain": -0.041604,
+     "kept_share": 0.297862,
      "bh": true,
      "accepted": "False"
     },
@@ -852,7 +852,7 @@
     },
     {
      "feature": "ret20",
-     "rule": "ret20 > 0.0163493",
+     "rule": "ret20 > 0.0163505",
      "label": "ret20 > 0.01635",
      "is": {
       "n": 447,
@@ -894,14 +894,14 @@
    "final_rules": [
     "vix <= 20.95",
     "rsi14 > 50.8209",
-    "atr_pct <= 0.0252403",
+    "atr_pct <= 0.0252404",
     "iv30 <= 0.296435",
     "iv_rank <= 0.349983",
     "rv20 <= 0.2796",
     "rv20 <= rv60",
-    "dist50 > 0.0124785"
+    "dist50 > 0.0124784"
    ],
-   "final_expr": "(ff >= 0.1 and e_in_f != 1) and (vix <= 20.95) and (rsi14 > 50.8209) and (atr_pct <= 0.0252403) and (iv30 <= 0.296435) and (iv_rank <= 0.349983) and (rv20 <= 0.2796) and (rv20 <= rv60) and (dist50 > 0.0124785)",
+   "final_expr": "(ff >= 0.1 and e_in_f != 1) and (vix <= 20.95) and (rsi14 > 50.8209) and (atr_pct <= 0.0252404) and (iv30 <= 0.296435) and (iv_rank <= 0.349983) and (rv20 <= 0.2796) and (rv20 <= rv60) and (dist50 > 0.0124784)",
    "final": {
     "is": {
      "n": 30,
@@ -1367,7 +1367,7 @@
     },
     {
      "feature": "ivrv",
-     "rule": "ivrv > 0.643902 and ivrv <= 0.735174",
+     "rule": "ivrv > 0.643902 and ivrv <= 0.735173",
      "label": "ivrv > 0.6439 and ivrv <= 0.7352",
      "is": {
       "n": 1261,
@@ -1407,19 +1407,19 @@
     },
     {
      "feature": "rv20",
-     "rule": "rv20 <= 0.354037",
+     "rule": "rv20 <= 0.354036",
      "label": "rv20 <= 0.354",
      "is": {
-      "n": 1261,
-      "mean": 0.042875,
-      "median": -0.0814,
-      "win": 0.41475,
-      "t": 1.214018,
-      "p": 0.11237,
-      "sharpe_w": 0.437688,
-      "maxdd_w": -3.700288,
+      "n": 1260,
+      "mean": 0.04323,
+      "median": -0.08125,
+      "win": 0.415079,
+      "t": 1.223565,
+      "p": 0.110558,
+      "sharpe_w": 0.442301,
+      "maxdd_w": -3.643541,
       "avg_win": 0.442569,
-      "avg_loss": -0.240377,
+      "avg_loss": -0.240155,
       "tickers": 98,
       "start": "2019-02-09",
       "end": "2024-09-23"
@@ -1439,9 +1439,9 @@
       "start": "2024-09-30",
       "end": "2026-11-09"
      },
-     "is_gain": 0.031348,
+     "is_gain": 0.031703,
      "oos_gain": 0.016664,
-     "kept_share": 0.309091,
+     "kept_share": 0.308903,
      "bh": true,
      "accepted": true
     },
@@ -1527,7 +1527,7 @@
     },
     {
      "feature": "dist200",
-     "rule": "dist200 <= -0.0294529",
+     "rule": "dist200 <= -0.0294531",
      "label": "dist200 <= -0.02945",
      "is": {
       "n": 1260,
@@ -1567,8 +1567,8 @@
     },
     {
      "feature": "dist50",
-     "rule": "dist50 > -0.0175651 and dist50 <= 0.0635159",
-     "label": "dist50 > -0.01757 and dist50 <= 0.06352",
+     "rule": "dist50 > -0.017565 and dist50 <= 0.0635165",
+     "label": "dist50 > -0.01756 and dist50 <= 0.06352",
      "is": {
       "n": 1260,
       "mean": 0.01988,
@@ -1825,23 +1825,23 @@
       "end": "2024-09-23"
      },
      "oos": {
-      "n": 504,
-      "mean": 0.066866,
-      "median": -0.10035,
-      "win": 0.410714,
-      "t": 1.663061,
-      "p": 0.04815,
-      "sharpe_w": 0.868127,
-      "maxdd_w": -2.436091,
+      "n": 505,
+      "mean": 0.066625,
+      "median": -0.0995,
+      "win": 0.409901,
+      "t": 1.658622,
+      "p": 0.048596,
+      "sharpe_w": 0.874143,
+      "maxdd_w": -2.408498,
       "avg_win": 0.521047,
-      "avg_loss": -0.249685,
+      "avg_loss": -0.249031,
       "tickers": 99,
       "start": "2024-09-30",
       "end": "2026-11-09"
      },
      "is_gain": 0.022446,
-     "oos_gain": -0.011528,
-     "kept_share": 0.344892,
+     "oos_gain": -0.01177,
+     "kept_share": 0.34508,
      "bh": true,
      "accepted": "False"
     },
@@ -1927,8 +1927,8 @@
     },
     {
      "feature": "ret20",
-     "rule": "ret20 > -0.0195858 and ret20 <= 0.0798727",
-     "label": "ret20 > -0.01959 and ret20 <= 0.07987",
+     "rule": "ret20 > -0.0195858 and ret20 <= 0.0798751",
+     "label": "ret20 > -0.01959 and ret20 <= 0.07988",
      "is": {
       "n": 1261,
       "mean": 0.033932,
@@ -1967,12 +1967,12 @@
     }
    ],
    "final_rules": [
-    "ivrv > 0.643902 and ivrv <= 0.735174",
-    "dist50 > -0.0175651 and dist50 <= 0.0635159",
+    "ivrv > 0.643902 and ivrv <= 0.735173",
+    "dist50 > -0.017565 and dist50 <= 0.0635165",
     "slope > 0.0381775",
-    "ret20 > -0.0195858 and ret20 <= 0.0798727"
+    "ret20 > -0.0195858 and ret20 <= 0.0798751"
    ],
-   "final_expr": "(ivrv <= 0.8 and e_in_f != 1) and (ivrv > 0.643902 and ivrv <= 0.735174) and (dist50 > -0.0175651 and dist50 <= 0.0635159) and (slope > 0.0381775) and (ret20 > -0.0195858 and ret20 <= 0.0798727)",
+   "final_expr": "(ivrv <= 0.8 and e_in_f != 1) and (ivrv > 0.643902 and ivrv <= 0.735173) and (dist50 > -0.017565 and dist50 <= 0.0635165) and (slope > 0.0381775) and (ret20 > -0.0195858 and ret20 <= 0.0798751)",
    "final": {
     "is": {
      "n": 128,

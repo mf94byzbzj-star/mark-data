@@ -12,7 +12,7 @@
    "stop": 150.67,
    "target": null,
    "max_days": 20,
-   "mark": 179.42
+   "mark": 184.72
   },
   {
    "id": "F0010-2026-11-23-XLP-long",
@@ -25,7 +25,7 @@
    "stop": 77.13,
    "target": null,
    "max_days": 20,
-   "mark": 90.38
+   "mark": 91.88
   },
   {
    "id": "F0010-2026-11-23-SMH-short",
@@ -38,7 +38,7 @@
    "stop": 759.22,
    "target": null,
    "max_days": 20,
-   "mark": 460.18
+   "mark": 426.75
   },
   {
    "id": "F0010-2026-11-23-XBI-short",
@@ -51,7 +51,7 @@
    "stop": 192.84,
    "target": null,
    "max_days": 20,
-   "mark": 147.16
+   "mark": 156.82
   }
  ],
  "closed": [],
@@ -60,7 +60,14 @@
    "day": "2026-11-23",
    "equity": 99973.37,
    "risk": 11970.73
+  },
+  {
+   "day": "2026-11-25",
+   "equity": 100569.97,
+   "risk": 11970.73
   }
  ],
- "n_orders": 4
+ "n_orders": 4,
+ "last_fin": "2026-11-25",
+ "peak": 100569.97361999999
 }

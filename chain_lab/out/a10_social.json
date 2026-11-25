@@ -1,144 +1,365 @@
 {
  "trends": {
-  "status": "keine Daten",
-  "tests": [],
-  "now": []
+  "status": "ok",
+  "coverage": 106,
+  "threshold": 0.391,
+  "last_week": "2026-11-22",
+  "tests": [
+   {
+    "id": "G1_h5",
+    "sig": "G1",
+    "name": "Suchsprung → long 1 Woche",
+    "dir": 1,
+    "h": 5,
+    "is": {
+     "n": 1622,
+     "mean": 0.003537,
+     "median": 0.000498,
+     "win": 0.504316,
+     "t": 2.098626,
+     "p": 0.017925,
+     "sharpe_w": 0.754008,
+     "maxdd_w": -0.198322,
+     "avg_win": 0.038108,
+     "avg_loss": -0.031636,
+     "tickers": 104,
+     "start": "2022-01-10",
+     "end": "2024-12-02"
+    },
+    "oos": {
+     "n": 1196,
+     "mean": 0.002356,
+     "median": 0.001209,
+     "win": 0.510033,
+     "t": 0.810247,
+     "p": 0.208899,
+     "sharpe_w": 0.859867,
+     "maxdd_w": -0.320494,
+     "avg_win": 0.043471,
+     "avg_loss": -0.040443,
+     "tickers": 106,
+     "start": "2024-12-09",
+     "end": "2026-11-16"
+    },
+    "oos_stress": {
+     "n": 1196,
+     "mean": 0.000356,
+     "median": -0.000791,
+     "win": 0.491639,
+     "t": 0.122424,
+     "p": 0.451281,
+     "sharpe_w": 0.313315,
+     "maxdd_w": -0.348494,
+     "avg_win": 0.043058,
+     "avg_loss": -0.040942,
+     "tickers": 106,
+     "start": "2024-12-09",
+     "end": "2026-11-16"
+    },
+    "base_oos": {
+     "n": 10282,
+     "mean": 0.000714,
+     "median": -0.001504,
+     "win": 0.484439,
+     "t": 0.983715,
+     "p": 0.162628,
+     "sharpe_w": 0.635704,
+     "maxdd_w": -0.04339,
+     "avg_win": 0.040173,
+     "avg_loss": -0.036362,
+     "tickers": 106,
+     "start": "2024-12-12",
+     "end": "2026-11-12"
+    },
+    "base_is": {
+     "n": 15688,
+     "mean": -4.5e-05,
+     "median": -0.001306,
+     "win": 0.483299,
+     "t": -0.071107,
+     "p": 0.528344,
+     "sharpe_w": -0.039361,
+     "maxdd_w": -0.08724,
+     "avg_win": 0.033278,
+     "avg_loss": -0.031214,
+     "tickers": 106,
+     "start": "2022-01-03",
+     "end": "2024-12-05"
+    },
+    "oos_h1": -0.00044,
+    "oos_h2": 0.005695,
+    "edge": 0.001642,
+    "edge_t": 0.564553,
+    "split": "2024-12-09",
+    "yearly": {
+     "2022": 0.0033,
+     "2023": 0.0027,
+     "2024": 0.0044,
+     "2025": -0.0005,
+     "2026": 0.0059
+    },
+    "bh": false,
+    "status": "verworfen"
+   },
+   {
+    "id": "G1_h20",
+    "sig": "G1",
+    "name": "Suchsprung → long 1 Monat",
+    "dir": 1,
+    "h": 20,
+    "is": {
+     "n": 1615,
+     "mean": 0.010534,
+     "median": -0.00184,
+     "win": 0.489783,
+     "t": 2.134303,
+     "p": 0.016409,
+     "sharpe_w": 1.284472,
+     "maxdd_w": -0.508124,
+     "avg_win": 0.082653,
+     "avg_loss": -0.058698,
+     "tickers": 104,
+     "start": "2022-01-10",
+     "end": "2024-11-25"
+    },
+    "oos": {
+     "n": 1168,
+     "mean": 0.008515,
+     "median": 0.002734,
+     "win": 0.518836,
+     "t": 1.399275,
+     "p": 0.080865,
+     "sharpe_w": 0.332559,
+     "maxdd_w": -0.850843,
+     "avg_win": 0.087257,
+     "avg_loss": -0.076392,
+     "tickers": 106,
+     "start": "2024-12-02",
+     "end": "2026-10-26"
+    },
+    "oos_stress": {
+     "n": 1168,
+     "mean": 0.006515,
+     "median": 0.000734,
+     "win": 0.505993,
+     "t": 1.070618,
+     "p": 0.142171,
+     "sharpe_w": 0.110155,
+     "maxdd_w": -0.876843,
+     "avg_win": 0.08745,
+     "avg_loss": -0.076384,
+     "tickers": 106,
+     "start": "2024-12-02",
+     "end": "2026-10-26"
+    },
+    "base_oos": {
+     "n": 10176,
+     "mean": 0.005803,
+     "median": -0.001766,
+     "win": 0.491549,
+     "t": 2.123804,
+     "p": 0.016843,
+     "sharpe_w": 2.586644,
+     "maxdd_w": -0.083889,
+     "avg_win": 0.085991,
+     "avg_loss": -0.071719,
+     "tickers": 106,
+     "start": "2024-11-27",
+     "end": "2026-10-22"
+    },
+    "base_is": {
+     "n": 15476,
+     "mean": 0.002863,
+     "median": -0.002733,
+     "win": 0.485849,
+     "t": 1.231464,
+     "p": 0.109075,
+     "sharpe_w": 1.289965,
+     "maxdd_w": -0.251391,
+     "avg_win": 0.073458,
+     "avg_loss": -0.063845,
+     "tickers": 106,
+     "start": "2022-01-03",
+     "end": "2024-11-20"
+    },
+    "oos_h1": 0.002648,
+    "oos_h2": 0.015553,
+    "edge": 0.002712,
+    "edge_t": 0.445605,
+    "split": "2024-11-27",
+    "yearly": {
+     "2022": 0.0098,
+     "2023": 0.0106,
+     "2024": 0.01,
+     "2025": 0.0027,
+     "2026": 0.0175
+    },
+    "bh": false,
+    "status": "verworfen"
+   },
+   {
+    "id": "G2_h60",
+    "sig": "G2",
+    "name": "Suchsprung → Umkehr short 3 Monate",
+    "dir": -1,
+    "h": 60,
+    "is": {
+     "n": 1511,
+     "mean": -0.016238,
+     "median": 0.001753,
+     "win": 0.50364,
+     "t": -1.743523,
+     "p": 0.959379,
+     "sharpe_w": -1.354675,
+     "maxdd_w": -4.26103,
+     "avg_win": 0.11091,
+     "avg_loss": -0.14525,
+     "tickers": 104,
+     "start": "2022-01-10",
+     "end": "2024-10-21"
+    },
+    "oos": {
+     "n": 1222,
+     "mean": -0.018958,
+     "median": 0.014711,
+     "win": 0.536825,
+     "t": -2.19854,
+     "p": 0.986045,
+     "sharpe_w": -0.524423,
+     "maxdd_w": -1.954998,
+     "avg_win": 0.126934,
+     "avg_loss": -0.188048,
+     "tickers": 106,
+     "start": "2024-10-28",
+     "end": "2026-08-31"
+    },
+    "oos_stress": {
+     "n": 1222,
+     "mean": -0.020958,
+     "median": 0.012711,
+     "win": 0.53437,
+     "t": -2.430481,
+     "p": 0.992461,
+     "sharpe_w": -0.657073,
+     "maxdd_w": -2.080998,
+     "avg_win": 0.12551,
+     "avg_loss": -0.189048,
+     "tickers": 106,
+     "start": "2024-10-28",
+     "end": "2026-08-31"
+    },
+    "base_oos": {
+     "n": 9858,
+     "mean": -0.022855,
+     "median": 0.006673,
+     "win": 0.517955,
+     "t": -5.60525,
+     "p": 1.0,
+     "sharpe_w": -7.523409,
+     "maxdd_w": -2.124831,
+     "avg_win": 0.117065,
+     "avg_loss": -0.173197,
+     "tickers": 106,
+     "start": "2024-10-23",
+     "end": "2026-08-26"
+    },
+    "base_is": {
+     "n": 14946,
+     "mean": -0.012686,
+     "median": 0.003259,
+     "win": 0.510504,
+     "t": -2.493455,
+     "p": 0.993675,
+     "sharpe_w": -2.940779,
+     "maxdd_w": -2.247678,
+     "avg_win": 0.109572,
+     "avg_loss": -0.140191,
+     "tickers": 106,
+     "start": "2022-01-03",
+     "end": "2024-10-16"
+    },
+    "oos_h1": -0.011974,
+    "oos_h2": -0.027159,
+    "edge": 0.003897,
+    "edge_t": 0.451932,
+    "split": "2024-10-23",
+    "yearly": {
+     "2022": -0.0277,
+     "2023": -0.0207,
+     "2024": -0.0048,
+     "2025": -0.0087,
+     "2026": -0.0333
+    },
+    "bh": false,
+    "status": "verworfen"
+   }
+  ],
+  "now": [
+   {
+    "ticker": "NVDA",
+    "asvi": 1.71,
+    "svi": 100.0,
+    "week": "2026-11-22"
+   },
+   {
+    "ticker": "CRWD",
+    "asvi": 0.83,
+    "svi": 32.0,
+    "week": "2026-11-22"
+   },
+   {
+    "ticker": "AMD",
+    "asvi": 0.45,
+    "svi": 44.0,
+    "week": "2026-11-22"
+   }
+  ],
+  "top": [
+   {
+    "ticker": "NVDA",
+    "asvi": 1.71
+   },
+   {
+    "ticker": "CRWD",
+    "asvi": 0.83
+   },
+   {
+    "ticker": "AMD",
+    "asvi": 0.45
+   },
+   {
+    "ticker": "NOW",
+    "asvi": 0.35
+   },
+   {
+    "ticker": "SNOW",
+    "asvi": 0.27
+   },
+   {
+    "ticker": "UNH",
+    "asvi": 0.25
+   },
+   {
+    "ticker": "CVS",
+    "asvi": 0.17
+   },
+   {
+    "ticker": "GOOG",
+    "asvi": 0.15
+   },
+   {
+    "ticker": "DELL",
+    "asvi": 0.15
+   },
+   {
+    "ticker": "DIS",
+    "asvi": 0.13
+   }
+  ]
  },
  "posts": {
   "tests": [],
-  "people": [
-   {
-    "person": "Trump",
-    "n": 37,
-    "status": "zu wenig Historie (< 40 Posts mit Ticker)"
-   }
-  ],
-  "recent": [
-   {
-    "date": "2026-11-23",
-    "person": "Trump",
-    "text": "Gratuliert Nvidia zur Wiedereinsetzung von Jensen Huang als CEO: „absolut großartige Entscheidung“.",
-    "tickers": [
-     "NVDA"
-    ],
-    "dir": 1,
-    "url": "https://finance.yahoo.com/markets/live/stock-market-today-monday-november-23-dow-sp-500-nasdaq-nvidia-reinstates-jensen-huang-141511975.html"
-   },
-   {
-    "date": "2026-11-22",
-    "person": "Trump",
-    "text": "Hofft, dass der Nvidia-Vorstand Jensen Huang wieder einstellt – das Beste für das Unternehmen und die USA.",
-    "tickers": [
-     "NVDA"
-    ],
-    "dir": 1,
-    "url": "https://finance.yahoo.com/markets/stocks/articles/trump-throws-weight-behind-jensen-041337724.html"
-   },
-   {
-    "date": "2026-07-01",
-    "person": "Trump",
-    "text": "Lobt Micron als eines der 'HEISSESTEN' Unternehmen der Welt nach 250-Mio.-$-Zusage für Trump Accounts.",
-    "tickers": [
-     "MU"
-    ],
-    "dir": 1,
-    "url": "https://247wallst.com/investing/2026/07/01/trump-just-called-micron-the-hottest-company-in-the-world-the-market-yawned-and-dumped-it-10/"
-   },
-   {
-    "date": "2026-02-21",
-    "person": "Trump",
-    "text": "Netflix muss Board-Mitglied Susan Rice sofort feuern oder 'die Konsequenzen tragen'.",
-    "tickers": [
-     "NFLX"
-    ],
-    "dir": -1,
-    "url": "https://techcrunch.com/2026/02/22/trump-says-netflix-will-face-consequences-if-it-doesnt-fire-board-member-susan-rice/"
-   },
-   {
-    "date": "2026-01-09",
-    "person": "Trump",
-    "text": "Fordert ab 20. Januar für ein Jahr Obergrenze von 10% für Kreditkartenzinsen.",
-    "tickers": [
-     "JPM",
-     "C",
-     "XLF"
-    ],
-    "dir": -1,
-    "url": "https://fortune.com/2026/01/10/trump-one-year-cap-credit-card-interest-rates-10-percent/"
-   },
-   {
-    "date": "2026-01-07",
-    "person": "Trump",
-    "text": "Raytheon reagiert am wenigsten auf Bedarf, gibt Geld für Aktienrückkäufe aus – Pentagon-Käufe könnten enden.",
-    "tickers": [
-     "RTX"
-    ],
-    "dir": -1,
-    "url": "https://www.stripes.com/theaters/us/2026-01-07/trump-threat-pentagon-purchases-raytheon-20333526.html"
-   },
-   {
-    "date": "2026-01-07",
-    "person": "Trump",
-    "text": "Militärbudget 2027 soll 1,5 Billionen $ statt 1 Billion betragen ('Traum-Militär').",
-    "tickers": [
-     "LMT"
-    ],
-    "dir": 1,
-    "url": "https://defensescoop.com/2026/01/07/trump-calls-for-1-5-trillion-defense-budget-2027/"
-   },
-   {
-    "date": "2025-12-08",
-    "person": "Trump",
-    "text": "Nvidia darf H200-Chips an zugelassene Kunden in China liefern, 25% gehen an die USA.",
-    "tickers": [
-     "NVDA"
-    ],
-    "dir": 1,
-    "url": "https://fortune.com/2025/12/08/trump-nvidia-china-chip-sales-approved-customers-xi-jinping-jensen-huang/"
-   },
-   {
-    "date": "2025-10-12",
-    "person": "Trump",
-    "text": "'Macht euch keine Sorgen um China, alles wird gut!' – USA wollen China helfen, nicht schaden.",
-    "tickers": [
-     "SPY",
-     "QQQ"
-    ],
-    "dir": 1,
-    "url": "https://fortune.com/2025/10/12/stock-market-today-dow-futures-trump-tariffs-china-trade-war-taco/"
-   },
-   {
-    "date": "2025-10-10",
-    "person": "Trump",
-    "text": "Wegen Seltene-Erden-Exportkontrollen droht massive Zollerhöhung; später 100% Zusatzzoll auf China ab 1. Nov.",
-    "tickers": [
-     "SPY",
-     "QQQ",
-     "SMH"
-    ],
-    "dir": -1,
-    "url": "https://www.presidency.ucsb.edu/documents/truth-social-posts-october-10-2025"
-   },
-   {
-    "date": "2025-09-26",
-    "person": "Trump",
-    "text": "Microsoft soll Lisa Monaco (Global Affairs) sofort entlassen – sie sei eine Bedrohung der nationalen Sicherheit.",
-    "tickers": [
-     "MSFT"
-    ],
-    "dir": -1,
-    "url": "https://techcrunch.com/2025/09/27/trump-demands-microsoft-fire-global-affairs-head-lisa-monaco/"
-   },
-   {
-    "date": "2025-08-22",
-    "person": "Trump",
-    "text": "USA besitzen nun 10% an Intel – großartiger Deal für Amerika und Intel.",
-    "tickers": [
-     "INTC"
-    ],
-    "dir": 1,
-    "url": "https://www.presidency.ucsb.edu/documents/truth-social-posts-august-22-2025"
-   }
-  ]
+  "people": [],
+  "recent": []
  }
 }
